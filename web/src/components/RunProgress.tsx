@@ -3,7 +3,7 @@ import { api, fmtUsd } from '../api'
 import { STAGES } from '../lib/stages'
 import type { RunEvent } from '../types'
 
-type StageState = { state: 'waiting' | 'running' | 'done'; seconds?: number; calls?: number }
+type StageState = { state: 'waiting' | 'running' | 'done'; seconds?: number; calls?: number; tokens?: number }
 
 interface Props {
   runId: string
@@ -37,6 +37,9 @@ export function RunProgress({ runId, onFinished }: Props) {
         }))
         if (event.total_usd !== undefined) setTotal(event.total_usd)
         if (event.status === 'start') setStatus(`${event.label}: ${event.detail ?? ''}`)
+      } else if (event.type === 'tick') {
+        // A long model call streaming: show its running token count (not announced, the stage start was).
+        setStages((prev) => ({ ...prev, [event.stage]: { state: 'running', tokens: event.tokens } }))
       } else if (event.type === 'finished') {
         source.close()
         onFinished(event.status, event.error)
@@ -81,7 +84,9 @@ export function RunProgress({ runId, onFinished }: Props) {
                 {st.state === 'done'
                   ? `${st.seconds?.toFixed(1)} s${st.calls ? ` · ${st.calls} call${st.calls > 1 ? 's' : ''}` : ''}`
                   : st.state === 'running'
-                    ? 'working…'
+                    ? st.tokens
+                      ? `working… ${st.tokens.toLocaleString('en-US')} tokens`
+                      : 'working…'
                     : ''}
                 <span className="visually-hidden">{st.state}</span>
               </span>

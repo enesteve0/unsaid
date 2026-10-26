@@ -230,6 +230,8 @@ async def run_pipeline(
             resolutions=resolutions,
             gaps=gaps,
             context_names=ctx.names,
+            # Ultra plans for minutes: a running token count shows the browser it is working, not stuck.
+            on_stream=lambda n: _emit(progress, {"type": "tick", "stage": "understand", "tokens": n}),
         ),
     )
 

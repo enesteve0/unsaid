@@ -35,7 +35,11 @@ class RunQueue:
 
     def _publish(self, run_id: str, event: dict[str, Any]) -> None:
         event = {**event, "at": time.time()}
-        self._history.setdefault(run_id, []).append(event)
+        history = self._history.setdefault(run_id, [])
+        if event["type"] == "tick" and history and history[-1]["type"] == "tick":
+            history[-1] = event  # a reconnecting browser needs only the latest count
+        else:
+            history.append(event)
         for queue in self._listeners.get(run_id, set()):
             queue.put_nowait(event)
 

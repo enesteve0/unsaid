@@ -15,7 +15,7 @@ from .ledger import Ledger
 from .perceive import Observation
 from .schemas import Gap, LessonBible, PointerResolution, PointingMoment, Word
 from .segments import timed_transcript
-from .tf_client import TokenFactory
+from .tf_client import StreamFn, TokenFactory
 
 SYSTEM = """You are a senior audio describer planning description for a recorded lecture, for blind and low-vision \
 students. You receive the timed transcript, a visual report for each segment (from a vision model), the pointing \
@@ -78,6 +78,7 @@ async def build_bible(
     resolutions: dict[str, PointerResolution],
     gaps: list[Gap],
     context_names: list[str],
+    on_stream: StreamFn | None = None,
 ) -> LessonBible:
     payload = {
         "duration_seconds": round(duration, 1),
@@ -119,5 +120,6 @@ async def build_bible(
         schema=LessonBible,
         constrain=False,
         medium_effort=settings.reason_effort == "medium",
+        on_stream=on_stream,
     )
     return result.parsed  # type: ignore[return-value]

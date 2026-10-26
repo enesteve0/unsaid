@@ -203,6 +203,7 @@ export type RunEvent =
   | StageEvent
   | { type: 'queued'; position: number }
   | { type: 'running' }
+  | { type: 'tick'; stage: string; tokens: number }
   | { type: 'done'; metrics: Metrics; total_usd: number }
   | { type: 'finished'; status: 'done' | 'cancelled' | 'failed'; error?: string }
 

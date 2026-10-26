@@ -291,3 +291,30 @@ async def test_json_schema_downgrade_wears_off(monkeypatch):
         )
     # A single 500 is not proof that the deployment rejects json_schema: constrained decoding comes back.
     assert ["response_format" in body for body in seen] == [True, False, True]
+
+
+async def test_streamed_call_reports_progress(monkeypatch):
+    monkeypatch.setattr(tf_client, "STREAM_REPORT_SECONDS", 0)
+    chunk = {"id": "s", "object": "chat.completion.chunk", "created": 0, "model": "m"}
+    deltas = [{"reasoning_content": "Let "}, {"reasoning_content": "me think."}, {"content": "done"}]
+    events = [{**chunk, "choices": [{"index": 0, "delta": d, "finish_reason": None}]} for d in deltas]
+    events.append(
+        {**chunk, "choices": [], "usage": {"prompt_tokens": 5, "completion_tokens": 3, "total_tokens": 8}}
+    )
+    body = "".join(f"data: {json.dumps(e)}\n\n" for e in events) + "data: [DONE]\n\n"
+    tf, _ = make_tf(httpx.Response(200, text=body, headers={"content-type": "text/event-stream"}))
+    counts: list[int] = []
+
+    async def report(n: int) -> None:
+        counts.append(n)
+
+    result = await tf.chat(
+        Role.REASON,
+        [{"role": "user", "content": "x"}],
+        stage="t",
+        ledger=Ledger(),
+        thinking=True,
+        on_stream=report,
+    )
+    assert result.content == "done"
+    assert counts == [1, 2, 3]

@@ -21,10 +21,12 @@ from __future__ import annotations
 import asyncio
 import copy
 import hashlib
+import inspect
 import json
 import os
 import re
 import time
+from collections.abc import Callable
 from dataclasses import dataclass, field
 from pathlib import Path
 from types import SimpleNamespace
@@ -40,6 +42,10 @@ from .ledger import Ledger, LedgerEntry
 # Calls stream (tool calls excepted), so a timeout is the longest silence allowed before the next chunk, the first
 # one included: a stalled request fails within a minute instead of holding a run for the whole budget.
 TIMEOUTS = {Role.VISION: 60.0, Role.REASON: 120.0, Role.FAST: 30.0, Role.CLASSIFY: 30.0}
+# A streamed call can report its progress: the number of pieces received so far (about one token each), sync or
+# async, at most once per STREAM_REPORT_SECONDS.
+StreamFn = Callable[[int], Any]
+STREAM_REPORT_SECONDS = 1.0
 CONCURRENCY = {Role.VISION: 4, Role.REASON: 2, Role.FAST: 8, Role.CLASSIFY: 4}
 DEFAULT_MAX_TOKENS = {
     # (role, thinking) -> max_tokens. Reasoning tokens count against max_tokens.
@@ -203,7 +209,9 @@ class TokenFactory:
         now = time.monotonic()
         return self._retired_until.get(model, 0) <= now and self._breaker_until.get(model, 0) <= now
 
-    async def _request(self, kwargs: dict[str, Any], stream: bool) -> _Reply:
+    async def _request(
+        self, kwargs: dict[str, Any], stream: bool, on_stream: StreamFn | None = None
+    ) -> _Reply:
         """One HTTP exchange. Streamed, gateways never see an idle connection and a stall is caught early."""
         if not stream:
             raw = await self._client.chat.completions.with_raw_response.create(**kwargs)
@@ -225,6 +233,7 @@ class TokenFactory:
         content: list[str] = []
         reasoning: list[str] = []
         finish, usage, request_id = "", None, raw.headers.get("x-request-id", "")
+        pieces, reported = 0, time.monotonic()
         async for chunk in chunks:
             request_id = request_id or getattr(chunk, "id", "")
             if getattr(chunk, "usage", None):
@@ -237,6 +246,13 @@ class TokenFactory:
             piece = _reasoning_of(delta)
             if piece:
                 reasoning.append(piece)
+            if on_stream and (delta.content or piece):
+                pieces += 1
+                if time.monotonic() - reported >= STREAM_REPORT_SECONDS:
+                    reported = time.monotonic()
+                    out = on_stream(pieces)
+                    if inspect.isawaitable(out):
+                        await out
             if chunk.choices[0].finish_reason:
                 finish = chunk.choices[0].finish_reason
         text = "".join(content).strip()
@@ -306,10 +322,12 @@ class TokenFactory:
         temperature: float | None = None,
         constrain: bool = True,
         medium_effort: bool = False,
+        on_stream: StreamFn | None = None,
     ) -> ChatResult:
         """`constrain=False` keeps the schema in the prompt but skips constrained decoding (used when the model
         should think freely before it answers). `medium_effort` sets the chat-template flag of that name on a
-        thinking call; on Ultra it roughly halved the reasoning tokens in our measurements."""
+        thinking call; on Ultra it roughly halved the reasoning tokens in our measurements. `on_stream` receives
+        the call's progress while it streams."""
         if schema is not None and tools:
             raise ValueError("response_format and tools must not be combined on Token Factory")
         chain = self.settings.chain(role)
@@ -336,6 +354,7 @@ class TokenFactory:
                         temperature=temperature,
                         constrain=constrain,
                         medium_effort=medium_effort,
+                        on_stream=on_stream,
                     )
                 except (CreditExhausted, AuthFailure):
                     raise
@@ -359,6 +378,7 @@ class TokenFactory:
         temperature: float | None,
         constrain: bool,
         medium_effort: bool,
+        on_stream: StreamFn | None,
     ) -> ChatResult:
         convo = with_schema_instruction(messages, schema) if schema is not None else list(messages)
         use_thinking = thinking
@@ -407,7 +427,7 @@ class TokenFactory:
             try:
                 reply = self._cache_get(cache_key) if cache_key else None
                 if reply is None:
-                    reply = await self._request(kwargs, stream=not tools)
+                    reply = await self._request(kwargs, stream=not tools, on_stream=on_stream)
                     if cache_key and reply.content:
                         self._cache_put(cache_key, reply, int((time.perf_counter() - started) * 1000))
                 else:
