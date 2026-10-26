@@ -9,7 +9,7 @@ Nebius access and credit expiry are unverified. Track choice controls additional
 ## Development
 
 - Confirm the current official rules and eligible work dates before implementation. Preserve unresolved facts instead of inventing requirements.
-- Follow the selected product and stack once the owner chooses them; this foundation makes neither choice.
+- The owner selected the product on 2026-10-26: *Unsaid*, entered in the Best Apps and Agents track. See docs/PROVENANCE.md. Follow that product and the stack recorded there.
 - Keep each hackathon's source and provenance separate. Never infer cross-event reuse permission.
 - Keep repository visibility private unless the owner explicitly instructs otherwise. A documented public-submission requirement is not permission to publish immediately.
 - Never commit credentials, real customer data, or private account details. Use placeholder-only configuration examples when configuration actually exists.
@@ -20,4 +20,4 @@ Nebius access and credit expiry are unverified. Track choice controls additional
 
 ## Repository conventions
 
-Use focused branches, descriptive conventional commits, and the pull-request template for reviewable changes. Keep documentation in English. Repository-local Git identity is configured; do not change global Git settings.
+Owner instruction (2026-10-26): commit and push directly to `master`, with no feature branches and no pull requests. Use descriptive conventional commits, and never add co-author or AI-attribution lines. Keep documentation in English. Repository-local Git identity is configured; do not change global Git settings.

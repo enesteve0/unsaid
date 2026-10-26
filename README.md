@@ -2,14 +2,14 @@
 
 Private research and project workspace for [Nebius x NVIDIA Global AI Hackathon 2026](https://nebiusglobalaihackathon.devpost.com/).
 
-**Status:** research and repository foundation. Application implementation has not started; product, track and technology choices remain open. No runnable application or deployment is claimed.
+**Status:** building **Unsaid**, which gives audio description for what lecture videos show but never say. It is entered in the Best Apps and Agents track. Implementation started on 2026-10-26. Nothing is deployed yet, and no integration is claimed until it has evidence.
 
 | Item | Current value |
 | --- | --- |
 | Submission deadline | October 30, 2026, 10:00 PDT (UTC-07:00) |
 | Istanbul deadline | October 30, 2026, 20:00 Europe/Istanbul |
 | Source visibility now | Private; publication is a separate future action |
-| Research checked | 2026-10-23 |
+| Research checked | 2026-10-26 |
 
 ## Start here
 

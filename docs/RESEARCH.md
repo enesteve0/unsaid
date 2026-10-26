@@ -1,36 +1,74 @@
 # Nebius x NVIDIA Global AI Hackathon 2026: research
 
-Checked: **2026-10-23**. Sources below are official organizer/sponsor pages for the 2026 event. This report summarizes them; it is not a replacement for the official rules.
+Checked: **2026-10-23**, rechecked **2026-10-26**. Every source below is an official organizer or sponsor page for the 2026 event. This report summarizes them and does not replace the official rules.
 
-**Confirmed** means stated in a cited source. **Unverified** means personal access/status was not tested. **Unresolved** means sources conflict or do not settle the point. Private development is a workflow choice, not a claim that final submissions may stay private.
+**Confirmed** means a cited source states it. **Unverified** means personal access or status was not tested. **Unresolved** means sources conflict or don't settle the point.
 
 ## Event and schedule
 
-Submissions run August 26, 09:00 PDT through October 30, 10:00 PDT (20:00 Istanbul). Judging is December 1, 09:00 PST through December 15, 12:00 PST; winners are expected around January 11, 2027, 12:00 PST. Budget for demo availability through December judging, not only the October deadline. [Schedule](https://nebiusglobalaihackathon.devpost.com/details/dates)
+| Milestone | Pacific time | Istanbul time |
+| --- | --- | --- |
+| Submissions open | Aug 26, 2026, 09:00 PDT | 19:00 |
+| Submission deadline | Oct 30, 2026, 10:00 PDT | 20:00 |
+| Judging | Dec 1, 09:00 PST – Dec 15, 12:00 PST | ends Dec 15, 23:00 |
+| Winners expected | around Jan 11, 2027 | — |
 
-## Required technology and tracks
+Demos must stay available until the judging period ends. [Rules](https://nebiusglobalaihackathon.devpost.com/rules), [schedule](https://nebiusglobalaihackathon.devpost.com/details/dates)
 
-Use at least one NVIDIA open-source model and execute through Nebius Token Factory or Nebius AI Cloud. A real runtime inference call or actual cloud execution is required; documentation-only mentions do not establish platform usage. Existing projects need significant event-period updates and an explanation. [Rules, section 4](https://nebiusglobalaihackathon.devpost.com/rules)
+## Required technology (confirmed 2026-10-26)
 
-Select one track: Coding and Agentic Engineering; Best Apps and Agents; Personal AI; or Physical AI. Track descriptions add specific platform/model expectations, including Nemotron through Token Factory for Best Apps and Agents. The Physical AI wording names several models without clearly stating that all are mandatory; recheck once choosing that track. [Track descriptions](https://nebiusglobalaihackathon.devpost.com/)
+The Official Rules define "Runs on Nebius Token Factory or Nebius AI Cloud" this way: "the project makes a runtime call to the Token Factory inference API, or is deployed/run using Nebius AI Cloud compute (Serverless Jobs, Serverless Endpoints, or DevPods)."
 
-## Deliverables and licensing
+The FAQ adds that calling an NVIDIA model through Token Factory satisfies the requirement, and that the rest of the app need not be hosted on Nebius. Calling NVIDIA models through other providers such as Hugging Face or OpenRouter does not count. [Rules](https://nebiusglobalaihackathon.devpost.com/rules), [FAQ](https://nebiusglobalaihackathon.devpost.com/details/faqs)
 
-Provide public source, an open-source license, setup/run instructions, an explanation of Nebius/NVIDIA usage, a chosen track, project description, technology feedback, and a public YouTube demo. Plan a video under three minutes to satisfy the stricter rules wording. A working demo/test-build URL is required except for Physical AI, whose video must include at least one minute of operating hardware or key modules working without hardware. MIT is this workspace's application-license default, not the only accepted license. [Submission requirements](https://nebiusglobalaihackathon.devpost.com/)
+### Track
 
-Review NVIDIA model terms separately: the application's MIT license does not replace a model's license or usage conditions. [NVIDIA Nemotron license](https://www.nvidia.com/en-us/agreements/enterprise-software/nvidia-nemotron-open-model-license/)
+This project is entered in **Best Apps and Agents**: "Build any app or agent someone would actually use... Power it with Nemotron models on Nebius through Token Factory." The track text recommends Nemotron 3 Ultra for heavy reasoning, Nano or Super for fast calls, and Serverless Endpoints or Jobs (optional).
 
-## Judging and access
+## NVIDIA models on Token Factory (public catalog, read 2026-10-26)
 
-After eligibility/platform screening, Technological Implementation, Design, Potential Impact and Quality of the Idea receive 25% each. Private demos need free, unrestricted judge access and any necessary credentials throughout judging. English materials or translations are required. Turkey is not explicitly named in the exclusions; individual eligibility remains subject to age, legality, sanctions and conflicts. No explicit cross-hackathon reuse permission was found. [Rules, sections 3, 4 and 6](https://nebiusglobalaihackathon.devpost.com/rules)
+Source: [public model catalog](https://tokenfactory.nebius.com/api/public/models_info). Prices are USD per 1M tokens.
 
-The resources offer Token Factory credits and a Builders Program route; redemption, access, expiry and sufficient credit through December are not verified. Keep keys outside Git and capture redacted runtime evidence. [Resources](https://nebiusglobalaihackathon.devpost.com/resources), [Token Factory quickstart](https://docs.tokenfactory.nebius.com/quickstart)
+| Model ID | Input | Context | Price in / out |
+| --- | --- | --- | --- |
+| `nvidia/Nemotron-3_5-Lightning` | text | 1M | 0.06 / 0.24 |
+| `nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B` | text | 262k | 0.06 / 0.24 |
+| `nvidia/nemotron-3-super-120b-a12b` | text | 262k | 0.30 / 0.90 |
+| `nvidia/Nemotron-3.5-Super-VL` | text, image, video | 1M | 0.30 / 0.90 |
+| `nvidia/Nemotron-3-Ultra-550b-a55b` | text | 1M | 1.00 / 3.00 |
 
-## First actions
+Model IDs are case-sensitive. The API base URL is `https://api.tokenfactory.nebius.com/v1/`, and it is OpenAI-compatible.
 
-Confirm Nebius access and credit terms, select a track and compatible model, then define a feasible runtime and demo-availability plan. Product and framework decisions remain open. Preserve original code attribution and distinguish existing work from event-period changes.
+## Deliverables
 
+- **Repository:** public on GitHub, GitLab or Bitbucket, with an open-source license that shows in the About panel.
+- **README:** setup and run instructions, and how NVIDIA models, Token Factory and other Nebius services are used.
+- **Submission form:** a working demo URL, the chosen track, a project description, and feedback on the tools.
+- **Video:** under three minutes, uploaded to YouTube and set to public.
+
+[Rules](https://nebiusglobalaihackathon.devpost.com/rules)
+
+## Judging
+
+- **Stage one** is pass/fail: the project must reasonably fit its track's theme and reasonably use the required APIs/SDKs.
+- **Stage two** scores four equal criteria from 1 to 5:
+  - Technological Implementation (also the first tie-break);
+  - Design;
+  - Potential Impact;
+  - Quality of the Idea.
+- **Prize combinations:** a project wins either one Overall award, or one Track award plus one Bonus award.
+
+[Rules](https://nebiusglobalaihackathon.devpost.com/rules)
+
+## Licenses
+
+| Model | License |
+| --- | --- |
+| Nemotron 3.5 Lightning, Nemotron 3.5 Super VL, Nemotron 3 Ultra | OpenMDW-1.1 |
+| Nemotron 3 Nano, Nemotron 3 Super | NVIDIA Nemotron Open Model License |
+
+The application's MIT license does not replace any model's license terms. [NVIDIA Nemotron license](https://www.nvidia.com/en-us/agreements/enterprise-software/nvidia-nemotron-open-model-license/)
 
 ## Maintenance
 
-Recheck official updates before development and again before submission. Record changes with source URL and check date. Keep application claims tied to actual evidence, and update the [submission checklist](SUBMISSION.md) when rules change. Track decisions and reused material in [provenance](PROVENANCE.md).
+Recheck the official updates before submission. Record changes with their source URL and check date. Keep application claims tied to actual evidence, and update the [submission checklist](SUBMISSION.md) when the rules change.
