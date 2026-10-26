@@ -279,7 +279,7 @@ METRIC_LABELS = {
     "sec_per_min": {"label": "Seconds per video minute", "better": "lower"},
 }
 SPLIT_LABELS = {
-    "heldout": "Held-out clips: labelled blind, never used while developing Unsaid",
+    "heldout": "Held-out clips: labelled blind, never used to tune Unsaid's prompts",
     "dev": "Development clips: also used to develop Unsaid's prompts",
 }
 
@@ -325,8 +325,10 @@ def aggregate(clips: list[dict]) -> dict:
         if (subset := [c for c in clips if c.get("split", "dev") == key])
     ]
     provenance = (
-        "Held-out clips were labelled blind and never used while developing Unsaid, and their labels include "
-        "pointing moments the phrase detector misses; development clips were also used to develop its prompts."
+        "Held-out clips were labelled blind and never used to tune Unsaid's prompts, and their labels include "
+        "pointing moments the phrase detector misses. Unsaid ran on them once before a change to where paused "
+        "descriptions start, a change that development failures also called for. Development clips were also used "
+        "to develop the prompts."
         if any(s["key"] == "heldout" for s in splits)
         else "Unsaid's prompts were developed on these same clips, so these are development results."
     )

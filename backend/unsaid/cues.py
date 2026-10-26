@@ -306,14 +306,15 @@ async def write_all(
     gaps_by_id = {g.id: g for g in gaps}
     allowed_names = verified_names(bible, observations, words, context_names)
 
-    # A description of what the speaker points at belongs where they point, not where the thing first appeared.
+    # A description of what the speaker points at belongs where they point, not where the thing first appeared, and
+    # not before it is on screen either: speakers often announce a picture ("here's a picture of...") before it shows.
     placed: list[_Placement] = []
     for n, plan in enumerate(bible.cue_plan, start=1):
         facts = [facts_by_id[i] for i in plan.fact_ids if i in facts_by_id]
         if not facts:
             continue
         pointed = [moment_times[m] for f in facts for m in f.moment_ids if m in moment_times]
-        anchor = min(pointed) if pointed else min(f.t for f in facts)
+        anchor = max(min(pointed), max(f.t for f in facts)) if pointed else min(f.t for f in facts)
         gap = gaps_by_id.get(plan.gap_id)
         placed.append(_Placement(n, plan, facts, anchor, gap, bool(pointed) and gap is not None))
 

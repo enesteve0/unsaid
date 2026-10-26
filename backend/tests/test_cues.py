@@ -235,3 +235,29 @@ async def test_a_draft_that_only_punctuation_makes_too_long_is_told_so():
     cue = await run("Wave: flat, low, high, flat.", tf)  # 5 words fit the budget; four pauses do not
     assert cue is not None and cue.text == "Wave flat low high flat."
     assert "pauses at its commas" in tf.messages[-1]["content"]
+
+
+async def test_paused_description_waits_until_the_thing_is_on_screen():
+    # laser: a fact that appears at 91.7 s was linked to a phrase at 76.3 s; the pause came 10 s before the rod.
+    rod = VisualFact(
+        id="f5", t=91.7, segment_id="s3", fact="Rod", importance=3, already_spoken=False, moment_id="p3"
+    )
+    bible = BIBLE.model_copy(
+        update={
+            "visual_facts": [rod],
+            "cue_plan": [CuePlan(gap_id="extended", fact_ids=["f5"], draft="Pink rod.")],
+        }
+    )
+    cues = await write_all(
+        StubTF(),
+        Ledger(),
+        SETTINGS,
+        bible=bible,
+        gaps=[],
+        speech=[],
+        observations={},
+        words=[],
+        context_names=[],
+        moment_times={"p3": 76.3},
+    )
+    assert cues[0].extended and cues[0].start == 91.7
