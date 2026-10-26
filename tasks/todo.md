@@ -12,14 +12,14 @@ Deadline: **Fri Oct 30, 2026 20:00 Istanbul** (submit by 16:00). Work directly o
 
 ## Mon Oct 26 — foundation
 
-- [ ] Memory + tasks files + provenance decision record + README status
-- [ ] Backend scaffold (uv, Python 3.12, FastAPI) + `.env.example`
-- [ ] `tf_client` (thinking control, defensive parsing, fallback chains, error policy) + `ledger` (prices, counterfactual)
-- [ ] `gates` (overlap, fit, banned phrases, numbers, names) + unit tests
-- [ ] `media` (probe, normalize, proxy clips, stills) + `deixis` lexicon + `segments` (gaps, slide changes)
-- [ ] ASR prototype (Parakeet ONNX, word timestamps) on the Mac — package from verification agent
-- [ ] Licensed sample clips downloaded with attribution — list from clip agent
-- [ ] Prompt prototyping for Super VL / Ultra / Lightning / Nano (TF key, or build.nvidia.com locally only)
+- [x] Memory + tasks files + provenance decision record + README status
+- [x] Backend scaffold (uv, Python 3.12, FastAPI) + `.env.example`
+- [x] `tf_client` (thinking control, defensive parsing, fallback chains, error policy) + `ledger` (prices, counterfactual)
+- [x] `gates` (overlap, fit, banned phrases, numbers, names) + unit tests
+- [x] `media` (probe, normalize, proxy clips, stills) + `deixis` lexicon + `segments` (gaps, slide changes)
+- [x] ASR prototype (Parakeet ONNX, word timestamps) on the Mac — package from verification agent
+- [x] Licensed sample clips downloaded with attribution — list from clip agent
+- [x] Prompt prototyping for Super VL / Ultra / Lightning / Nano (TF key, or build.nvidia.com locally only)
 
 ## Tue Oct 27 — end to end + gates
 
@@ -30,8 +30,8 @@ Deadline: **Fri Oct 30, 2026 20:00 Istanbul** (submit by 16:00). Work directly o
 
 ## Wed Oct 28 — product
 
-- [ ] API + queue (per-session isolation, caps, judge lane, Stop, SSE progress)
-- [ ] Web: Home A/B wow player, Run progress + ledger, Review timeline + editor, Exports, Tips
+- [x] API + queue (per-session isolation, caps, judge lane, Stop, SSE progress)
+- [x] Web: Home A/B wow player, Run progress + ledger, Review timeline + editor, Exports, Tips
 - [ ] Serverless Job: backlog + nightly eval with checkpoints and $ cap
 - [ ] Eval set labels + first full eval run (B0, B1, Unsaid, ablations)
 - [ ] First deploy
@@ -49,6 +49,15 @@ Deadline: **Fri Oct 30, 2026 20:00 Istanbul** (submit by 16:00). Work directly o
 
 - [ ] Fresh-browser judge-path test on deployed URL
 - [ ] Owner uploads video + submits; tag `submission-2026-10-30`; provenance updated; monitors running
+
+## Progress notes
+
+- 2026-10-26 evening: full pipeline runs end to end on real CC BY lectures (prototyped on build.nvidia.com locally;
+  Token Factory runs pending the owner's key). Fourier excerpt with Ultra drafts: 7 cues, 5 inline, 6 auto,
+  0.0 s talk-over, 6/6 visual pointing moments covered. Live path verified through the API (queue, SSE, result,
+  session isolation). Web app passes axe WCAG 2.1 AA checks on every page. amd64 image builds (813 MB) and runs
+  Parakeet inside the container. Video pipeline (Kokoro narration, Playwright scenes, ffmpeg assembly) produces a draft.
+- Blocked on owner: NEBIUS_API_KEY (Token Factory), TAVILY_API_KEY, Nebius AI Cloud account for Serverless.
 
 ## Review
 
