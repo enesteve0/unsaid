@@ -160,9 +160,16 @@ export function Describe() {
               <p style={{ color: 'var(--paper-dim)' }}>Openly licensed lectures, described again from scratch while you watch.</p>
               <div style={{ display: 'grid', gap: 10 }}>
                 {samples.map((s) => (
-                  <button key={s.id} type="button" className="btn" onClick={() => runSample(s.id)} disabled={paused}>
-                    {s.title}
-                    <span className="mono" style={{ marginLeft: 'auto', color: 'var(--muted)' }}>
+                  <button
+                    key={s.id}
+                    type="button"
+                    className="btn"
+                    style={{ justifyContent: 'space-between', textAlign: 'left', lineHeight: 1.3 }}
+                    onClick={() => runSample(s.id)}
+                    disabled={paused}
+                  >
+                    <span>{s.title}</span>
+                    <span className="mono" style={{ color: 'var(--muted)', whiteSpace: 'nowrap' }}>
                       {Math.round(s.duration)} s
                     </span>
                   </button>
