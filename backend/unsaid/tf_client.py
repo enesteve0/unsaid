@@ -354,6 +354,7 @@ class TokenFactory:
         key_switched = False
         transport_retried = False
         grown = False
+        budget_lowered = False
         for _attempt in range(5):
             kwargs: dict[str, Any] = {
                 "model": model,
@@ -416,6 +417,11 @@ class TokenFactory:
                         await asyncio.sleep(retry_after)
                         continue
                     raise
+                if status == 400 and not budget_lowered and "token" in str(exc).lower():
+                    # The deployment caps max_tokens below our budget: retry once with a smaller one.
+                    budget_lowered = True
+                    max_tokens = min(16_000, (max_tokens or DEFAULT_MAX_TOKENS[(role, use_thinking)]) // 2)
+                    continue
                 if constrained and status >= 500:
                     # Some deployments reject json_schema decoding outright; the schema is also in the prompt,
                     # so retry unconstrained and remember the choice for this model.

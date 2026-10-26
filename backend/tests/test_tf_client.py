@@ -206,3 +206,16 @@ async def test_reasoning_calls_stream_and_collect_usage():
     assert seen[0]["stream"] is True and "response_format" not in seen[0]
     assert result.parsed.value == 9 and result.reasoning == "Let me think. "
     assert (ledger.entries[0].completion_tokens, ledger.entries[0].reasoning_tokens) == (30, 22)
+
+
+async def test_max_tokens_rejection_retries_with_smaller_budget():
+    tf, seen = make_tf(
+        httpx.Response(400, json={"error": {"message": "max_tokens must be <= 16384"}}),
+        httpx.Response(200, json=completion("ok")),
+    )
+    result = await tf.chat(
+        Role.CLASSIFY, [{"role": "user", "content": "x"}], stage="t", ledger=Ledger(), max_tokens=40_000
+    )
+    assert result.content == "ok"
+    assert seen[0]["max_tokens"] == 40_000 and seen[1]["max_tokens"] == 16_000
+    assert seen[1]["model"] == seen[0]["model"]  # same model, not a silent fallback
