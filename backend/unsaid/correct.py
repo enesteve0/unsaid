@@ -21,7 +21,8 @@ from .tf_client import AuthFailure, CreditExhausted, TokenFactory
 from .verify import assign_tier, check_times, verify_cue
 
 SYSTEM = """You fix an audio description for a blind student that a checker compared with the video frames. \
-Remove or correct every listed problem, using only the facts given; keep everything that was fine; add nothing new. \
+The frames win: never repeat a contradicted claim, even if the facts say it. Replace it with what the frames show \
+(given as observed) or drop it; drop claims that are not visible. Keep everything that was fine and add nothing new. \
 Stay within max_words, present tense, no "we see". If nothing reliable remains, return an empty text.
 Reply with JSON: {"text": "..."}."""
 

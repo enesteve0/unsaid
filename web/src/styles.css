@@ -28,6 +28,9 @@
   --speech: #5f5a51;
   --speech-hi: #8a8378;
   --ok: #8fd3a8;
+  /* chart marks: validated on the dark surface (OKLCH L 0.48-0.67, CVD ΔE 15) — never used for text */
+  --viz-unsaid: #cc8018;
+  --viz-baseline: #6f6a62;
   --warn: #ffd166;
   --bad: #ff8a80;
 
@@ -1063,6 +1066,57 @@ th.num {
   color: var(--paper-dim);
   max-width: 60ch;
   margin: 10px 0 0;
+}
+
+/* ---- comparison bars (evaluation) ------------------------------------------------------------------------ */
+
+.cmp {
+  margin: 0;
+}
+
+.cmp-row {
+  display: grid;
+  grid-template-columns: minmax(150px, 220px) 1fr 120px;
+  gap: 16px;
+  align-items: center;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.cmp-label {
+  display: grid;
+}
+
+.cmp-label span {
+  font: 400 0.74rem var(--mono);
+  color: var(--muted);
+}
+
+.cmp-bars {
+  width: 100%;
+  overflow: visible;
+}
+
+.cmp-value {
+  font: 500 11px var(--mono);
+  fill: var(--paper-dim);
+}
+
+.cmp-verdict {
+  font: 500 0.78rem var(--mono);
+  color: var(--paper-dim);
+  text-align: right;
+}
+
+@media (max-width: 700px) {
+  .cmp-row {
+    grid-template-columns: 1fr;
+    gap: 6px;
+  }
+
+  .cmp-verdict {
+    text-align: left;
+  }
 }
 
 /* ---- cinema (full-screen player) ---------------------------------------------------------------------------- */

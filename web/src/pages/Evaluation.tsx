@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { api } from '../api'
+import { ComparisonBars } from '../components/ComparisonBars'
 
 interface SystemRow {
   key: string
@@ -56,6 +57,20 @@ export function Evaluation() {
           <p className="mono" style={{ color: 'var(--muted)' }}>
             {report.clips} clips · {report.minutes?.toFixed(1)} minutes of video · generated {report.generated_at}
           </p>
+          {systems.length === 2 && (
+            <div className="panel" style={{ marginBottom: 22 }}>
+              <ComparisonBars
+                rows={Object.entries(labels).map(([key, meta]) => ({
+                  key,
+                  label: meta.label,
+                  better: meta.better,
+                  unit: meta.unit,
+                  baseline: systems.find((s) => s.key === 'oneshot')?.metrics[key] ?? 0,
+                  unsaid: systems.find((s) => s.key === 'unsaid')?.metrics[key] ?? 0,
+                }))}
+              />
+            </div>
+          )}
           <div className="panel" style={{ overflowX: 'auto' }}>
             <table>
               <caption className="visually-hidden">Metrics per system</caption>

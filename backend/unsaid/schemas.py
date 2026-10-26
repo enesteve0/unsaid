@@ -136,6 +136,9 @@ class CueText(BaseModel):
 class ClaimCheck(BaseModel):
     claim: str
     verdict: Literal["supported", "contradicted", "not_visible"]
+    observed: str = Field(
+        default="", description="For a contradicted claim, what the frames show instead; else empty"
+    )
 
 
 class Verification(BaseModel):

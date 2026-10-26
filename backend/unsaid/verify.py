@@ -23,7 +23,7 @@ SYSTEM = (
     "You check one audio description written for a lecture video against frames from that moment. Split the "
     "description into its factual claims and judge each one: supported (clearly visible in the clip or the frames), "
     "contradicted (they show something different: wrong number, colour, direction, side or object) or not_visible "
-    "(cannot be seen at all). identifies_person is true if the description names a person or says who someone is; describing "
+    "(cannot be seen at all). For each contradicted claim, say in observed what the frames show instead. identifies_person is true if the description names a person or says who someone is; describing "
     "appearance or action is fine."
 )
 
