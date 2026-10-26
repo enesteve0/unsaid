@@ -160,7 +160,7 @@ export function Home() {
         <div className="section-head">
           <div>
             <p className="eyebrow">Why</p>
-            <h2 id="why-title">Most of what a lecture shows is never said.</h2>
+            <h2 id="why-title">Most of what a lecture shows is never fully said.</h2>
           </div>
         </div>
         <div className="checks">
@@ -172,7 +172,7 @@ export function Home() {
           </div>
           <div className="check">
             <span className="value">2.2 bn</span>
-            <span className="label">people live with a near or distance vision impairment (WHO, 2026)</span>
+            <span className="label">people, at least, live with a near or distance vision impairment (WHO fact sheet)</span>
           </div>
           <div className="check">
             <span className="value">Apr 2027</span>

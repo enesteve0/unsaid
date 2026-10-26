@@ -169,7 +169,7 @@
     },
     {
       "id": "tips",
-      "narration": "And because the best description is the one the lecturer says aloud, Unsaid suggests the sentence to say next time. In presentation videos, seventy-two percent of what is shown is never properly described. Unsaid says it.",
+      "narration": "And because the best description is the one the lecturer says aloud, Unsaid suggests the sentence to say next time. In a study of ninety presentation videos, seventy-two percent of what was shown was not fully described. Unsaid says it.",
       "actions": [
         {
           "goto": "/samples/{sample}"
