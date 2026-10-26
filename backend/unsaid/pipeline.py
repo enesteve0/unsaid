@@ -284,7 +284,7 @@ async def run_pipeline(
     await stage("check", check)
 
     async def deliver():
-        tips = await lecturer_tips(tf, ledger, moments, resolutions, bible)
+        tips = await lecturer_tips(tf, ledger, moments, resolutions, bible, cues)
         (workdir / "descriptions.vtt").write_text(export.descriptions_vtt(cues))
         (workdir / "captions.vtt").write_text(export.captions_vtt(transcript.words))
         (workdir / "captions.srt").write_text(export.captions_srt(transcript.words))

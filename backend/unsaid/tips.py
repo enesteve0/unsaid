@@ -10,7 +10,7 @@ import json
 
 from .config import Role
 from .ledger import Ledger
-from .schemas import LessonBible, PointerResolution, PointingMoment, Tip, TipBatch
+from .schemas import Cue, LessonBible, PointerResolution, PointingMoment, Tip, TipBatch
 from .tf_client import TokenFactory
 
 SYSTEM = (
@@ -33,16 +33,25 @@ async def lecturer_tips(
     moments: list[PointingMoment],
     resolutions: dict[str, PointerResolution],
     bible: LessonBible,
+    cues: list[Cue] | None = None,
 ) -> list[Tip]:
+    """Facts the frame check contradicted are left out; a corrected description stands in for its facts."""
+    described = {fact_id: cue for cue in cues or [] for fact_id in cue.fact_ids}
     facts_by_moment: dict[str, list[str]] = {}
     for fact in bible.visual_facts:
+        cue = described.get(fact.id)
+        if cue and cue.verification and any(c.verdict == "contradicted" for c in cue.verification.claims):
+            continue  # the frames say otherwise: never coach a lecturer to say it
+        text = cue.text if cue and cue.corrected_from else fact.fact
         for moment_id in fact.moment_ids:
-            facts_by_moment.setdefault(moment_id, []).append(fact.fact)
+            facts_by_moment.setdefault(moment_id, [])
+            if text not in facts_by_moment[moment_id]:
+                facts_by_moment[moment_id].append(text)
     items = [
         {
             "moment_id": m.id,
             "said": m.sentence,
-            "visual_facts": [*facts_by_moment.get(m.id, []), resolutions[m.id].unsaid],
+            "visual_facts": [*facts_by_moment.get(m.id, []), *filter(None, [resolutions[m.id].unsaid])],
         }
         for m in moments
         if m.id in resolutions
