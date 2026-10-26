@@ -18,3 +18,10 @@ echo "clips ready in $OUT"
 # USGS PubTalk (public domain): stream-cut 20:00-25:00, then the evaluated 2:10-4:10 of that.
 [ -f "$RAW/usgs_1200_1500.mp4" ] || ffmpeg -y -v error -ss 1200 -i "https://usgs-ocapsv2-public-output-media.s3.us-west-2.amazonaws.com/assets/palladium/production/s3fs-public/atoms/video/science_festival/MP4/science_festival.mp4" -t 300 -c copy "$RAW/usgs_1200_1500.mp4"
 cut usgs_1200_1500.mp4 130 250 usgs
+# Held-out clips: labelled blind, never used while developing Unsaid.
+get "https://upload.wikimedia.org/wikipedia/commons/9/9c/USGS_%E2%80%94_2021_November_Yellowstone_Volcano_Update.webm" yellowstone_2021_11.webm
+cut yellowstone_2021_11.webm 185.5 305.2 yellowstone
+get "https://upload.wikimedia.org/wikipedia/commons/c/c3/NASA_-_Vital_Signs-_Taking_the_Pulse_of_Our_Planet_mrnBdcdM4UM.webm" vitalsigns.webm
+cut vitalsigns.webm 2241 2339 ozone
+get "https://upload.wikimedia.org/wikipedia/commons/c/c2/Solving-quadratic-equations.ogv" quadratic.ogv
+cut quadratic.ogv 44.8 161.4 quadratic

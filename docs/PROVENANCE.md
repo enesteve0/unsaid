@@ -67,6 +67,9 @@ Exact versions are pinned in `backend/uv.lock` and `web/pnpm-lock.yaml`. None of
 | *A-level Physics Core Practical: Capacitor Discharge* | NUSTEM, Wikimedia Commons | CC BY 3.0 | example, evaluation |
 | *How a Laser Works*, *CCD: the heart of a digital camera* | engineerguy, Wikimedia Commons | CC BY 3.0 | evaluation |
 | *PubTalk 11/2011: USGS Science for a Changing Bay Area* | U.S. Geological Survey | Public domain | evaluation |
+| *Yellowstone Volcano Observatory monthly update, November 2021* | U.S. Geological Survey, Wikimedia Commons | Public domain | held-out evaluation (metrics only) |
+| *Vital Signs: Taking the Pulse of Our Planet* (Piers Sellers) | NASA Goddard, Wikimedia Commons | Public domain (one slide shows a meeting photo that may not be NASA's) | held-out evaluation (metrics only, not redistributed) |
+| *Solving quadratic equations* | Mosborne01, Wikimedia Commons | CC BY-SA 3.0 | held-out evaluation (metrics only) |
 
 ## Submission record
 

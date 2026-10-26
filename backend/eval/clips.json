@@ -181,5 +181,123 @@
     "referent": "The pointer moves to the dark purple area at the top of the channel."
    }
   ]
+ },
+ {
+  "id": "yellowstone",
+  "title": "Yellowstone Volcano Observatory monthly update, November 2021, 3:05-5:05 (U.S. Geological Survey)",
+  "path": "data/eval/clips/yellowstone.mp4",
+  "license": "Public domain",
+  "source": "https://commons.wikimedia.org/wiki/File:USGS_%E2%80%94_2021_November_Yellowstone_Volcano_Update.webm",
+  "split": "heldout",
+  "notes": "Labelled blind from frames. Labels at 42.5, 67.6 and 101.3 s are pointing moments the phrase detector missed.",
+  "labels": [
+   {
+    "t": 5.5,
+    "said": "you can see this downward trend overall, which indicates subsidence.",
+    "referent": "Chart labelled WLWY Best Available Rank Up, in meters from Dec-2019 to Sep-2021: daily blue circles fall from about 0.02 to 0.03 to about 0.01, level off through summer 2020, then drop to about -0.02."
+   },
+   {
+    "t": 42.5,
+    "said": "The trend improves in terms of the precision of the data quite a bit here in September of 2020",
+    "referent": "Chart labelled OFW2 Best Available Rank Up with a cursor line at Sep-2020: before it the daily circles scatter between about +0.04 and -0.04 meters; after it they form a tight band between about 0 and -0.02."
+   },
+   {
+    "t": 67.6,
+    "said": "it's looking like over the summer we might start to see a bit of uplift here in the Norris area.",
+    "referent": "Chart labelled NRWY Best Available Rank Up: two years of daily circles scattered around 0 meters, mostly between -0.02 and +0.02; as the cursor sweeps summer 2021 the last points climb to about +0.01 to +0.02."
+   },
+   {
+    "t": 101.3,
+    "said": "So these up and down variations are just the normal daily variations.",
+    "referent": "Chart titled Steamboat Geyser, Water eruptions: October 13, 25: Steamboat Temperature in degrees C through October 2021, a line rising and falling daily between about 0 and 20, with a thin spike to 40 near October 4."
+   },
+   {
+    "t": 108.5,
+    "said": "And then we see a lot of this sort of noise in here.",
+    "referent": "Two dense, jagged stretches where the line climbs to roughly 20 to 48 degrees: about October 9 to 13 and October 21 to 25; another begins at the right edge, on October 31."
+   },
+   {
+    "t": 111.6,
+    "said": "So here's a major eruption on October 13th",
+    "referent": "The cursor sits on a lone spike to about 57 degrees at October 13; right after it the line falls below 10 and returns to small daily waves."
+   }
+  ]
+ },
+ {
+  "id": "ozone",
+  "title": "Vital Signs: Taking the Pulse of Our Planet, 37:21-38:59 (NASA Goddard, Piers Sellers)",
+  "path": "data/eval/clips/ozone.mp4",
+  "license": "Public domain",
+  "source": "https://commons.wikimedia.org/wiki/File:NASA_-_Vital_Signs-_Taking_the_Pulse_of_Our_Planet_mrnBdcdM4UM.webm",
+  "split": "heldout",
+  "notes": "Labelled blind from frames. One slide is a photo of the 2008 Montreal Protocol meeting that may not be a NASA work; the clip is used for metrics only and not redistributed.",
+  "labels": [
+   {
+    "t": 5.5,
+    "said": "Here's a picture of the ozone hole that was discovered in 1979.",
+    "referent": "Animated globe centred on Antarctica, dated Aug 1979 to Aug 2012 on a timeline bar marked 1979 and 2013: a pale blue patch over the continent, ringed by green, grows larger and deeper blue through the 1980s and 1990s."
+   },
+   {
+    "t": 34.3,
+    "said": "Here's a UN meeting where they're discussing the problem and what to do about it.",
+    "referent": "Photo of a vast hall of delegates at long desks; stage banners read 8th Meeting of the Conference of the Parties to the Vienna Convention and the 20th Meeting of the Parties to the Montreal Protocol, Doha, Qatar."
+   },
+   {
+    "t": 42.0,
+    "said": "And here's all the agreements that they cranked out.",
+    "referent": "A list builds over the photo: Vienna Convention for the Protection of the Ozone Layer, 1985; The Montreal Protocol on Substances that Deplete the Ozone Layer, 1987; then its London 1990, Copenhagen 1992, Montreal 1997 and Beijing 1999 Amendments."
+   },
+   {
+    "t": 48.7,
+    "said": "And here's two of Goddard's finest scientists in the back row",
+    "referent": "The list clears and a large white arrow at the lower right of the hall photo points down at two people seated at laptops in the back row, nearest the camera."
+   },
+   {
+    "t": 63.8,
+    "said": "Here's a picture of two worlds.",
+    "referent": "Two globes centred on the Americas, labelled Projected (left) and World Avoided (right), with a year counter starting at 2014: Projected is green with yellow and red near the poles; World Avoided is pale cyan."
+   },
+   {
+    "t": 73.5,
+    "said": "And on the right is what would have happened if we didn't have all those controls and agreements. And blue here means no ozone",
+    "referent": "As the counter runs from 2027 to 2057, the World Avoided globe darkens to deep blue, first in a band at its southern edge, then across the whole globe; Projected stays green and yellow."
+   }
+  ]
+ },
+ {
+  "id": "quadratic",
+  "title": "Solving quadratic equations, 0:45-2:41 (Mosborne01)",
+  "path": "data/eval/clips/quadratic.mp4",
+  "license": "CC BY-SA 3.0",
+  "source": "https://commons.wikimedia.org/wiki/File:Solving-quadratic-equations.ogv",
+  "split": "heldout",
+  "notes": "Labelled blind from frames. The label at 62.9 s is a pointing moment the phrase detector missed. CC BY-SA: any derived clip stays under CC BY-SA.",
+  "labels": [
+   {
+    "t": 9.7,
+    "said": "except this is not yet factorized. So what I need to do is to factorize this.",
+    "referent": "Red marker on a whiteboard: ab = 0 at top left and below it Consider: x² + 5x + 4 = 0; he then draws two empty brackets beneath it, followed by = 0."
+   },
+   {
+    "t": 52.8,
+    "said": "Four plus one will give me five. And I want a plus there.",
+    "referent": "His pen is on the plus between x² and 5x in x² + 5x + 4 = 0; the line below reads (x 4)(x 1) = 0, still without signs."
+   },
+   {
+    "t": 57.0,
+    "said": "The bigger number here must have the same sign as that term there.",
+    "referent": "The pen moves from the gaps in the brackets up to the plus before 5x, then he writes a plus before the 4: (x + 4)(x 1) = 0."
+   },
+   {
+    "t": 61.4,
+    "said": "For that to be a plus, that'll be a plus there.",
+    "referent": "He taps the 5x in x² + 5x + 4 = 0, then writes a plus before the 1, completing (x + 4)(x + 1) = 0."
+   },
+   {
+    "t": 62.9,
+    "said": "Now what I've created here, there is my A. There is my B.",
+    "referent": "He underlines (x + 4) and writes a beneath it, then underlines (x + 1) and writes b beneath it, and adds = 0 after them."
+   }
+  ]
  }
 ]

@@ -325,8 +325,8 @@ def aggregate(clips: list[dict]) -> dict:
         if (subset := [c for c in clips if c.get("split", "dev") == key])
     ]
     provenance = (
-        "Held-out clips were labelled blind and never used while developing Unsaid; development clips were also "
-        "used to develop its prompts."
+        "Held-out clips were labelled blind and never used while developing Unsaid, and their labels include "
+        "pointing moments the phrase detector misses; development clips were also used to develop its prompts."
         if any(s["key"] == "heldout" for s in splits)
         else "Unsaid's prompts were developed on these same clips, so these are development results."
     )
