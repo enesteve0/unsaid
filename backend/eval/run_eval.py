@@ -109,16 +109,9 @@ def timing(cues: list[Cue], speech: list[Interval]) -> tuple[float, float]:
 def grounding(cues: list[Cue], result: dict) -> int:
     """Descriptions with a number or name found nowhere on screen, in what the vision model saw, or in the speech.
     Uses the same sources as the pipeline's gates, for both systems."""
-    seen: list[str] = []
-    for facts in result["observations"].values():
-        seen += facts["on_screen_text"]
-        seen += [v["description"] for v in facts["visuals"]] + [
-            x for v in facts["visuals"] for x in v["values"]
-        ]
-        seen += [e["description"] for e in facts["events"]]
     screen = [t for o in result["observations"].values() for t in o["on_screen_text"]]
     spoken = " ".join(w["text"] for w in result["transcript"])
-    allowed = set().union(*(gates.numbers_in(t) for t in [*seen, spoken]))
+    allowed = gates.numbers_seen(result["observations"].values(), spoken)
     vocab = gates.vocabulary(screen, [spoken], result["context"]["names"])
     bad = 0
     for c in cues:

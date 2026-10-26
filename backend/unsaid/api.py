@@ -303,7 +303,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         speech = [Interval(**s) for s in result["speech"]]
         screen = [t for facts in result["observations"].values() for t in facts["on_screen_text"]]
         spoken = " ".join(w["text"] for w in result["transcript"])
-        allowed = set().union(*(gates.numbers_in(t) for t in [*screen, spoken]))
+        allowed = gates.numbers_seen(result["observations"].values(), spoken)
         vocab = gates.vocabulary(
             screen, [spoken], result["context"]["names"], [r["name"] for r in result["bible"]["registry"]]
         )

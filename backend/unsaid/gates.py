@@ -207,6 +207,19 @@ def _spoken_number_words(token: str) -> int:
     return words
 
 
+def numbers_seen(observations: Iterable[dict], spoken: str) -> set[str]:
+    """Every number a description may use: printed on screen, read off a visual or an action by the vision model,
+    or spoken. `observations` are SegmentFacts as saved in a run's result."""
+    texts = [spoken]
+    for facts in observations:
+        texts += facts["on_screen_text"]
+        texts += [v["description"] for v in facts["visuals"]] + [
+            x for v in facts["visuals"] for x in v["values"]
+        ]
+        texts += [e["description"] for e in facts["events"]]
+    return set().union(*(numbers_in(t) for t in texts))
+
+
 def spoken_word_count(text: str) -> float:
     count = 0.0
     for token in WORD.findall(text):

@@ -2,6 +2,7 @@ from unsaid.gates import (
     check_cue,
     estimate_seconds,
     numbers_in,
+    numbers_seen,
     spoken_word_count,
     unknown_names,
     vocabulary,
@@ -86,3 +87,13 @@ def test_extended_cues_are_limited_to_thirty_words():
     words = " ".join(["word"] * 33) + "."
     report = run(words, extended=True)
     assert not report.passed and report.failures[0].startswith("too_long: 33 spoken words")
+
+
+def test_numbers_seen_include_values_read_off_charts():
+    # capacitor: the fact said "~13 V" but only "13.40" was printed; the review editor refused 13.4 before.
+    facts = {
+        "on_screen_text": ["Voltage (V)"],
+        "visuals": [{"description": "Line graph", "values": ["13.40", "14.89"]}],
+        "events": [{"description": "Pointer at 20 s"}],
+    }
+    assert {"13.4", "14.89", "20"} <= numbers_seen([facts], "about two volts")
