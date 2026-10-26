@@ -43,3 +43,10 @@ def test_without_held_out_clips_the_report_says_they_are_development_results():
     report = aggregate([clip("a", "dev", 1.0)])
     assert [s["key"] for s in report["splits"]] == ["dev"]
     assert any("development results" in note for note in report["notes"])
+
+
+def test_repeated_runs_pool_metrics_but_count_each_clip_once():
+    first, second = clip("a", "dev", 1.0) | {"run": 1}, clip("a", "dev", 0.5) | {"run": 2}
+    report = aggregate([first, second])
+    assert (report["clips"], report["minutes"]) == (1, 2.0)
+    assert unsaid_metrics(report["systems"])["coverage"] == 0.75

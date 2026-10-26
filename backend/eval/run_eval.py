@@ -312,13 +312,20 @@ def summarize(clips: list[dict]) -> list[dict]:
     return systems
 
 
+def _distinct(clips: list[dict]) -> tuple[int, float]:
+    """Number of clips and minutes of video, counting a clip described in several runs once."""
+    by_id = {c["id"]: c for c in clips}
+    return len(by_id), sum(c["unsaid"]["minutes"] for c in by_id.values())
+
+
 def aggregate(clips: list[dict]) -> dict:
+    """Metrics pool every clip-run: a clip described in several runs counts once per run."""
     splits = [
         {
             "key": key,
             "label": label,
-            "clips": len(subset),
-            "minutes": sum(c["unsaid"]["minutes"] for c in subset),
+            "clips": _distinct(subset)[0],
+            "minutes": _distinct(subset)[1],
             "systems": summarize(subset),
         }
         for key, label in SPLIT_LABELS.items()
@@ -335,8 +342,8 @@ def aggregate(clips: list[dict]) -> dict:
     return {
         "available": True,
         "generated_at": datetime.now(UTC).strftime("%Y-%m-%d %H:%M UTC"),
-        "clips": len(clips),
-        "minutes": sum(c["unsaid"]["minutes"] for c in clips),
+        "clips": _distinct(clips)[0],
+        "minutes": _distinct(clips)[1],
         "systems": summarize(clips),
         "splits": splits,
         "metric_labels": METRIC_LABELS,
@@ -364,6 +371,12 @@ def main(argv: list[str] | None = None) -> None:
     parser.add_argument("--clips", default="eval/clips.json")
     parser.add_argument("--out", default="eval/out")
     parser.add_argument("--report", default="eval/report.json")
+    parser.add_argument(
+        "--repeat",
+        type=int,
+        default=1,
+        help="describe every clip this many times and pool the runs (models vary)",
+    )
     args = parser.parse_args(argv)
     clips = json.loads(Path(args.clips).read_text())
     out = Path(args.out)
@@ -373,15 +386,32 @@ def main(argv: list[str] | None = None) -> None:
 
     async def run_all() -> list[dict]:
         results = []
-        for clip in clips:  # sequential: keeps rate limits and the cost ledger easy to read
-            print(f"→ {clip['id']}", flush=True)
-            results.append(await evaluate_clip(tf, asr, clip, out))
+        for run in range(1, args.repeat + 1):
+            for clip in clips:  # sequential: keeps rate limits and the cost ledger easy to read
+                print(
+                    f"→ {clip['id']}" + (f" (run {run} of {args.repeat})" if args.repeat > 1 else ""),
+                    flush=True,
+                )
+                workdir = out / f"run{run}" if args.repeat > 1 else out
+                results.append({**await evaluate_clip(tf, asr, clip, workdir), "run": run})
         return results
 
     results = asyncio.run(run_all())
     skipped = [r for r in results if "skipped" in r]
-    report = aggregate([r for r in results if "skipped" not in r])
-    report["skipped"] = [{"id": r["id"], "reason": r["skipped"]} for r in skipped]
+    done = [r for r in results if "skipped" not in r]
+    report = aggregate(done)
+    report["runs"] = args.repeat
+    if args.repeat > 1:
+        report["per_run"] = [
+            {"run": run, "systems": summarize(subset)}
+            for run in range(1, args.repeat + 1)
+            if (subset := [r for r in done if r["run"] == run])
+        ]
+        report["notes"].append(
+            f"Every clip was described {args.repeat} times, because model outputs vary from run to run; the "
+            "metrics pool all runs, and per_run shows each run on its own."
+        )
+    report["skipped"] = [{"id": r["id"], "run": r["run"], "reason": r["skipped"]} for r in skipped]
     Path(args.report).write_text(json.dumps(report, indent=1))
     print(json.dumps(report["systems"], indent=1))
 

@@ -34,5 +34,6 @@ if [[ "$STEP" == all || "$STEP" == eval ]]; then
   # Fetch the clips if any listed in clips.json (development or held-out) is missing.
   uv run python -c "import json, os, sys; sys.exit(any(not os.path.exists(c['path']) for c in json.load(open('eval/clips.json'))))" \
     || eval/fetch_clips.sh
-  uv run python -m eval.run_eval --clips eval/clips.json --out data/eval/out --report eval/report.json
+  # Two runs per clip: model outputs vary from run to run, so one run is too noisy to publish.
+  uv run python -m eval.run_eval --clips eval/clips.json --out data/eval/out --report eval/report.json --repeat 2
 fi
