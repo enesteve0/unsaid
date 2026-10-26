@@ -21,9 +21,9 @@ from .tf_client import AuthFailure, CreditExhausted, TokenFactory
 
 SYSTEM = (
     "You check one audio description written for a lecture video against frames from that moment. Split the "
-    "description into its factual claims and judge each one: supported (clearly visible), contradicted (the frames "
-    "show something different: wrong number, colour, direction or object) or not_visible (cannot be seen in these "
-    "frames). identifies_person is true if the description names a person or says who someone is; describing "
+    "description into its factual claims and judge each one: supported (clearly visible in the clip or the frames), "
+    "contradicted (they show something different: wrong number, colour, direction, side or object) or not_visible "
+    "(cannot be seen at all). identifies_person is true if the description names a person or says who someone is; describing "
     "appearance or action is fine."
 )
 
@@ -31,13 +31,18 @@ SYSTEM = (
 async def verify_cue(
     tf: TokenFactory, ledger: Ledger, video: Path, cue: Cue, times: list[float], workdir: Path
 ) -> None:
+    """Judge each claim against stills at the facts' moments plus a short clip, so motion can be checked too."""
     stills = [await media.still(video, t, workdir / f"check_{cue.id}_{i}.jpg") for i, t in enumerate(times)]
+    clip_start = max(min(times) - 1.0, 0.0)
+    clip = await media.cut_clip(video, clip_start, clip_start + 7.0, workdir / f"check_{cue.id}.mp4", fps=4)
     content = [
         {
             "type": "text",
             "text": f'Description (spoken at {cue.start:.1f}s): "{cue.text}"\n'
-            f"Frames at {', '.join(f'{t:.1f}s' for t in times)}.",
+            f"A short clip from {clip_start:.1f}s to {clip_start + 7.0:.1f}s shows any motion; "
+            f"full-resolution frames at {', '.join(f'{t:.1f}s' for t in times)} show text and detail.",
         },
+        {"type": "video_url", "video_url": {"url": media.data_url(clip)}},
         *[{"type": "image_url", "image_url": {"url": media.data_url(p)}} for p in stills],
     ]
     result = await tf.chat(
