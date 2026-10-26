@@ -1,0 +1,200 @@
+{
+  "size": [
+    1920,
+    1080
+  ],
+  "fps": 30,
+  "narrator_voice": "af_heart",
+  "describer_voice": "am_michael",
+  "sample": "fourier-machine",
+  "cold_open": {
+    "lecture_start": 58.6,
+    "lecture_end": 69.5,
+    "first_card": "This is a lecture, as a blind student hears it.",
+    "question": "Which points?"
+  },
+  "scenes": [
+    {
+      "id": "home",
+      "narration": "Lecturers point instead of speaking. As you can see. This curve. These points. Whatever they show stays unsaid. Unsaid finds those moments, and describes them in the pauses, without ever talking over the lecture.",
+      "actions": [
+        {
+          "goto": "/"
+        },
+        {
+          "wait": 2500
+        },
+        {
+          "hover": "text=Hear it as a blind student does"
+        },
+        {
+          "wait": 1500
+        },
+        {
+          "hover": "text=Now with Unsaid"
+        },
+        {
+          "wait": 1500
+        },
+        {
+          "scroll": 760
+        },
+        {
+          "wait": 4000
+        }
+      ]
+    },
+    {
+      "id": "pipeline",
+      "narration": "Upload a lecture. NVIDIA Parakeet, running on Nebius, transcribes it and finds every silence. Nemotron 3.5 Super VL watches each segment and reads the slides. Nemotron 3 Nano works out what each this points at. Then Nemotron 3 Ultra reads the whole lecture at once, on Nebius Token Factory, and plans what is unsaid, and which pause it fits.",
+      "speedup_to_narration": true,
+      "actions": [
+        {
+          "goto": "/describe"
+        },
+        {
+          "wait": 1500
+        },
+        {
+          "click": "role=button[name=/Explaining Fourier analysis/]"
+        },
+        {
+          "wait_for": "text=Describing",
+          "timeout": 30000
+        },
+        {
+          "wait_for_url": "**/runs/**",
+          "timeout": 600000
+        },
+        {
+          "wait": 2500
+        }
+      ]
+    },
+    {
+      "id": "timeline",
+      "narration": "Every description lands inside a silence. Amber, in the gaps. Never over the grey speech.",
+      "actions": [
+        {
+          "goto": "/samples/{sample}"
+        },
+        {
+          "wait": 1500
+        },
+        {
+          "scroll": 520
+        },
+        {
+          "wait": 5000
+        }
+      ]
+    },
+    {
+      "id": "checks",
+      "narration": "The models draft. The code decides. A description must fit its silence, never overlap speech, and use only numbers printed on screen, and names from the screen, the speech, or the video's own page, which Tavily looks up. Nemotron 3.5 Lightning repairs anything that breaks a rule, and Super VL checks every claim against the frames again.",
+      "actions": [
+        {
+          "goto": "/samples/{sample}"
+        },
+        {
+          "wait": 1200
+        },
+        {
+          "click": "role=tab[name='Descriptions & checks']"
+        },
+        {
+          "scroll": 900
+        },
+        {
+          "wait": 2500
+        },
+        {
+          "click": "text=Checked against the frames"
+        },
+        {
+          "wait": 6000
+        },
+        {
+          "scroll": 1300
+        },
+        {
+          "wait": 6000
+        }
+      ]
+    },
+    {
+      "id": "evaluation",
+      "narration": "We compared Unsaid with the obvious approach: one call to a vision model, describing the whole clip. {{evaluation_sentence}} And we publish where Unsaid still fails.",
+      "actions": [
+        {
+          "goto": "/evaluation"
+        },
+        {
+          "wait": 6000
+        },
+        {
+          "scroll": 700
+        },
+        {
+          "wait": 6000
+        }
+      ]
+    },
+    {
+      "id": "cost",
+      "narration": "Every call is in the ledger. Four Nemotron models, {{usd_per_min_words}} per minute of video. Long lectures run overnight as a Nebius Serverless job, with a dollar cap.",
+      "actions": [
+        {
+          "goto": "/samples/{sample}"
+        },
+        {
+          "wait": 1200
+        },
+        {
+          "click": "role=tab[name='Models & cost']"
+        },
+        {
+          "scroll": 900
+        },
+        {
+          "wait": 5000
+        },
+        {
+          "goto": "/describe"
+        },
+        {
+          "wait": 4000
+        }
+      ]
+    },
+    {
+      "id": "tips",
+      "narration": "And because the best description is the one the lecturer says aloud, Unsaid suggests the sentence to say next time. In presentation videos, seventy-two percent of what is shown is never properly described. Unsaid says it.",
+      "actions": [
+        {
+          "goto": "/samples/{sample}"
+        },
+        {
+          "wait": 1200
+        },
+        {
+          "click": "role=tab[name='Lecturer tips']"
+        },
+        {
+          "scroll": 900
+        },
+        {
+          "wait": 9000
+        }
+      ]
+    }
+  ],
+  "end_card": {
+    "title": "Unsaid",
+    "lines": [
+      "Audio description for everything a lecture shows but never says.",
+      "Built with NVIDIA Nemotron on Nebius Token Factory."
+    ],
+    "seconds": 5
+  }
+}

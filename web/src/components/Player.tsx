@@ -22,6 +22,8 @@ interface Props {
   onCue?: (cue: Cue | null) => void
   handle?: Ref<PlayerHandle>
   compact?: boolean
+  /** Show descriptions without speaking them (used when recording the demo; the voice is added afterwards). */
+  voiceOff?: boolean
 }
 
 const MODE_LABEL: Record<Mode, string> = {
@@ -30,7 +32,7 @@ const MODE_LABEL: Record<Mode, string> = {
   watch: 'Watch',
 }
 
-export function Player({ result, media, mode, onModeChange, window: clip, onTime, onCue, handle, compact }: Props) {
+export function Player({ result, media, mode, onModeChange, window: clip, onTime, onCue, handle, compact, voiceOff }: Props) {
   const video = useRef<HTMLVideoElement>(null)
   const spoken = useRef(new Set<string>())
   const pausedForCue = useRef(false)
@@ -44,9 +46,12 @@ export function Player({ result, media, mode, onModeChange, window: clip, onTime
   const describing = mode !== 'heard'
 
   const setCue = useCallback(
-    (cue: Cue | null) => {
-      setActive(cue)
-      onCue?.(cue)
+    (next: Cue | null | ((current: Cue | null) => Cue | null)) => {
+      setActive((current) => {
+        const value = typeof next === 'function' ? next(current) : next
+        if (value !== current) onCue?.(value)
+        return value
+      })
     },
     [onCue],
   )
@@ -117,9 +122,13 @@ export function Player({ result, media, mode, onModeChange, window: clip, onTime
           } else {
             v.volume = 0.35
           }
-          narrator.speak(due.text, () => {
+          // Keep the text on screen for at least as long as it takes to say, even if speech ends early.
+          const shownUntil = performance.now() + Math.max(due.end - due.start, 1.5) * 1000
+          const speak = voiceOff ? (_: string, done: () => void) => window.setTimeout(done, (due.end - due.start) * 1000) : narrator.speak.bind(narrator)
+          speak(due.text, () => {
             v.volume = 1
-            window.setTimeout(() => setCue(null), 600)
+            const linger = Math.max(shownUntil - performance.now(), 0) + 600
+            window.setTimeout(() => setCue((current) => (current?.id === due.id ? null : current)), linger)
             if (pausedForCue.current) {
               pausedForCue.current = false
               void v.play()
@@ -131,7 +140,7 @@ export function Player({ result, media, mode, onModeChange, window: clip, onTime
     }
     raf = requestAnimationFrame(tick)
     return () => cancelAnimationFrame(raf)
-  }, [playing, describing, cues, clip, onTime, setCue])
+  }, [playing, describing, cues, clip, onTime, setCue, voiceOff])
 
   useEffect(() => () => narrator.cancel(), [])
 

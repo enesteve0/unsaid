@@ -12,7 +12,8 @@ RUN pnpm build
 FROM python:3.12-slim-bookworm
 ENV PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1 UV_COMPILE_BYTECODE=1 UV_LINK_MODE=copy \
     ASR_THREADS=2 DATA_DIR=/data SAMPLES_DIR=/app/samples
-RUN apt-get update && apt-get install -y --no-install-recommends ffmpeg && rm -rf /var/lib/apt/lists/*
+# Static ffmpeg/ffprobe: no apt step, which is very slow when building amd64 images on Apple Silicon.
+COPY --from=mwader/static-ffmpeg:7.1.1 /ffmpeg /ffprobe /usr/local/bin/
 COPY --from=ghcr.io/astral-sh/uv:0.9.27 /uv /usr/local/bin/uv
 WORKDIR /app/backend
 COPY backend/pyproject.toml backend/uv.lock ./
