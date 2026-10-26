@@ -45,7 +45,8 @@ lecture.mp4
   ├─ Understand  Nemotron 3 Ultra: the whole lecture in one context; what is visual-only, how important,
   │              which silence it fits, and a draft within that silence's word budget
   ├─ Write & fit code gates; Nemotron 3.5 Lightning repairs drafts that break a rule; code trims, or pauses for essentials
-  ├─ Check       Nemotron 3.5 Super VL: every claim re-checked against frames from that moment
+  ├─ Check       Nemotron 3.5 Super VL: every claim re-checked against frames from that moment;
+  │              Lightning corrects what it flags, code re-gates, Super VL checks once more
   └─ Deliver     tracks, transcript, editor markers, lecturer tips (Nemotron 3.5 Lightning)
 ```
 
@@ -55,7 +56,7 @@ lecture.mp4
 | --- | --- | --- |
 | Nemotron 3.5 Super VL (`nvidia/Nemotron-3.5-Super-VL`) | Watch every segment; verify every description | The only model here that sees images and video. Thinking off: this is perception. |
 | Nemotron 3 Ultra (`nvidia/Nemotron-3-Ultra-550b-a55b`) | Plan the whole lecture and draft each description | Needs the entire transcript, every segment report and every silence at once (1M-token context). Thinking on, streamed. One call per video. |
-| Nemotron 3.5 Lightning (`nvidia/Nemotron-3_5-Lightning`) | Repair descriptions that fail a rule; lecturer tips | Many small, latency-sensitive rewrites, in parallel. |
+| Nemotron 3.5 Lightning (`nvidia/Nemotron-3_5-Lightning`) | Repair descriptions that fail a rule or the frame check; lecturer tips | Many small, latency-sensitive rewrites, in parallel. |
 | Nemotron 3 Nano (`nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B`) | Classify pointing phrases | High-volume structured classification with strict JSON. |
 
 Every call is written to a ledger with tokens, cached tokens, reasoning tokens, latency and dollar cost at Token

@@ -43,6 +43,7 @@ export function About() {
           <li>No “we see”, “the image shows” or “in this video”; present tense; hedges are flagged for review.</li>
           <li>If nothing fits, the description becomes extended: the player pauses the video (WCAG 1.2.7).</li>
           <li>People are never identified from their faces. A description that names someone without a source is withheld.</li>
+          <li>If the frame check finds a claim the picture contradicts, the description is corrected and checked again; if that fails, it waits for a person.</li>
         </ul>
       </section>
 
