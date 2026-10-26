@@ -32,8 +32,8 @@ Deadline: **Fri Oct 30, 2026 20:00 Istanbul** (submit by 16:00). Work directly o
 
 - [x] API + queue (per-session isolation, caps, judge lane, Stop, SSE progress)
 - [x] Web: Home A/B wow player, Run progress + ledger, Review timeline + editor, Exports, Tips
-- [ ] Serverless Job: backlog + nightly eval with checkpoints and $ cap
-- [ ] Eval set labels + first full eval run (B0, B1, Unsaid, ablations)
+- [x] Serverless Job code: backlog with checkpoints and $ cap (`batch/run_batch.py`); deploy pending AI Cloud account
+- [x] Eval set: 6 clips, 21 builder labels; harness validated (prototype). [ ] Official run on Token Factory
 - [ ] First deploy
 
 ## Thu Oct 29 — polish + publish
@@ -57,6 +57,12 @@ Deadline: **Fri Oct 30, 2026 20:00 Istanbul** (submit by 16:00). Work directly o
   0.0 s talk-over, 6/6 visual pointing moments covered. Live path verified through the API (queue, SSE, result,
   session isolation). Web app passes axe WCAG 2.1 AA checks on every page. amd64 image builds (813 MB) and runs
   Parakeet inside the container. Video pipeline (Kokoro narration, Playwright scenes, ffmpeg assembly) produces a draft.
+- 2026-10-26 late: added check-and-correct (Super VL finds unsupported claims, Lightning rewrites, code re-gates,
+  Super VL re-checks; the frames outrank the plan), a motion clip for the verifier, judge-link unlocking, screen-reader
+  output, backlog panel, evaluation small multiples (validated colours), failures list, smoke test, runbook
+  (`scripts/tf_day.sh`), uptime monitor workflow, provenance table, thumbnail, gallery script. One-clip prototype
+  (laser, build endpoint): talk-over 0 s vs 52 s one-shot; coverage 1.0 vs 0.5; unsupported 2/6 vs 3/6; 1 of 3
+  flagged drafts corrected. gitleaks: no leaks. 49 backend tests, 6 e2e.
 - Blocked on owner: NEBIUS_API_KEY (Token Factory), TAVILY_API_KEY, Nebius AI Cloud account for Serverless.
 
 ## Review
