@@ -56,7 +56,35 @@ def _publish(args: argparse.Namespace) -> None:
     run = Path(args.run)
     target = Path(args.samples) / args.id
     target.mkdir(parents=True, exist_ok=True)
-    shutil.copyfile(args.video, target / "video.mp4")
+    # 720p H.264 + AAC with fast start: plenty for the web player, small enough to keep in the repository.
+    subprocess.run(
+        [
+            "ffmpeg",
+            "-y",
+            "-v",
+            "error",
+            "-i",
+            args.video,
+            "-vf",
+            "scale=-2:720",
+            "-c:v",
+            "libx264",
+            "-preset",
+            "slow",
+            "-crf",
+            "26",
+            "-pix_fmt",
+            "yuv420p",
+            "-c:a",
+            "aac",
+            "-b:a",
+            "96k",
+            "-movflags",
+            "+faststart",
+            str(target / "video.mp4"),
+        ],
+        check=True,
+    )
     for name in (
         "result.json",
         "descriptions.vtt",
