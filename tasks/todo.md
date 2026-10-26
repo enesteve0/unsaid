@@ -98,6 +98,9 @@ Deadline: **Fri Oct 30, 2026 20:00 Istanbul** (submit by 16:00). Work directly o
   - check frames are capped at three;
   - event times relative to the clip are guessed;
   - Tavily's cited-work title is not passed to the writer.
+- Held-out clips (added 2026-10-27, labelled blind): the phrase detector missed 4 of their 17 pointing moments
+  ("here" followed by more words; nouns such as "variations" that are not in its list). Do not tune the detector
+  or prompts on these clips before the official run; that would turn them into development clips.
 - TF day checks:
   - smoke test (perception shape, `medium_effort` honoured);
   - measure a live 2-minute run and set the Describe page's "a couple of minutes" to the measured time;
