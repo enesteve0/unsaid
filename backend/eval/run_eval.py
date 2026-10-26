@@ -38,7 +38,7 @@ from unsaid.ledger import Ledger
 from unsaid.pipeline import RunOptions, run_pipeline
 from unsaid.schemas import Cue, Interval, Word
 from unsaid.segments import timed_transcript
-from unsaid.tf_client import TokenFactory
+from unsaid.tf_client import AuthFailure, CreditExhausted, TokenFactory
 from unsaid.verify import verify_cue
 
 ONESHOT_SYSTEM = (
@@ -171,14 +171,13 @@ async def evaluate_clip(tf: TokenFactory, asr: SpeechRecognizer, clip: dict, out
     base_cues = await oneshot(tf, base_ledger, video, words, duration, workdir)
     base_seconds = time.perf_counter() - t0
     for cue in base_cues:
-        await verify_cue(
-            tf,
-            base_ledger,
-            video,
-            cue,
-            [min(cue.start + 0.3, duration - 0.1), min(cue.start + 1.3, duration - 0.1)],
-            workdir,
-        )
+        times = [min(cue.start + 0.3, duration - 0.1), min(cue.start + 1.3, duration - 0.1)]
+        try:
+            await verify_cue(tf, base_ledger, video, cue, times, workdir)
+        except (CreditExhausted, AuthFailure):
+            raise
+        except Exception:
+            cue.verification = None
 
     judge_ledger = Ledger()
     labels = clip.get("labels", [])
@@ -220,7 +219,10 @@ async def evaluate_clip(tf: TokenFactory, asr: SpeechRecognizer, clip: dict, out
             "in_silence": inside,
             "pauses": sum(c.extended for c in cues),
             "coverage": covered,
-            "unsupported": sum(1 for c in cues if c.verification is None or not c.verification.supported),
+            "checked": sum(1 for c in cues if c.verification is not None),
+            "unsupported": sum(
+                1 for c in cues if c.verification is not None and not c.verification.supported
+            ),
             "ungrounded": grounding(cues, result),
             "usd": cost,
             "seconds": seconds,
@@ -269,7 +271,8 @@ def aggregate(clips: list[dict]) -> dict:
                     "in_silence": sum(r["in_silence"] for r in rows) / cues,
                     "pauses": sum(r["pauses"] for r in rows) / minutes,
                     "coverage": sum(covered) / len(covered) if covered else 0.0,
-                    "unsupported": sum(r["unsupported"] for r in rows) / cues,
+                    "unsupported": sum(r["unsupported"] for r in rows)
+                    / max(sum(r["checked"] for r in rows), 1),
                     "ungrounded": sum(r["ungrounded"] for r in rows) / cues,
                     "usd_per_min": sum(r["usd"] for r in rows) / minutes,
                     "sec_per_min": sum(r["seconds"] for r in rows) / minutes,
@@ -295,7 +298,8 @@ def aggregate(clips: list[dict]) -> dict:
         "notes": [
             "Talk-over uses the speech intervals from NVIDIA Parakeet for both systems; descriptions are timed at 2.5 words per second.",
             "Coverage labels were written by the builder after viewing the frames at each pointing moment; Nemotron 3 Ultra judges them.",
-            "The same Super VL verifier checks both systems' descriptions against the frames.",
+            "The same Super VL verifier checks both systems' descriptions against the frames; descriptions it could not "
+            "check are excluded from that rate and counted separately.",
         ],
     }
 
