@@ -39,9 +39,34 @@ For every imported component, record its upstream URL, immutable commit/version,
 
 ### Third-party components and media
 
+Exact versions are pinned in `backend/uv.lock` and `web/pnpm-lock.yaml`. None of this code was modified.
+
 | Component | Version / source | License | Purpose |
 | --- | --- | --- | --- |
-| (added as dependencies and sample clips are introduced) | | | |
+| NVIDIA Nemotron 3 Ultra, 3.5 Super VL, 3.5 Lightning | Nebius Token Factory API | OpenMDW-1.1 | planning, perception and checking, repairs |
+| NVIDIA Nemotron 3 Nano | Nebius Token Factory API | NVIDIA Nemotron Open Model License | pointing-phrase classification |
+| NVIDIA Parakeet TDT 0.6B v2 (int8 ONNX, `istupakov/parakeet-tdt-0.6b-v2-onnx`) | downloaded at build time | CC-BY-4.0 | speech recognition |
+| Silero VAD (ONNX, `istupakov/silero-vad-onnx`) | downloaded at build time | MIT | speech segments |
+| onnx-asr / onnxruntime | 0.12.0 / 1.31.0 | MIT / MIT | running the ONNX models on CPU |
+| FastAPI, uvicorn, pydantic, pydantic-settings | 0.162.0, 0.54.0, 2.14.1, 2.16.1 | MIT, BSD-3-Clause, MIT, MIT | web API |
+| openai (Python SDK) | 3.37.0 | Apache-2.0 | client for the OpenAI-compatible Token Factory API |
+| tavily-python | 0.8.5 | MIT | Tavily search and extract |
+| httpx, numpy, pillow, pyyaml, python-multipart | 0.28.1, 2.5.4, 13.0.0, 6.0.3, 0.0.32 | BSD-3, BSD-3, MIT-CMU, MIT, Apache-2.0 | HTTP, arrays, images, config, uploads |
+| React, react-router-dom | 19.3.1, 7.18.4 | MIT | web app |
+| Vite, TypeScript, @vitejs/plugin-react, oxlint | 8.3, 6.0, 6.1, 1.88 | MIT, Apache-2.0, MIT, MIT | build tooling |
+| Playwright, @axe-core/playwright | 1.64.1, 4.14.0 | Apache-2.0, MPL-2.0 | end-to-end and accessibility tests; demo-video recording |
+| @fontsource: Atkinson Hyperlegible Next, Instrument Serif, IBM Plex Mono | 5.3.0 | OFL-1.1 | typefaces (also as TTF in `video/fonts/` for video cards) |
+| ffmpeg (static build `mwader/static-ffmpeg:7.1.1` in the image) | 7.1.1 | GPL/LGPL build of FFmpeg, used as a separate executable | media processing |
+| Kokoro-82M ONNX (`fastrtc/kokoro-onnx`) via kokoro-onnx | downloaded by `video/fetch_voices.sh` | Apache-2.0 (model), MIT (package) | voice for the demo video only |
+
+### Media
+
+| Media | Source | License | Use |
+| --- | --- | --- | --- |
+| *(3/4) Analysis: Explaining Fourier analysis with a machine* | engineerguy, Wikimedia Commons | CC BY 3.0 | example, evaluation, demo video |
+| *A-level Physics Core Practical: Capacitor Discharge* | NUSTEM, Wikimedia Commons | CC BY 3.0 | example, evaluation |
+| *How a Laser Works*, *CCD: the heart of a digital camera* | engineerguy, Wikimedia Commons | CC BY 3.0 | evaluation |
+| *PubTalk 11/2011: USGS Science for a Changing Bay Area* | U.S. Geological Survey | Public domain | evaluation |
 
 ## Submission record
 
