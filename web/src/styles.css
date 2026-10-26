@@ -1098,7 +1098,13 @@ th.num {
 
 .cinema .player-bar {
   border-top: 0;
-  opacity: 0.35;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.cinema .player-bar:hover,
+.cinema .player-bar:focus-within {
+  opacity: 1;
 }
 
 .cinema-caption {

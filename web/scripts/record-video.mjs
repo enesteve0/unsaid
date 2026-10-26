@@ -41,6 +41,9 @@ for (const scene of script.scenes) {
     recordVideo: { dir: out, size: { width, height } },
     reducedMotion: 'no-preference',
   })
+  if (process.env.JUDGE_CODE) {
+    await context.request.post(`${base}/api/judge`, { data: { code: process.env.JUDGE_CODE } }) // reserved lane, no IP limits
+  }
   const page = await context.newPage()
   const started = Date.now()
   for (const step of scene.actions) {
