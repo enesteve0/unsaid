@@ -89,6 +89,12 @@ appears in a prompt. The Evaluation page lists where Unsaid still fails.
   explicit budget, and stream it.
 - **Structured output that sometimes isn’t.** We send the schema in the prompt as well as through constrained
   decoding, validate it with pydantic, and repair or retry. Truncated JSON gets more room instead of a “repair”.
+- **A checker is only as good as its corrector.** Super VL caught a wrong count (“11 at 10, 9 at zero”, where the
+  chart shows ten and ten), but the corrector was never shown what the checker saw, so all it could do was delete.
+  The description became “rock bars adjusted”. Passing the observation through fixed it, and a correction may no
+  longer shrink a description to a fragment.
+- **Requests that never answer.** A few requests hung until the client gave up. Every call now streams, so a stall
+  is cut off after a minute without a chunk instead of after a three-minute budget.
 - **“This” is not always pointing.** “In the right polarity”, “at this point” and “students could look at the graph
   later” all match a naive lexicon; Nano filters them.
 
