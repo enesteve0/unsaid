@@ -329,6 +329,8 @@ def aggregate(clips: list[dict]) -> dict:
         "notes": [
             "Talk-over uses the speech intervals from NVIDIA Parakeet for both systems; descriptions are timed at 2.5 words per second.",
             "Coverage labels were written by the builder after viewing the frames at each pointing moment; Nemotron 3 Ultra judges them.",
+            "Unsaid's prompts were developed on these same clips, so these are development results; no phrase from the "
+            "clips appears in a prompt.",
             "The same Super VL verifier checks both systems' descriptions against the frames; descriptions it could not "
             "check are excluded from that rate and counted separately.",
         ],

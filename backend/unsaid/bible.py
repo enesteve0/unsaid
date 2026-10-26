@@ -35,8 +35,8 @@ when the fact resolves a pointing moment that refers to something visible), 2 = 
 the first silence at or after the fact's time, within about 10 seconds. Use only silences with a word_budget of at \
 least 4. The draft must fit the silence's word budget (count each number as the words needed to say it). A draft \
 must make sense to someone who cannot see: name what the thing is, then the concrete detail a listener can picture \
-(values, direction, position, what changes), e.g. "Graph: dots at 10 for the first half, then at 0." Avoid \
-abstract labels such as "even symmetry" unless they are printed on screen. Present tense; no "we see". Most \
+(values, direction, position, what changes), e.g. "Bar chart: sales rise from 2 to 9 over five years." Avoid \
+abstract labels such as "steady growth" unless they are printed on screen. Present tense; no "we see". Most \
 important facts first; drop \
 importance-1 facts when space is short. If an importance-3 fact has no silence that fits, use gap_id "extended" \
 (the player pauses the video) with a draft of at most 30 words. Never plan facts that are already_spoken. Every \

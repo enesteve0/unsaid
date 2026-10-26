@@ -74,7 +74,8 @@ obvious one-shot approach (Super VL given the whole clip and the transcript):
 | Claims the frames do not support | {{oneshot.unsupported}} | {{unsaid.unsupported}} |
 | Cost per video minute | {{oneshot.usd_per_min}} | {{unsaid.usd_per_min}} |
 
-The Evaluation page lists where Unsaid still fails.
+We developed Unsaid's prompts on these same clips, so read these as development results; no phrase from the clips
+appears in a prompt. The Evaluation page lists where Unsaid still fails.
 
 ## Challenges we ran into
 
