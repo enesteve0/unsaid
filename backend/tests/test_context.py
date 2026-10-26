@@ -10,7 +10,7 @@ PAGE = "Explaining Fourier analysis with a machine. Presented by Bill Hammack (e
 
 
 class FakeTavily:
-    calls: list = []
+    calls: list = []  # noqa: RUF012 - shared on purpose: the test inspects calls made by instances it never sees
 
     def __init__(self, **kwargs):
         self.kwargs = kwargs
