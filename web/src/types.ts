@@ -205,6 +205,7 @@ export type RunEvent =
 /** Where a result's media lives: a precomputed sample or a visitor's own run. */
 export interface MediaBase {
   video: string
+  poster?: string
   captions: string
   descriptions: string
   files: (name: string) => string

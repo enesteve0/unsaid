@@ -346,7 +346,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     if web_dist.exists():
         app.mount("/assets", StaticFiles(directory=web_dist / "assets"), name="assets")
 
-        @app.get("/{path:path}")
+        @app.api_route("/{path:path}", methods=["GET", "HEAD"])
         async def spa(path: str) -> FileResponse:
             candidate = web_dist / path
             if path and candidate.is_file():

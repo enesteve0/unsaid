@@ -12,7 +12,15 @@ BIBLE = LessonBible(summary="", registry=[], notation=[], visual_facts=[], cue_p
 
 
 def fact(importance=3):
-    return VisualFact(id="f1", t=9.5, segment_id="s1", fact="Square wave from 0 to 10", importance=importance, already_spoken=False, moment_id="p1")
+    return VisualFact(
+        id="f1",
+        t=9.5,
+        segment_id="s1",
+        fact="Square wave from 0 to 10",
+        importance=importance,
+        already_spoken=False,
+        moment_id="p1",
+    )
 
 
 class StubTF:
@@ -27,10 +35,22 @@ class StubTF:
         return SimpleNamespace(parsed=CueText(text=self.texts.pop(0)))
 
 
-async def run(draft, tf, importance=3, gap=Gap(id="g1", start=10.0, end=13.0)):
+GAP = Gap(id="g1", start=10.0, end=13.0)
+
+
+async def run(draft, tf, importance=3, gap=GAP):
     return await write_cue(
-        tf, Ledger(), SETTINGS, cue_id="001", facts=[fact(importance)], draft=draft, gap=gap,
-        speech=SPEECH, context=CONTEXT, bible=BIBLE, allowed_names=[],
+        tf,
+        Ledger(),
+        SETTINGS,
+        cue_id="001",
+        facts=[fact(importance)],
+        draft=draft,
+        gap=gap,
+        speech=SPEECH,
+        context=CONTEXT,
+        bible=BIBLE,
+        allowed_names=[],
     )
 
 

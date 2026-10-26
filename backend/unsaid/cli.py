@@ -51,6 +51,7 @@ async def _describe(args: argparse.Namespace) -> None:
 def _publish(args: argparse.Namespace) -> None:
     """Copy a finished run into samples/<id>/ (video, tracks, result) and register it in samples/manifest.json."""
     import shutil
+    import subprocess
 
     run = Path(args.run)
     target = Path(args.samples) / args.id
@@ -65,6 +66,27 @@ def _publish(args: argparse.Namespace) -> None:
         "markers.fcpxml",
     ):
         shutil.copyfile(run / name, target / name)
+    poster_at = float(args.hero.split(",")[0]) + 1.0 if args.hero else 5.0
+    subprocess.run(
+        [
+            "ffmpeg",
+            "-y",
+            "-v",
+            "error",
+            "-ss",
+            f"{poster_at:.2f}",
+            "-i",
+            str(target / "video.mp4"),
+            "-frames:v",
+            "1",
+            "-vf",
+            "scale='min(1280,iw)':-2",
+            "-q:v",
+            "3",
+            str(target / "poster.jpg"),
+        ],
+        check=True,
+    )
     manifest_path = Path(args.samples) / "manifest.json"
     manifest = json.loads(manifest_path.read_text()) if manifest_path.exists() else []
     result = json.loads((run / "result.json").read_text())

@@ -62,6 +62,7 @@ export function sampleMedia(id: string): MediaBase {
   const base = `/media/samples/${encodeURIComponent(id)}`
   return {
     video: `${base}/video.mp4`,
+    poster: `${base}/poster.jpg`,
     captions: `${base}/captions.vtt`,
     descriptions: `${base}/descriptions.vtt`,
     files: (name) => `${base}/${name}`,

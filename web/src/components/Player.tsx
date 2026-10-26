@@ -160,7 +160,8 @@ export function Player({ result, media, mode, onModeChange, window: clip, onTime
         <video
           ref={video}
           src={media.video}
-          preload="metadata"
+          poster={media.poster}
+          preload="auto"
           playsInline
           crossOrigin="anonymous"
           onPlay={() => setPlaying(true)}

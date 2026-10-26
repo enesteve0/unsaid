@@ -14,7 +14,7 @@ export function Checks({ result }: { result: RunResult }) {
     { value: fmtUsd(result.ledger.summary.total_usd / Math.max(minutes, 1e-6)), label: 'model cost per minute of video' },
   ]
   return (
-    <div className="checks" role="list" aria-label="Results for this video">
+    <div className="checks quad" role="list" aria-label="Results for this video">
       {items.map((item) => (
         <div className="check" role="listitem" key={item.label}>
           <span className="value">{item.value}</span>

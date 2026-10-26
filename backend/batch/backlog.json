@@ -1,0 +1,14 @@
+[
+  {
+    "id": "laser",
+    "title": "How a laser works (engineerguy)",
+    "source": "https://upload.wikimedia.org/wikipedia/commons/0/02/How_a_Laser_Works.webm",
+    "page": "https://commons.wikimedia.org/wiki/File:How_a_Laser_Works.webm"
+  },
+  {
+    "id": "ccd",
+    "title": "CCD: the heart of a digital camera (engineerguy)",
+    "source": "https://upload.wikimedia.org/wikipedia/commons/3/35/CCD_-_The_heart_of_a_digital_camera_%28how_a_charge-coupled_device_works%29.webm",
+    "page": "https://commons.wikimedia.org/wiki/File:CCD_-_The_heart_of_a_digital_camera_(how_a_charge-coupled_device_works).webm"
+  }
+]

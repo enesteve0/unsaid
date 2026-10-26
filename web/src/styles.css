@@ -711,6 +711,18 @@ section {
   overflow: hidden;
 }
 
+.checks.quad {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.checks.quad .check:nth-child(2n) {
+  border-right: 0;
+}
+
+.checks.quad .check:nth-child(-n + 2) {
+  border-bottom: 1px solid var(--line);
+}
+
 .check {
   padding: 18px 20px;
   border-right: 1px solid var(--line);
@@ -1000,7 +1012,7 @@ th.num {
 
 .steps {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 0;
   border-top: 1px solid var(--line);
   border-left: 1px solid var(--line);
@@ -1058,7 +1070,8 @@ th.num {
     grid-template-columns: 1fr;
   }
 
-  .ab {
+  .ab,
+  .steps {
     grid-template-columns: 1fr;
   }
 
