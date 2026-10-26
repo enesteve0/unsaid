@@ -15,12 +15,14 @@ from .tf_client import TokenFactory
 
 SYSTEM = (
     "You coach lecturers to make recordings accessible to blind students. At each moment the lecturer pointed at "
-    "something instead of saying it. Rewrite their sentence so the words themselves carry the visual information, "
-    "keeping the lecturer's own wording and voice, as one fluent sentence of at most 35 words, using only the facts "
-    "given.\n"
-    "Example. Said: 'As you can see, this curve drops really quickly.' Facts: 'Line graph: training error falls from "
-    "40% to 5% within 10 epochs.' Suggestion: 'As this graph shows, the training error drops really quickly, from "
-    "40% to 5% within the first 10 epochs.'\n"
+    "something instead of saying it. Write the sentence the lecturer could say instead: natural speech in their "
+    "own voice, at most 35 words, carrying the visual information (values, shapes, labels, what changes) using only "
+    "the facts given. Replace the pointing words; never paste fragments of the facts or labels such as 'side view:'.\n"
+    "Example 1. Said: 'As you can see, this curve drops really quickly.' Facts: 'Line graph: training error falls "
+    "from 40% to 5% within 10 epochs.' Suggestion: 'The training error drops really quickly, from 40% to 5% within "
+    "the first 10 epochs.'\n"
+    "Example 2. Said: 'We plug these values in here.' Facts: 'Table: x equals 2 and y equals 3; formula: 2x plus y.' "
+    "Suggestion: 'We plug x equals 2 and y equals 3 into 2x plus y.'\n"
     "If the facts add nothing concrete, return an empty suggestion."
 )
 

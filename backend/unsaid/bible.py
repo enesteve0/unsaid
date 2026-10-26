@@ -33,8 +33,11 @@ tense, specific (values, labels, shapes, what changes), built only from the visu
 have; already_spoken is true when the speech already conveys it; moment_id is the pointing moment it resolves, or "".
 5. cue_plan: assign facts to silences, at most one plan per silence, and write the draft to speak there. Prefer \
 the first silence at or after the fact's time, within about 10 seconds. Use only silences with a word_budget of at \
-least 4. The draft must fit the silence's word budget (count each number as the words needed to say it); start by \
-naming what the thing is, then the key detail; present tense; no "we see". Most important facts first; drop \
+least 4. The draft must fit the silence's word budget (count each number as the words needed to say it). A draft \
+must make sense to someone who cannot see: name what the thing is, then the concrete detail a listener can picture \
+(values, direction, position, what changes), e.g. "Graph: dots at 10 for the first half, then at 0." Avoid \
+abstract labels such as "even symmetry" unless they are printed on screen. Present tense; no "we see". Most \
+important facts first; drop \
 importance-1 facts when space is short. If an importance-3 fact has no silence that fits, use gap_id "extended" \
 (the player pauses the video) with a draft of at most 30 words. Never plan facts that are already_spoken. Every \
 pointing moment that refers to something visible should be covered.
