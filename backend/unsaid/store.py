@@ -95,6 +95,16 @@ class Store:
         rows = self._q("SELECT COALESCE(SUM(usd), 0) AS s FROM spend WHERE day LIKE ?", (today()[:7] + "%",))
         return rows[0]["s"]
 
+    def fail_orphans(self) -> int:
+        """Runs left queued or running by a previous process can never finish; say so instead of hanging."""
+        with self._lock:
+            cursor = self._db.execute(
+                "UPDATE runs SET status = 'failed', error = 'interrupted by a server restart', finished = ? "
+                "WHERE status IN ('queued', 'running')",
+                (time.time(),),
+            )
+            return cursor.rowcount
+
     def run_dir(self, run_id: str) -> Path:
         return self.runs_dir / run_id
 

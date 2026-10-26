@@ -59,6 +59,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
 
     app = FastAPI(title="Unsaid", docs_url="/api/docs", openapi_url="/api/openapi.json")
     store = Store(settings.data_dir)
+    store.fail_orphans()
     tf = TokenFactory(settings)
     asr = SpeechRecognizer(Path("models"))
     queue = RunQueue(settings, tf, asr, store)
