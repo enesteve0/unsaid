@@ -70,9 +70,38 @@ Deadline: **Fri Oct 30, 2026 20:00 Istanbul** (submit by 16:00). Work directly o
   `medium_effort`) halved Ultra's reasoning on a test prompt; six-clip comparison against full effort pending.
   FEEDBACK item on json_schema withdrawn (it was intermittent) and replaced with measured findings. 53 backend tests,
   7 e2e.
-- TF day checks: smoke test now sends the perception shape (clip + still + strict schema, streamed); measure a live
-  2-minute run and fix the Describe page's "a couple of minutes" to the measured time; decide `REASON_EFFORT` from
-  the six-clip comparison on Token Factory.
+- 2026-10-27 early morning (build-endpoint prototype; official numbers come from Token Factory):
+  - Effort: same code and inputs, coverage 0.33 at full and at medium effort; medium used 58% fewer Ultra tokens.
+    Medium is now the default.
+  - Coverage (0.33 vs 0.53 one-shot) is the weak number. `eval/diagnose.py` traces each label. Losses fixed:
+    - paused descriptions placed when a fact first appeared, up to 16 s before the pointing;
+    - inline descriptions put in a silence far from the moment;
+    - pointing facts written as the spoken gist and dropped as "already spoken" (planner prompt, 6/8 vs 4/8 on
+      targeted moments);
+    - perception losing the moment frames;
+    - several moment ids in one field.
+  - Quality fixes:
+    - the corrector never saw what the checker observed ("rock bars adjusted");
+    - checks used frames from after a description was heard;
+    - the word budget ignored punctuation pauses (7 of 17 drafts);
+    - the writer never saw printed values;
+    - spelled-out numbers bypassed the gate;
+    - extended descriptions had no 30-word limit;
+    - tips repeated contradicted facts;
+    - the editor refused chart values.
+  - Evaluation hygiene: prompt examples that came from the evaluation clips were replaced (Resolve recall 42/48 vs
+    41/48), the report says the prompts were developed on these clips, and the held-out split is supported.
+  - 72 backend tests, 8 e2e.
+- Known gaps (low impact, from the data-flow review):
+  - Ultra's style notes are unused;
+  - the timing estimate counts maths symbols as one word;
+  - check frames are capped at three;
+  - event times relative to the clip are guessed;
+  - Tavily's cited-work title is not passed to the writer.
+- TF day checks:
+  - smoke test (perception shape, `medium_effort` honoured);
+  - measure a live 2-minute run and set the Describe page's "a couple of minutes" to the measured time;
+  - official evaluation with held-out clips.
 - Blocked on owner: NEBIUS_API_KEY (Token Factory), TAVILY_API_KEY, Nebius AI Cloud account for Serverless.
 
 ## Review
