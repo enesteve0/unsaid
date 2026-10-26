@@ -1,6 +1,18 @@
+import { useEffect } from 'react'
 import { NavLink, Outlet } from 'react-router-dom'
+import { api } from '../api'
 
 export function Layout() {
+  // A judge link like /?judge=1&code=XYZ unlocks the reserved judging lane, then the code leaves the address bar.
+  useEffect(() => {
+    const url = new URL(window.location.href)
+    const code = url.searchParams.get('code')
+    if (!code) return
+    url.searchParams.delete('code')
+    window.history.replaceState(null, '', url.pathname + (url.search ? url.search : '') + url.hash)
+    api.judge(code).catch(() => undefined)
+  }, [])
+
   return (
     <>
       <a className="skip-link" href="#main">

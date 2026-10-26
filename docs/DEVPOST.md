@@ -122,8 +122,8 @@ react, typescript, vite, playwright, axe-core, docker
 - **Track:** Best Apps and Agents
 - **New or existing:** New. Started 2026-10-26.
 - **Repository:** {{repo_url}} (MIT, LICENSE in About)
-- **Demo:** {{demo_url}}. Testing instructions: open {{demo_url}}/?judge=1 for the 30-second tour. Access code for the
-  reserved judging lane: {{judge_code}}.
+- **Demo:** {{demo_url}}. Testing instructions: open {{demo_url}}/?judge=1&code={{judge_code}} for the 30-second tour;
+  the link also unlocks a reserved judging lane, so live runs never wait behind public traffic.
 - **Models and why:** see “How we built it”.
   - Super VL is the only vision model.
   - Ultra is used once per video, for whole-lecture judgement over a 1M-token context.
