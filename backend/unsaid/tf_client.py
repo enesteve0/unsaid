@@ -301,7 +301,10 @@ class TokenFactory:
             "reasoning_tokens": reasoning,
             "latency_ms": latency_ms,
         }
-        (self._cache_dir / f"{key}.json").write_text(json.dumps(record))  # type: ignore[operator]
+        # Write then rename, so a second process sharing the cache never reads half a file.
+        tmp = self._cache_dir / f"{key}.{os.getpid()}.tmp"  # type: ignore[operator]
+        tmp.write_text(json.dumps(record))
+        tmp.replace(self._cache_dir / f"{key}.json")  # type: ignore[operator]
 
     async def list_models(self) -> list[dict[str, Any]]:
         page = await self._client.models.list(extra_query={"verbose": "true"})
