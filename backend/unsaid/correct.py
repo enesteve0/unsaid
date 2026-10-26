@@ -104,11 +104,18 @@ async def correct_unsupported(
         if not cue.extended:
             cue.end = round(cue.start + report.estimated_seconds, 3)
         await verify_cue(tf, ledger, video, cue, check_times(cue, bible, duration), workdir)
-        if cue.verification is not None and cue.verification.supported:
-            cue.corrected_from = before_text
-            cue.gate_warnings = report.warnings
-            cue.origin = f"{cue.origin} + corrected after the frame check".lstrip(" +")
-            return True
+        after = cue.verification
+        unsupported_before = sum(c.verdict != "supported" for c in v.claims)
+        if after is not None and not any(c.verdict == "contradicted" for c in after.claims):
+            unsupported_after = sum(c.verdict != "supported" for c in after.claims)
+            if after.supported or unsupported_after < unsupported_before:
+                # Strictly better: no contradictions left and fewer unsupported claims. Anything still unverified
+                # keeps the description in review.
+                cue.corrected_from = before_text
+                cue.gate_warnings = report.warnings
+                step = "corrected" if after.supported else "partly corrected"
+                cue.origin = f"{cue.origin} + {step} after the frame check".lstrip(" +")
+                return True
         cue.text, cue.verification, cue.end = before_text, before_verdict, before_end
         return False
 

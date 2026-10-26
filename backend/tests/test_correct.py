@@ -78,8 +78,48 @@ async def test_flagged_cue_is_corrected_and_rechecked(monkeypatch):
     assert cue.tier == "auto" and "corrected after the frame check" in cue.origin
 
 
-async def test_failed_correction_reverts_and_stays_in_review(monkeypatch):
-    fixed, cue = await run(StubTF("Fully mirrored end on the left."), "not_visible", monkeypatch)
+async def test_correction_that_is_still_contradicted_reverts(monkeypatch):
+    fixed, cue = await run(StubTF("Fully mirrored end on the left."), "contradicted", monkeypatch)
     assert fixed == 0
     assert cue.text == "Mirrored end on the right." and cue.corrected_from == ""
     assert cue.tier == "review"
+
+
+async def test_correction_without_contradictions_but_unverified_is_not_kept_unless_better(monkeypatch):
+    # One unsupported claim before (contradicted), one after (not visible): not strictly better, so revert.
+    fixed, cue = await run(StubTF("Fully mirrored end on the left."), "not_visible", monkeypatch)
+    assert fixed == 0 and cue.text == "Mirrored end on the right."
+
+
+async def test_strictly_better_correction_is_kept_but_stays_in_review(monkeypatch):
+    async def fake_verify(tf_, ledger, video, cue, times, workdir):
+        cue.verification = Verification(
+            claims=[ClaimCheck(claim="beam exits", verdict="not_visible")], identifies_person=False
+        )
+
+    monkeypatch.setattr(correct, "verify_cue", fake_verify)
+    cue = flagged_cue()
+    cue.verification = Verification(
+        claims=[
+            ClaimCheck(claim="mirrored end on the right", verdict="contradicted"),
+            ClaimCheck(claim="beam exits", verdict="not_visible"),
+        ],
+        identifies_person=False,
+    )
+    fixed = await correct.correct_unsupported(
+        StubTF("Fully mirrored end on the left; beam exits."),
+        Ledger(),
+        Settings(_env_file=None),
+        video=Path("v.mp4"),
+        cues=[cue],
+        bible=BIBLE,
+        gaps=[GAP],
+        speech=SPEECH,
+        observations={},
+        words=[],
+        context_names=[],
+        duration=60.0,
+        workdir=Path("."),
+    )
+    assert fixed == 1 and cue.text.startswith("Fully mirrored end on the left")
+    assert "partly corrected" in cue.origin and cue.tier == "review"
