@@ -63,6 +63,16 @@ Deadline: **Fri Oct 30, 2026 20:00 Istanbul** (submit by 16:00). Work directly o
   (`scripts/tf_day.sh`), uptime monitor workflow, provenance table, thumbnail, gallery script. One-clip prototype
   (laser, build endpoint): talk-over 0 s vs 52 s one-shot; coverage 1.0 vs 0.5; unsupported 2/6 vs 3/6; 1 of 3
   flagged drafts corrected. gitleaks: no leaks. 49 backend tests, 6 e2e.
+- 2026-10-26 midnight: the USGS clip's lost perception was transient build-endpoint 500s (identical requests pass
+  when repeated). Client: a 5xx retries once after 5 s; a constrained 500 downgrades json_schema for 10 minutes, not
+  for good; every call streams, and timeouts bound the silence between chunks (vision 60 s), so a stall costs about a
+  minute instead of 180 s. Ultra's running token count shows during planning. `REASON_EFFORT=medium` (chat template
+  `medium_effort`) halved Ultra's reasoning on a test prompt; six-clip comparison against full effort pending.
+  FEEDBACK item on json_schema withdrawn (it was intermittent) and replaced with measured findings. 53 backend tests,
+  7 e2e.
+- TF day checks: smoke test now sends the perception shape (clip + still + strict schema, streamed); measure a live
+  2-minute run and fix the Describe page's "a couple of minutes" to the measured time; decide `REASON_EFFORT` from
+  the six-clip comparison on Token Factory.
 - Blocked on owner: NEBIUS_API_KEY (Token Factory), TAVILY_API_KEY, Nebius AI Cloud account for Serverless.
 
 ## Review
