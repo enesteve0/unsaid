@@ -4,6 +4,7 @@ import httpx
 import pytest
 from pydantic import BaseModel
 
+from unsaid import tf_client
 from unsaid.config import Role, Settings
 from unsaid.ledger import Ledger
 from unsaid.schemas import LessonBible
@@ -225,3 +226,31 @@ def test_extract_json_ignores_trailing_characters():
     assert json.loads(extract_json('{"descriptions": [{"t": 1, "text": "x"}]}}')) == {
         "descriptions": [{"t": 1, "text": "x"}]
     }
+
+
+async def test_transient_server_error_is_retried_on_the_same_model(monkeypatch):
+    monkeypatch.setattr(tf_client, "TRANSIENT_PAUSE_SECONDS", 0)
+    tf, seen = make_tf(
+        httpx.Response(500, json={"message": "Failed to generate completions"}),
+        httpx.Response(200, json=completion("ok")),
+    )
+    ledger = Ledger()
+    result = await tf.chat(Role.FAST, [{"role": "user", "content": "x"}], stage="t", ledger=ledger)
+    assert result.content == "ok"
+    assert seen[1]["model"] == seen[0]["model"]
+    assert [e.ok for e in ledger.entries] == [False, True]
+
+
+async def test_json_schema_downgrade_wears_off(monkeypatch):
+    monkeypatch.setattr(tf_client, "RETIRED_SECONDS", 0)
+    tf, seen = make_tf(
+        httpx.Response(500, json={"message": "Failed to generate completions"}),
+        httpx.Response(200, json=completion('{"value": 3}')),
+        httpx.Response(200, json=completion('{"value": 4}')),
+    )
+    for content in ("x", "y"):
+        await tf.chat(
+            Role.CLASSIFY, [{"role": "user", "content": content}], stage="t", ledger=Ledger(), schema=Answer
+        )
+    # A single 500 is not proof that the deployment rejects json_schema: constrained decoding comes back.
+    assert ["response_format" in body for body in seen] == [True, False, True]

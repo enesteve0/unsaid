@@ -10,7 +10,8 @@ role's model chain and handles the behaviours we measured on Token Factory:
 * `response_format` is never combined with `tools`.
 * Structured answers are validated with pydantic and repaired once before falling back to the next model.
 * 402 stops everything (credit exhausted); 401/403 tries the backup key; 404/409/410 retires a model for a while;
-  429 honours Retry-After once; 5xx/529/timeouts open a short circuit breaker.
+  429 honours Retry-After once; 5xx and timeouts are retried once after a pause (gateways fail in short bursts),
+  then open a short circuit breaker.
 
 Every attempt, successful or not, is written to the run's ledger.
 """
@@ -51,6 +52,7 @@ DEFAULT_MAX_TOKENS = {
 }
 BREAKER_SECONDS = 60.0
 RETIRED_SECONDS = 600.0
+TRANSIENT_PAUSE_SECONDS = 2.0
 MAX_RETRY_AFTER = 30.0
 
 
@@ -184,7 +186,7 @@ class TokenFactory:
         self._semaphores = {role: asyncio.Semaphore(n) for role, n in CONCURRENCY.items()}
         self._retired_until: dict[str, float] = {}
         self._breaker_until: dict[str, float] = {}
-        self._json_schema_ok: dict[str, bool] = {}
+        self._unconstrained_until: dict[str, float] = {}
         # Development only: replay identical requests from disk (TF_CACHE_DIR). Never set in production.
         cache_dir = os.getenv("TF_CACHE_DIR")
         self._cache_dir = Path(cache_dir) if cache_dir else None
@@ -357,7 +359,7 @@ class TokenFactory:
         repaired = False
         rate_limited_once = False
         key_switched = False
-        transport_retried = False
+        transient_retried = False
         grown = False
         budget_lowered = False
         for _attempt in range(5):
@@ -375,7 +377,11 @@ class TokenFactory:
                 kwargs["tools"] = tools
                 if tool_choice is not None:
                     kwargs["tool_choice"] = tool_choice
-            constrained = schema is not None and constrain and self._json_schema_ok.get(model, True)
+            constrained = (
+                schema is not None
+                and constrain
+                and self._unconstrained_until.get(model, 0) <= time.monotonic()
+            )
             if constrained:
                 kwargs["response_format"] = {
                     "type": "json_schema",
@@ -429,8 +435,14 @@ class TokenFactory:
                     continue
                 if constrained and status >= 500:
                     # Some deployments reject json_schema decoding outright; the schema is also in the prompt,
-                    # so retry unconstrained and remember the choice for this model.
-                    self._json_schema_ok[model] = False
+                    # so retry unconstrained and keep this model unconstrained for a while (not for good: the
+                    # 500 may have been a transient one).
+                    constrain = False
+                    self._unconstrained_until[model] = time.monotonic() + RETIRED_SECONDS
+                    continue
+                if status >= 500 and not transient_retried:
+                    transient_retried = True
+                    await asyncio.sleep(TRANSIENT_PAUSE_SECONDS)
                     continue
                 self._breaker_until[model] = time.monotonic() + BREAKER_SECONDS
                 raise
@@ -438,9 +450,9 @@ class TokenFactory:
                 entry.ok, entry.error = False, type(exc).__name__
                 entry.latency_ms = int((time.perf_counter() - started) * 1000)
                 ledger.add(entry)
-                if not transport_retried:
-                    transport_retried = True
-                    await asyncio.sleep(2)
+                if not transient_retried:
+                    transient_retried = True
+                    await asyncio.sleep(TRANSIENT_PAUSE_SECONDS)
                     continue
                 self._breaker_until[model] = time.monotonic() + BREAKER_SECONDS
                 raise
