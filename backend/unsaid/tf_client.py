@@ -37,7 +37,9 @@ from pydantic import BaseModel, ValidationError
 from .config import Role, Settings
 from .ledger import Ledger, LedgerEntry
 
-TIMEOUTS = {Role.VISION: 180.0, Role.REASON: 360.0, Role.FAST: 60.0, Role.CLASSIFY: 90.0}
+# Calls stream (tool calls excepted), so a timeout is the longest silence allowed before the next chunk, the first
+# one included: a stalled request fails within a minute instead of holding a run for the whole budget.
+TIMEOUTS = {Role.VISION: 60.0, Role.REASON: 120.0, Role.FAST: 30.0, Role.CLASSIFY: 30.0}
 CONCURRENCY = {Role.VISION: 4, Role.REASON: 2, Role.FAST: 8, Role.CLASSIFY: 4}
 DEFAULT_MAX_TOKENS = {
     # (role, thinking) -> max_tokens. Reasoning tokens count against max_tokens.
@@ -52,7 +54,7 @@ DEFAULT_MAX_TOKENS = {
 }
 BREAKER_SECONDS = 60.0
 RETIRED_SECONDS = 600.0
-TRANSIENT_PAUSE_SECONDS = 2.0
+TRANSIENT_PAUSE_SECONDS = 5.0
 MAX_RETRY_AFTER = 30.0
 
 
@@ -202,7 +204,7 @@ class TokenFactory:
         return self._retired_until.get(model, 0) <= now and self._breaker_until.get(model, 0) <= now
 
     async def _request(self, kwargs: dict[str, Any], stream: bool) -> _Reply:
-        """One HTTP exchange. Long reasoning calls stream, so gateways never see an idle connection."""
+        """One HTTP exchange. Streamed, gateways never see an idle connection and a stall is caught early."""
         if not stream:
             raw = await self._client.chat.completions.with_raw_response.create(**kwargs)
             completion = raw.parse()
@@ -405,7 +407,7 @@ class TokenFactory:
             try:
                 reply = self._cache_get(cache_key) if cache_key else None
                 if reply is None:
-                    reply = await self._request(kwargs, stream=role is Role.REASON and not tools)
+                    reply = await self._request(kwargs, stream=not tools)
                     if cache_key and reply.content:
                         self._cache_put(cache_key, reply, int((time.perf_counter() - started) * 1000))
                 else:

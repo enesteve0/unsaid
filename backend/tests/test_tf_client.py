@@ -34,14 +34,35 @@ def completion(
     }
 
 
+def as_stream(response: httpx.Response) -> httpx.Response:
+    """The server-sent events a streamed request receives for the same chat.completion body."""
+    data = response.json()
+    choice = data["choices"][0]
+    chunk = {"id": data["id"], "object": "chat.completion.chunk", "created": 0, "model": data["model"]}
+    events = [
+        {
+            **chunk,
+            "choices": [{"index": 0, "delta": choice["message"], "finish_reason": choice["finish_reason"]}],
+        },
+        {**chunk, "choices": [], "usage": data["usage"]},
+    ]
+    body = "".join(f"data: {json.dumps(e)}\n\n" for e in events) + "data: [DONE]\n\n"
+    return httpx.Response(200, text=body, headers={"content-type": "text/event-stream"})
+
+
 def make_tf(*responses):
-    """TokenFactory wired to a mock transport that replays `responses` in order and records requests."""
+    """TokenFactory wired to a mock transport that replays `responses` in order and records requests. A JSON
+    completion queued for a streamed request is replayed as events."""
     queue, seen = list(responses), []
 
     def handler(request: httpx.Request) -> httpx.Response:
         assert str(request.url) == URL
-        seen.append(json.loads(request.content))
-        return queue.pop(0)
+        body = json.loads(request.content)
+        seen.append(body)
+        response = queue.pop(0)
+        if body.get("stream") and response.headers.get("content-type") == "application/json":
+            return as_stream(response) if response.status_code == 200 else response
+        return response
 
     client = httpx.AsyncClient(transport=httpx.MockTransport(handler))
     settings = Settings(nebius_api_key="test-key", _env_file=None)
@@ -59,6 +80,7 @@ async def test_fast_call_turns_thinking_off_and_records_ledger():
     body = seen[0]
     assert body["model"] == "nvidia/Nemotron-3_5-Lightning"
     assert body["chat_template_kwargs"] == {"enable_thinking": False}
+    assert body["stream"] is True  # a stalled call is caught by the read timeout, not after the whole budget
     assert result.content == "hello"
     assert ledger.entries[0].prompt_tokens == 100 and ledger.entries[0].cached_tokens == 40
     assert ledger.entries[0].ok
