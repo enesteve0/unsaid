@@ -256,9 +256,10 @@ async def run_pipeline(
 
     allowed_names = verified_names(bible, observations, transcript.words, ctx.names)
     check_counts: dict[str, int] = {}
+    moment_times = {m.id: m.t for m in moments}
 
     async def check() -> None:
-        await verify_all(tf, ledger, video, cues, bible, info.duration, allowed_names, workdir)
+        await verify_all(tf, ledger, video, cues, bible, info.duration, allowed_names, workdir, moment_times)
         check_counts["flagged"] = sum(
             1 for c in cues if c.verification is not None and not c.verification.supported
         )
@@ -276,6 +277,7 @@ async def run_pipeline(
             context_names=ctx.names,
             duration=info.duration,
             workdir=workdir,
+            moment_times=moment_times,
         )
 
     await stage("check", check)

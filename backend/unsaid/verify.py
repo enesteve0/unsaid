@@ -68,16 +68,22 @@ def assign_tier(cue: Cue, allowed_names: list[str]) -> None:
         cue.tier = "auto"
 
 
-def check_times(cue: Cue, bible: LessonBible, duration: float) -> list[float]:
-    """Frames where the cue's facts are visible: each fact's time plus one second later, at most three."""
-    facts = {f.id: f for f in bible.visual_facts}
-    times: list[float] = []
-    for fid in cue.fact_ids:
-        if fid in facts:
-            times += [facts[fid].t + 0.3, facts[fid].t + 1.3]
-    times = times or [cue.start]
-    clamped = sorted({round(min(max(t, 0.0), max(duration - 0.1, 0.0)), 2) for t in times})
-    return clamped[:3]
+def check_times(
+    cue: Cue, bible: LessonBible, duration: float, moment_times: dict[str, float] | None = None
+) -> list[float]:
+    """At most three frames to check a cue against. First where the speaker pointed at what the cue describes
+    (timed by speech recognition, so reliable), then where each fact became visible (the planner's estimate, which
+    can be seconds off), then one second later."""
+    facts = [f for f in bible.visual_facts if f.id in cue.fact_ids]
+    moment_times = moment_times or {}
+    times = [moment_times[f.moment_id] + 0.3 for f in facts if f.moment_id in moment_times]
+    times += [t for f in facts for t in (f.t + 0.3, f.t + 1.3)]
+    picked: list[float] = []
+    for t in times or [cue.start]:
+        t = round(min(max(t, 0.0), max(duration - 0.1, 0.0)), 2)
+        if t not in picked:
+            picked.append(t)
+    return sorted(picked[:3])
 
 
 async def verify_all(
@@ -89,10 +95,11 @@ async def verify_all(
     duration: float,
     allowed_names: list[str],
     workdir: Path,
+    moment_times: dict[str, float] | None = None,
 ) -> None:
     async def one(cue: Cue) -> None:
         try:
-            await verify_cue(tf, ledger, video, cue, check_times(cue, bible, duration), workdir)
+            await verify_cue(tf, ledger, video, cue, check_times(cue, bible, duration, moment_times), workdir)
         except (CreditExhausted, AuthFailure):
             raise
         except Exception:
