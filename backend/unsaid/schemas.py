@@ -8,7 +8,7 @@ from __future__ import annotations
 
 from typing import Literal
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, computed_field
 
 
 class Word(BaseModel):
@@ -133,18 +133,26 @@ class CueText(BaseModel):
 # ---- Verifier (Super VL) -------------------------------------------------------------------------------------------
 
 
+class ClaimCheck(BaseModel):
+    claim: str
+    verdict: Literal["supported", "contradicted", "not_visible"]
+
+
 class Verification(BaseModel):
-    supported: bool
-    unsupported_claims: list[str]
-    identifies_person: bool
+    claims: list[ClaimCheck] = Field(description="Every factual claim in the description, checked one by one")
+    identifies_person: bool = Field(
+        description="True if the description names a person or says who someone is"
+    )
 
+    @computed_field  # type: ignore[prop-decorator]
+    @property
+    def supported(self) -> bool:
+        return all(c.verdict == "supported" for c in self.claims)
 
-class CueVerification(Verification):
-    cue_id: str
-
-
-class VerificationBatch(BaseModel):
-    items: list[CueVerification]
+    @computed_field  # type: ignore[prop-decorator]
+    @property
+    def unsupported_claims(self) -> list[str]:
+        return [f"{c.claim} ({c.verdict.replace('_', ' ')})" for c in self.claims if c.verdict != "supported"]
 
 
 class TipText(BaseModel):

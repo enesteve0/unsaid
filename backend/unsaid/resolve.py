@@ -17,13 +17,18 @@ from .segments import said_between
 from .tf_client import TokenFactory
 
 SYSTEM = (
-    "You help an audio describer. A speaker in a lecture video sometimes points at something on screen instead of "
-    "saying it ('as you can see, this curve drops'). For each candidate phrase, decide whether it refers to "
-    "something visible. If it does, name the target using the label of a visual element from the segment report, "
-    "and write `unsaid`: the visual information a blind listener misses, in at most 20 words, using only facts "
-    "from the segment report. If the phrase is not a reference to something visible (for example 'in the right "
-    "polarity' or 'look at what happens next'), set refers_to_visual to false and leave target and unsaid empty. "
-    "confidence is between 0 and 1."
+    "You help an audio describer. A speaker in a lecture video sometimes relies on the viewer seeing something "
+    "instead of saying it. For each candidate phrase, decide whether, at that moment, the speaker refers to "
+    "something currently visible and the meaning depends on seeing it.\n"
+    "True examples: 'as you can see, this curve drops', 'the data has been plotted on the screen behind me', "
+    "'look at this point here', 'these values on the rocker arms'.\n"
+    "False examples: figures of speech ('in the right polarity'), hypothetical or later actions ('students could "
+    "look at the graph afterwards'), 'let's look at what happens' when nothing specific is shown, and anything the "
+    "speech already states in full.\n"
+    "When true: target is the label of the visual element from the segment report, and unsaid is the visual "
+    "information itself (values, shape, labels, what changes), at most 25 words, using only facts from the report. "
+    "Never write that something 'is visible' or 'is displayed' without saying what it shows. When false, leave "
+    "target and unsaid empty. confidence is between 0 and 1."
 )
 
 

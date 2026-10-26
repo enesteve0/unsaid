@@ -353,6 +353,7 @@ class TokenFactory:
         rate_limited_once = False
         key_switched = False
         transport_retried = False
+        grown = False
         for _attempt in range(5):
             kwargs: dict[str, Any] = {
                 "model": model,
@@ -462,6 +463,11 @@ class TokenFactory:
                 except ValidationError as exc:
                     entry.ok, entry.error = False, "schema validation failed"
                     ledger.add(entry)
+                    if finish == "length" and not grown:
+                        # Truncated, not malformed: ask again with room to finish instead of "repairing".
+                        grown = True
+                        max_tokens = 2 * (max_tokens or DEFAULT_MAX_TOKENS[(role, use_thinking)])
+                        continue
                     if repaired:
                         raise
                     repaired = True

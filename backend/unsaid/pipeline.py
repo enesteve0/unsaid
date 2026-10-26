@@ -238,10 +238,12 @@ async def run_pipeline(
         cue.sources = ctx.sources
 
     allowed_names = verified_names(bible, observations, transcript.words, ctx.names)
-    await stage("check", lambda: verify_all(tf, ledger, cues, observations, allowed_names, workdir))
+    await stage(
+        "check", lambda: verify_all(tf, ledger, video, cues, bible, info.duration, allowed_names, workdir)
+    )
 
     async def deliver():
-        tips = await lecturer_tips(tf, ledger, moments, resolutions)
+        tips = await lecturer_tips(tf, ledger, moments, resolutions, bible)
         (workdir / "descriptions.vtt").write_text(export.descriptions_vtt(cues))
         (workdir / "captions.vtt").write_text(export.captions_vtt(transcript.words))
         (workdir / "captions.srt").write_text(export.captions_srt(transcript.words))

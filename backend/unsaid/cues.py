@@ -25,12 +25,13 @@ EXTENDED_WORDS = 30
 SYSTEM = """You write one audio description cue for a blind student watching a lecture video. The cue is spoken \
 by a synthetic voice in a pause in the lecture.
 Rules:
-- At most the given number of words. Shorter is better.
+- Describe only the facts given, in order of importance. Never add details that are not in the facts.
+- The on-screen text is only for copying spellings and numbers exactly; do not describe it unless a fact does.
+- At most max_words words. Shorter is better; drop the least important detail first.
 - Present tense, objective, concrete: what is visible, never an explanation.
 - Start with the thing itself ("Line chart: ...", "Slide: ...", "The presenter presses ...").
 - Never say "we see", "you can see", "the image shows" or "in this video".
-- Use digits for numbers and copy them exactly as printed. Do not add numbers that are not in the facts.
-- Name people, products and places only with names from the allowed names list; otherwise describe them.
+- Use digits for numbers. Name things only with names from allowed_names; otherwise describe them.
 Reply with JSON: {"text": "..."}."""
 
 
@@ -112,7 +113,7 @@ async def write_cue(
         "max_words": budget,
         "allowed_names": allowed_names[:60],
         "on_screen_text": context.on_screen_text,
-        "style_notes": bible.style_notes,
+        "how_to_read_symbols": bible.notation,
     }
     messages = [
         {"role": "system", "content": SYSTEM},

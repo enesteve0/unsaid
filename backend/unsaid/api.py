@@ -13,7 +13,7 @@ import secrets
 import time
 import uuid
 from pathlib import Path
-from typing import Any
+from typing import Annotated, Any
 
 from fastapi import FastAPI, File, Form, HTTPException, Request, Response, UploadFile
 from fastapi.responses import FileResponse, JSONResponse, StreamingResponse
@@ -84,7 +84,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
                 await refresh_models()
                 store.purge_uploads()
 
-        asyncio.create_task(housekeeping())
+        app.state.housekeeping = asyncio.create_task(housekeeping())
 
     @app.middleware("http")
     async def session_cookie(request: Request, call_next):
@@ -153,25 +153,23 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     @app.post("/api/runs")
     async def create_run(
         request: Request,
-        file: UploadFile | None = File(None),
-        sample_id: str | None = Form(None),
-        title: str = Form("My lecture"),
-        source_url: str | None = Form(None),
+        file: Annotated[UploadFile | None, File()] = None,
+        sample_id: Annotated[str | None, Form()] = None,
+        title: Annotated[str, Form()] = "My lecture",
+        source_url: Annotated[str | None, Form()] = None,
     ) -> dict[str, Any]:
         if settings.demo_mode == "recorded" or queue.credit_exhausted:
             raise HTTPException(
                 503, "Live describing is paused right now. The recorded examples show real runs."
             )
         lane, sid, ip = lane_of(request), request.state.sid, client_ip(request)
-        if lane == "public":
-            if (
-                store.count_recent(session=sid, seconds=600) >= 3
-                or store.count_recent(ip=ip, seconds=3600) >= 5
-            ):
-                raise HTTPException(
-                    429,
-                    "You have reached the limit of live runs for now. Try again in a few minutes, or explore the examples.",
-                )
+        if lane == "public" and (
+            store.count_recent(session=sid, seconds=600) >= 3 or store.count_recent(ip=ip, seconds=3600) >= 5
+        ):
+            raise HTTPException(
+                429,
+                "You have reached the limit of live runs for now. Try again in a few minutes, or explore the examples.",
+            )
         daily_cap = settings.judge_daily_usd if lane == "judge" else settings.public_daily_usd
         if store.spend_today(lane) >= daily_cap or store.spend_this_month() >= settings.monthly_ceiling_usd:
             raise HTTPException(

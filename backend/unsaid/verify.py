@@ -1,62 +1,54 @@
-"""Stage 8, Check: Nemotron 3.5 Super VL re-watches each segment and checks every cue against the frames.
+"""Stage 8, Check: Nemotron 3.5 Super VL re-reads the frames and checks every claim in every cue.
 
-The writer only saw text facts; the checker sees the pixels again. One call per segment covers all of that
-segment's cues. The verdict, together with the code gates, sets each cue's tier:
+The writer only saw text facts; the checker sees the pixels again, at the moments those facts become visible.
+Each claim is judged supported, contradicted or not visible. Together with the code gates this sets the tier:
 
-* auto: passed every gate, supported by the frames, identifies no one;
-* review: a gate warning, a failed gate that repairs could not fix, or a claim the frames do not support;
+* auto: every gate passed and every claim is supported by the frames;
+* review: a gate warning, a gate failure that repairs could not fix, or any claim that is not supported;
 * never: identifies a person who is not named on screen, in speech or on the source page.
 """
 
 from __future__ import annotations
 
 import asyncio
-import json
+from pathlib import Path
 
 from . import media
 from .config import Role
 from .ledger import Ledger
-from .perceive import Observation
-from .schemas import Cue, VerificationBatch
-from .segments import segment_at
-from .tf_client import TokenFactory
+from .schemas import Cue, LessonBible, Verification
+from .tf_client import AuthFailure, CreditExhausted, TokenFactory
 
 SYSTEM = (
-    "You check audio descriptions written for a lecture video. For each cue, compare every claim with the clip and "
-    "the frames. supported is false if any claim is not visible (wrong number, wrong colour, invented object, "
-    "wrong direction). List each unsupported claim briefly. identifies_person is true if the cue names a person "
-    "or states who someone is; describing appearance or action is fine."
+    "You check one audio description written for a lecture video against frames from that moment. Split the "
+    "description into its factual claims and judge each one: supported (clearly visible), contradicted (the frames "
+    "show something different: wrong number, colour, direction or object) or not_visible (cannot be seen in these "
+    "frames). identifies_person is true if the description names a person or says who someone is; describing "
+    "appearance or action is fine."
 )
 
 
-async def verify_segment(
-    tf: TokenFactory, ledger: Ledger, obs: Observation, cues: list[Cue], workdir
+async def verify_cue(
+    tf: TokenFactory, ledger: Ledger, video: Path, cue: Cue, times: list[float], workdir: Path
 ) -> None:
-    clip = workdir / f"{obs.segment.id}.mp4"
+    stills = [await media.still(video, t, workdir / f"check_{cue.id}_{i}.jpg") for i, t in enumerate(times)]
     content = [
         {
             "type": "text",
-            "text": "Cues to check:\n"
-            + json.dumps(
-                [{"cue_id": c.id, "time": c.start, "text": c.text} for c in cues], ensure_ascii=False
-            ),
+            "text": f'Description (spoken at {cue.start:.1f}s): "{cue.text}"\n'
+            f"Frames at {', '.join(f'{t:.1f}s' for t in times)}.",
         },
-        *([{"type": "video_url", "video_url": {"url": media.data_url(clip)}}] if clip.exists() else []),
-        *[{"type": "image_url", "image_url": {"url": media.data_url(p)}} for _, p in obs.stills],
+        *[{"type": "image_url", "image_url": {"url": media.data_url(p)}} for p in stills],
     ]
     result = await tf.chat(
         Role.VISION,
         [{"role": "system", "content": SYSTEM}, {"role": "user", "content": content}],
         stage="check",
         ledger=ledger,
-        schema=VerificationBatch,
-        max_tokens=1500,
+        schema=Verification,
+        max_tokens=1000,
     )
-    verdicts = {v.cue_id: v for v in result.parsed.items}  # type: ignore[union-attr]
-    for cue in cues:
-        verdict = verdicts.get(cue.id)
-        if verdict is not None:
-            cue.verification = verdict
+    cue.verification = result.parsed  # type: ignore[assignment]
 
 
 def assign_tier(cue: Cue, allowed_names: list[str]) -> None:
@@ -70,20 +62,36 @@ def assign_tier(cue: Cue, allowed_names: list[str]) -> None:
         cue.tier = "auto"
 
 
+def check_times(cue: Cue, bible: LessonBible, duration: float) -> list[float]:
+    """Frames where the cue's facts are visible: each fact's time plus one second later, at most three."""
+    facts = {f.id: f for f in bible.visual_facts}
+    times: list[float] = []
+    for fid in cue.fact_ids:
+        if fid in facts:
+            times += [facts[fid].t + 0.3, facts[fid].t + 1.3]
+    times = times or [cue.start]
+    clamped = sorted({round(min(max(t, 0.0), max(duration - 0.1, 0.0)), 2) for t in times})
+    return clamped[:3]
+
+
 async def verify_all(
     tf: TokenFactory,
     ledger: Ledger,
+    video: Path,
     cues: list[Cue],
-    observations: dict[str, Observation],
+    bible: LessonBible,
+    duration: float,
     allowed_names: list[str],
-    workdir,
+    workdir: Path,
 ) -> None:
-    segments = [o.segment for o in observations.values()]
-    by_segment: dict[str, list[Cue]] = {}
-    for cue in cues:
-        by_segment.setdefault(segment_at(cue.start, segments).id, []).append(cue)
-    await asyncio.gather(
-        *(verify_segment(tf, ledger, observations[sid], group, workdir) for sid, group in by_segment.items())
-    )
+    async def one(cue: Cue) -> None:
+        try:
+            await verify_cue(tf, ledger, video, cue, check_times(cue, bible, duration), workdir)
+        except (CreditExhausted, AuthFailure):
+            raise
+        except Exception:
+            cue.verification = None
+
+    await asyncio.gather(*(one(c) for c in cues))
     for cue in cues:
         assign_tier(cue, allowed_names)

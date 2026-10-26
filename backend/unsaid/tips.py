@@ -10,13 +10,14 @@ import json
 
 from .config import Role
 from .ledger import Ledger
-from .schemas import PointerResolution, PointingMoment, Tip, TipBatch
+from .schemas import LessonBible, PointerResolution, PointingMoment, Tip, TipBatch
 from .tf_client import TokenFactory
 
 SYSTEM = (
-    "You coach lecturers to make recordings accessible to blind students. For each moment, the lecturer pointed at "
-    "something instead of saying it. Rewrite what they said so the words carry the visual information, in the "
-    "lecturer's own voice, at most 30 words. Use only the facts given."
+    "You coach lecturers to make recordings accessible to blind students. At each moment the lecturer pointed at "
+    "something instead of saying it. Rewrite the sentence so the words themselves carry the visual information "
+    "(values, shapes, labels, what changes), in the lecturer's own voice, at most 35 words, using only the facts "
+    "given. If the facts add nothing concrete, return an empty suggestion."
 )
 
 
@@ -25,11 +26,22 @@ async def lecturer_tips(
     ledger: Ledger,
     moments: list[PointingMoment],
     resolutions: dict[str, PointerResolution],
+    bible: LessonBible,
 ) -> list[Tip]:
+    facts_by_moment: dict[str, list[str]] = {}
+    for fact in bible.visual_facts:
+        if fact.moment_id:
+            facts_by_moment.setdefault(fact.moment_id, []).append(fact.fact)
     items = [
-        {"moment_id": m.id, "said": m.sentence, "unsaid": resolutions[m.id].unsaid}
+        {
+            "moment_id": m.id,
+            "said": m.sentence,
+            "visual_facts": [*facts_by_moment.get(m.id, []), resolutions[m.id].unsaid],
+        }
         for m in moments
-        if m.id in resolutions and resolutions[m.id].refers_to_visual and resolutions[m.id].unsaid
+        if m.id in resolutions
+        and resolutions[m.id].refers_to_visual
+        and (facts_by_moment.get(m.id) or resolutions[m.id].unsaid)
     ]
     if not items:
         return []
@@ -53,5 +65,5 @@ async def lecturer_tips(
             suggestion=t.suggestion,
         )
         for t in result.parsed.items  # type: ignore[union-attr]
-        if t.moment_id in by_moment
+        if t.moment_id in by_moment and t.suggestion.strip()
     ]

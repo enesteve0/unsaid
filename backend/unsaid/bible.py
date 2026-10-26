@@ -29,9 +29,9 @@ transcript (source "speech") or listed as verified context (source "context"). N
 3. notation: symbols and terms with how to read them aloud.
 4. visual_facts: what a sighted student gets from the picture that the speech does not say. id f1, f2, ...; t is \
 when the fact becomes visible (seconds from the start of the video); fact is at most 25 words, objective, present \
-tense, built only from the visual reports; importance 3 = needed to follow the lecture, 2 = helpful, 1 = nice to \
+tense, specific (values, labels, shapes, what changes), built only from the visual reports; importance 3 = needed to follow the lecture, 2 = helpful, 1 = nice to \
 have; already_spoken is true when the speech already conveys it; moment_id is the pointing moment it resolves, or "".
-5. cue_plan: assign facts to silences. Prefer the first silence at or after the fact's time, within about 10 \
+5. cue_plan: assign facts to silences, at most one plan per silence. Prefer the first silence at or after the fact's time, within about 10 \
 seconds. Respect each silence's word budget: everything assigned to it must fit. Most important facts first; drop \
 importance-1 facts when space is short. If an importance-3 fact has no silence that fits, use gap_id "extended" and \
 the player will pause the video for it. Never plan facts that are already_spoken. Every pointing moment that refers \
