@@ -1,0 +1,46 @@
+[project]
+name = "unsaid"
+version = "0.1.0"
+description = "Audio description for everything a lecture shows but never says."
+license = "MIT"
+requires-python = ">=3.12,<3.13"
+dependencies = [
+    "fastapi>=0.115",
+    "httpx>=0.27",
+    "numpy>=1.26",
+    "openai>=1.55",
+    "pillow>=10",
+    "pydantic>=2.9",
+    "pydantic-settings>=2.6",
+    "python-multipart>=0.0.12",
+    "pyyaml>=6",
+    "tavily-python>=0.7",
+    "uvicorn[standard]>=0.32",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["unsaid"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+asyncio_mode = "auto"
+addopts = "-q"
+
+[tool.ruff]
+line-length = 110
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP", "SIM", "RUF"]
+ignore = ["E501", "RUF001"]  # gates match Unicode minus signs and curly quotes on purpose
+
+[dependency-groups]
+dev = [
+    "pytest>=8",
+    "pytest-asyncio>=0.24",
+    "ruff>=0.7",
+]
