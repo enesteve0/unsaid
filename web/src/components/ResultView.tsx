@@ -70,7 +70,6 @@ export function ResultView({ result: initial, media, runId }: { result: RunResul
               role="tab"
               id={`tab-${t.key}`}
               aria-selected={tab === t.key}
-              aria-pressed={tab === t.key}
               aria-controls={`panel-${t.key}`}
               onClick={() => setTab(t.key)}
             >
