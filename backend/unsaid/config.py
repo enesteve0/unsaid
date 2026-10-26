@@ -65,6 +65,9 @@ class Settings(BaseSettings):
 
     data_dir: Path = Path("data")
     samples_dir: Path = Path("../samples")
+    backlog_dir: Path = Path(
+        "data/backlog"
+    )  # where the Serverless Job writes digest.json (a mounted bucket in production)
     demo_mode: Literal["live", "recorded"] = "live"
 
     # Audio-description timing: plan at 2.5 words/s (150 wpm); describers avoid the 170-180 wpm of normal speech.

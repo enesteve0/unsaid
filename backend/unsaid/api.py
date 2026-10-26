@@ -331,6 +331,15 @@ def create_app(settings: Settings | None = None) -> FastAPI:
             "estimated_seconds": round(report.estimated_seconds, 2),
         }
 
+    # ---- overnight backlog (Nebius Serverless Job output) -------------------------------------------------------
+
+    @app.get("/api/backlog")
+    async def backlog() -> JSONResponse:
+        path = settings.backlog_dir / "digest.json"
+        return JSONResponse(
+            {"available": True, **json.loads(path.read_text())} if path.exists() else {"available": False}
+        )
+
     # ---- evaluation report -------------------------------------------------------------------------------------
 
     @app.get("/api/eval")

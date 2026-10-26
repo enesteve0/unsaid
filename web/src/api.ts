@@ -24,6 +24,17 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
   return res.json() as Promise<T>
 }
 
+export interface Backlog {
+  available: boolean
+  finished_at?: string
+  seconds?: number
+  spent_usd?: number
+  budget_usd?: number
+  ready?: number
+  need_review?: number
+  lectures?: { id: string; title: string; status: string; cues?: number; auto?: number; review?: number; cost_usd?: number; reason?: string }[]
+}
+
 export interface Health {
   ok: boolean
   provider: string
@@ -56,6 +67,7 @@ export const api = {
       { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ text }) },
     ),
   evaluation: () => request<Record<string, unknown>>('/api/eval'),
+  backlog: () => request<Backlog>('/api/backlog'),
 }
 
 export function sampleMedia(id: string): MediaBase {

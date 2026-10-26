@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { api, type Health } from '../api'
+import { BacklogPanel } from '../components/BacklogPanel'
 import { RunProgress } from '../components/RunProgress'
 import type { SampleInfo } from '../types'
 
@@ -168,6 +169,7 @@ export function Describe() {
                 ))}
               </div>
             </div>
+            <BacklogPanel />
             <details className="panel">
               <summary>Have an access code?</summary>
               <form onSubmit={unlock} className="field">
