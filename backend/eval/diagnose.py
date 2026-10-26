@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import re
 from collections import Counter
 from pathlib import Path
 
@@ -22,7 +23,8 @@ def trace(label: dict, result: dict, verdict: str) -> tuple[str, list[str]]:
     moments = [m for m in result["moments"] if abs(m["t"] - t) <= NEAR]
     resolutions = [result["resolutions"].get(m["id"]) for m in moments]
     visual = [m for m, r in zip(moments, resolutions, strict=True) if r and r["refers_to_visual"]]
-    facts = [f for f in result["bible"]["visual_facts"] if f["moment_id"] in {m["id"] for m in moments}]
+    ids = {m["id"] for m in moments}
+    facts = [f for f in result["bible"]["visual_facts"] if ids & set(re.split(r"[,;\s]+", f["moment_id"]))]
     fact_ids = {f["id"] for f in facts}
     plans = [p for p in result["bible"]["cue_plan"] if fact_ids & set(p["fact_ids"])]
     cues = [

@@ -259,7 +259,7 @@ async def write_cue(
         text=text,
         extended=extended,
         fact_ids=[f.id for f in facts],
-        moment_ids=[f.moment_id for f in facts if f.moment_id],
+        moment_ids=list(dict.fromkeys(m for f in facts for m in f.moment_ids)),
         gate_failures=report.failures,
         gate_warnings=report.warnings,
         repairs=repairs,
@@ -291,7 +291,7 @@ async def write_all(
         facts = [facts_by_id[i] for i in plan.fact_ids if i in facts_by_id]
         if not facts:
             continue
-        pointed = [moment_times[f.moment_id] for f in facts if f.moment_id in moment_times]
+        pointed = [moment_times[m] for f in facts for m in f.moment_ids if m in moment_times]
         anchor = min(pointed) if pointed else min(f.t for f in facts)
         gap = gaps_by_id.get(plan.gap_id)
         placed.append(_Placement(n, plan, facts, anchor, gap, bool(pointed) and gap is not None))

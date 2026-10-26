@@ -6,6 +6,7 @@ because strict JSON-schema decoding requires all properties.
 
 from __future__ import annotations
 
+import re
 from typing import Literal
 
 from pydantic import BaseModel, Field, computed_field
@@ -107,6 +108,11 @@ class VisualFact(BaseModel):
     importance: int = Field(ge=1, le=3, description="3 = needed to follow the lecture")
     already_spoken: bool
     moment_id: str = Field(description="Pointing moment this fact resolves, or empty")
+
+    @property
+    def moment_ids(self) -> list[str]:
+        """Ultra sometimes writes several ids into moment_id ("p2,p3")."""
+        return [m for m in re.split(r"[,;\s]+", self.moment_id) if m]
 
 
 class CuePlan(BaseModel):

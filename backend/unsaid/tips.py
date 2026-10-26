@@ -36,8 +36,8 @@ async def lecturer_tips(
 ) -> list[Tip]:
     facts_by_moment: dict[str, list[str]] = {}
     for fact in bible.visual_facts:
-        if fact.moment_id:
-            facts_by_moment.setdefault(fact.moment_id, []).append(fact.fact)
+        for moment_id in fact.moment_ids:
+            facts_by_moment.setdefault(moment_id, []).append(fact.fact)
     items = [
         {
             "moment_id": m.id,

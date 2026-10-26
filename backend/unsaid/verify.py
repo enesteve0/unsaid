@@ -76,7 +76,7 @@ def check_times(
     can be seconds off), then one second later."""
     facts = [f for f in bible.visual_facts if f.id in cue.fact_ids]
     moment_times = moment_times or {}
-    times = [moment_times[f.moment_id] + 0.3 for f in facts if f.moment_id in moment_times]
+    times = [moment_times[m] + 0.3 for f in facts for m in f.moment_ids if m in moment_times]
     times += [t for f in facts for t in (f.t + 0.3, f.t + 1.3)]
     picked: list[float] = []
     for t in times or [cue.start]:
