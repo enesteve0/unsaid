@@ -21,6 +21,7 @@ from .schemas import Interval
 NUMBER = re.compile(r"(?<![\w.])[-+−]?\d[\d,]*(?:\.\d+)?%?")
 WORD = re.compile(r"[A-Za-z][A-Za-z'’-]*|\d[\d,]*(?:\.\d+)?%?")
 PAUSE_PER_MARK = 0.12  # seconds a voice pauses at a comma, colon, semicolon or dash
+EXTENDED_WORDS = 30  # longest extended description (the video is paused while it plays)
 
 BANNED = {
     "we see": re.compile(r"\bwe (?:can |now )?see\b", re.I),
@@ -269,6 +270,10 @@ def check_cue(
             )
         if overlaps(start, end, speech, guard):
             report.failures.append("talks_over_speech")
+    elif spoken_word_count(text) > EXTENDED_WORDS:
+        report.failures.append(
+            f"too_long: {spoken_word_count(text):.0f} spoken words, an extended description allows {EXTENDED_WORDS}"
+        )
     for label, pattern in BANNED.items():
         if pattern.search(text):
             report.failures.append(f"banned_phrase: {label}")

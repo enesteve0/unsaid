@@ -38,7 +38,8 @@ jumps here" and the fact is "Pointer on the line where it rises from 2 to 9, at 
 already_spoken.
 5. cue_plan: assign facts to silences, at most one plan per silence, and write the draft to speak there. Prefer \
 the first silence at or after the fact's time, within about 10 seconds. Use only silences with a word_budget of at \
-least 4. The draft must fit the silence's word budget (count each number as the words needed to say it). A draft \
+least 4. The draft must fit the silence's word budget (count each number as the words needed to say it). Write \
+numbers as digits, as printed ("15 V", not "fifteen volts"). A draft \
 must make sense to someone who cannot see: name what the thing is, then the concrete detail a listener can picture \
 (values, direction, position, what changes), e.g. "Bar chart: sales rise from 2 to 9 over five years." Avoid \
 abstract labels such as "steady growth" unless they are printed on screen. Present tense; no "we see". Most \

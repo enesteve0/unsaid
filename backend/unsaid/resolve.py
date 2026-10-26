@@ -37,7 +37,7 @@ def _segment_digest(obs: Observation, t: float) -> dict:
     return {
         "segment": obs.segment.id,
         "visuals": [
-            {"label": v.label, "kind": v.kind, "shows": v.description, "values": v.values[:12]}
+            {"label": v.label, "kind": v.kind, "shows": v.description, "values": v.values[:30]}
             for v in facts.visuals
         ],
         "on_screen_text": facts.on_screen_text[:30],

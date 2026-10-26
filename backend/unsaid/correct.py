@@ -104,7 +104,9 @@ async def correct_unsupported(
             cue.start,
             window_end,
             speech=speech,
-            allowed_numbers=context.allowed_numbers,
+            # The frames win: numbers the checker read in them count as printed.
+            allowed_numbers=context.allowed_numbers
+            | set().union(*(gates.numbers_in(c.observed) for c in v.claims if c.observed)),
             known_vocabulary=context.vocabulary,
             words_per_second=settings.words_per_second,
             guard=settings.speech_guard_seconds,

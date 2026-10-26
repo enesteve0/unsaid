@@ -80,3 +80,9 @@ def test_warnings_do_not_fail():
     report = run("The curve appears to flatten.")
     assert report.passed
     assert "speculation" in report.warnings
+
+
+def test_extended_cues_are_limited_to_thirty_words():
+    words = " ".join(["word"] * 33) + "."
+    report = run(words, extended=True)
+    assert not report.passed and report.failures[0].startswith("too_long: 33 spoken words")

@@ -24,7 +24,7 @@ from .schemas import Cue, CuePlan, CueText, Gap, Interval, LessonBible, VisualFa
 from .tf_client import TokenFactory
 
 MAX_REPAIRS = 2
-EXTENDED_WORDS = 30
+EXTENDED_WORDS = gates.EXTENDED_WORDS
 MIN_INLINE_WORDS = 4  # a silence that holds fewer words than this only produces fragments like "Yellow box."
 
 SYSTEM = """You write or repair one audio description cue for a blind student watching a lecture video. The cue is \

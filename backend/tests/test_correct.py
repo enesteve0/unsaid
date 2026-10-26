@@ -129,3 +129,36 @@ async def test_strictly_better_correction_is_kept_but_stays_in_review(monkeypatc
     )
     assert fixed == 1 and cue.text.startswith("Fully mirrored end on the left")
     assert "partly corrected" in cue.origin and cue.tier == "review"
+
+
+async def test_correction_may_use_a_number_the_checker_read_in_the_frames(monkeypatch):
+    async def fake_verify(tf_, ledger, video, cue, times, workdir):
+        cue.verification = Verification(
+            claims=[ClaimCheck(claim=cue.text, verdict="supported")], identifies_person=False
+        )
+
+    monkeypatch.setattr(correct, "verify_cue", fake_verify)
+    cue = flagged_cue()
+    cue.text = "Graph peaks at 14 volts."
+    cue.verification = Verification(
+        claims=[
+            ClaimCheck(claim="peaks at 14 volts", verdict="contradicted", observed="the peak is at 14.9 V")
+        ],
+        identifies_person=False,
+    )
+    fixed = await correct.correct_unsupported(
+        StubTF("Graph peaks at 14.9 volts."),
+        Ledger(),
+        Settings(_env_file=None),
+        video=Path("v.mp4"),
+        cues=[cue],
+        bible=BIBLE,
+        gaps=[GAP],
+        speech=SPEECH,
+        observations={},
+        words=[],
+        context_names=[],
+        duration=60.0,
+        workdir=Path("."),
+    )
+    assert fixed == 1 and cue.text == "Graph peaks at 14.9 volts."
