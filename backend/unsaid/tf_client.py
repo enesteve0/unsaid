@@ -33,7 +33,7 @@ from types import SimpleNamespace
 from typing import Any
 
 import httpx
-from openai import APIConnectionError, APIStatusError, APITimeoutError, AsyncOpenAI
+from openai import APIError, APIStatusError, AsyncOpenAI
 from pydantic import BaseModel, ValidationError
 
 from .config import Role, Settings
@@ -478,7 +478,8 @@ class TokenFactory:
                     continue
                 self._breaker_until[model] = time.monotonic() + BREAKER_SECONDS
                 raise
-            except (APITimeoutError, APIConnectionError, httpx.HTTPError) as exc:
+            except (APIError, httpx.HTTPError) as exc:
+                # Timeouts, dropped connections and errors sent inside a stream (the SDK raises a plain APIError).
                 entry.ok, entry.error = False, type(exc).__name__
                 entry.latency_ms = int((time.perf_counter() - started) * 1000)
                 ledger.add(entry)

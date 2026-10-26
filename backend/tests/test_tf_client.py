@@ -318,3 +318,21 @@ async def test_streamed_call_reports_progress(monkeypatch):
     )
     assert result.content == "done"
     assert counts == [1, 2, 3]
+
+
+async def test_error_inside_a_stream_is_retried(monkeypatch):
+    monkeypatch.setattr(tf_client, "TRANSIENT_PAUSE_SECONDS", 0)
+    chunk = {"id": "s", "object": "chat.completion.chunk", "created": 0, "model": "m"}
+    events = [
+        {**chunk, "choices": [{"index": 0, "delta": {"content": "par"}, "finish_reason": None}]},
+        {"error": {"message": "Failed to generate completions", "code": 500}},
+    ]
+    body = "".join(f"data: {json.dumps(e)}\n\n" for e in events)
+    tf, _ = make_tf(
+        httpx.Response(200, text=body, headers={"content-type": "text/event-stream"}),
+        httpx.Response(200, json=completion("whole answer")),
+    )
+    ledger = Ledger()
+    result = await tf.chat(Role.FAST, [{"role": "user", "content": "x"}], stage="t", ledger=ledger)
+    assert result.content == "whole answer"  # never the half-streamed "par"
+    assert [e.error for e in ledger.entries] == ["APIError", ""]
