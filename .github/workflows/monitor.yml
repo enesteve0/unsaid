@@ -1,0 +1,33 @@
+name: monitor
+
+# Keeps an eye on the live demo through the judging period (Dec 1-15, 2026). GitHub emails the owner when a run fails.
+on:
+  schedule:
+    - cron: "17,47 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  health:
+    if: vars.DEMO_URL != ''
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - name: Demo answers and every Nemotron model is active
+        env:
+          DEMO_URL: ${{ vars.DEMO_URL }}
+        run: |
+          set -euo pipefail
+          body=$(curl -fsS --max-time 30 "$DEMO_URL/api/health")
+          echo "$body" | python3 -c '
+          import json, sys
+          d = json.load(sys.stdin)
+          need = ["nvidia/Nemotron-3.5-Super-VL", "nvidia/Nemotron-3-Ultra-550b-a55b", "nvidia/Nemotron-3_5-Lightning", "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B"]
+          missing = [m for m in need if d["models"].get(m) not in ("active", None) or m not in d["models"]]
+          print("demo_mode:", d["demo_mode"], "| models checked:", len(d["models"]))
+          if d["demo_mode"] != "live": sys.exit("demo is in recorded mode")
+          if missing: sys.exit("models not active: " + ", ".join(missing))
+          '
+          curl -fsS --max-time 30 -o /dev/null "$DEMO_URL/media/samples/fourier-machine/result.json"
