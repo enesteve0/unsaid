@@ -55,7 +55,7 @@ export function Evaluation() {
       ) : (
         <>
           <p className="mono" style={{ color: 'var(--muted)' }}>
-            {report.clips} clips · {report.minutes?.toFixed(1)} minutes of video · generated {report.generated_at}
+            {report.clips} {report.clips === 1 ? 'clip' : 'clips'} · {report.minutes?.toFixed(1)} minutes of video · generated {report.generated_at}
           </p>
           {systems.length === 2 && (
             <div className="panel" style={{ marginBottom: 22 }}>

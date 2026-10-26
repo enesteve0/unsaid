@@ -118,10 +118,12 @@ def grounding(cues: list[Cue], result: dict) -> int:
     return bad
 
 
-async def coverage(tf: TokenFactory, ledger: Ledger, labels: list[dict], cues: list[Cue]) -> float:
+async def coverage(
+    tf: TokenFactory, ledger: Ledger, labels: list[dict], cues: list[Cue]
+) -> tuple[float, list[float]]:
     if not labels:
-        return float("nan")
-    scores = []
+        return float("nan"), []
+    scores: list[float] = []
     for label in labels:
         # Describers often voice a visual when it appears, a few seconds before the speaker points at it.
         nearby = [c.text for c in cues if label["t"] - 12 <= c.start <= label["t"] + 15]
@@ -145,7 +147,7 @@ async def coverage(tf: TokenFactory, ledger: Ledger, labels: list[dict], cues: l
             max_tokens=2000,
         )
         scores.append({"yes": 1.0, "partial": 0.5, "no": 0.0}[verdict.parsed.verdict])  # type: ignore[union-attr]
-    return sum(scores) / len(scores)
+    return sum(scores) / len(scores), scores
 
 
 async def evaluate_clip(tf: TokenFactory, asr: SpeechRecognizer, clip: dict, out: Path) -> dict:
@@ -180,18 +182,44 @@ async def evaluate_clip(tf: TokenFactory, asr: SpeechRecognizer, clip: dict, out
 
     judge_ledger = Ledger()
     labels = clip.get("labels", [])
-    rows = {}
+    rows: dict = {}
+    failures: list[dict] = []
     for key, cues, seconds, cost in (
         ("unsaid", unsaid_cues, unsaid_seconds, result["ledger"]["summary"]["total_usd"]),
         ("oneshot", base_cues, base_seconds, base_ledger.total_cost),
     ):
         talk_over, inside = timing(cues, speech)
+        covered, per_label = await coverage(tf, judge_ledger, labels, cues)
+        if key == "unsaid":
+            for c in cues:
+                if c.verification is not None and not c.verification.supported:
+                    failures.append(
+                        {
+                            "clip": clip["id"],
+                            "t": c.start,
+                            "text": c.text,
+                            "problem": "claim not supported by the frames: "
+                            + "; ".join(c.verification.unsupported_claims),
+                        }
+                    )
+            for label, score in zip(labels, per_label, strict=False):
+                if score < 1.0:
+                    failures.append(
+                        {
+                            "clip": clip["id"],
+                            "t": label["t"],
+                            "text": f"Missed: {label['referent']}",
+                            "problem": "pointing moment not described"
+                            if score == 0
+                            else "pointing moment only partly described",
+                        }
+                    )
         rows[key] = {
             "cues": len(cues),
             "talk_over": talk_over,
             "in_silence": inside,
             "pauses": sum(c.extended for c in cues),
-            "coverage": await coverage(tf, judge_ledger, labels, cues),
+            "coverage": covered,
             "unsupported": sum(1 for c in cues if c.verification is None or not c.verification.supported),
             "ungrounded": grounding(cues, result),
             "usd": cost,
@@ -200,7 +228,13 @@ async def evaluate_clip(tf: TokenFactory, asr: SpeechRecognizer, clip: dict, out
             "texts": [{"t": c.start, "text": c.text, "extended": c.extended} for c in cues],
         }
     (workdir / "scores.json").write_text(json.dumps(rows, indent=1))
-    return {"id": clip["id"], "title": clip["title"], **rows, "judge_usd": judge_ledger.total_cost}
+    return {
+        "id": clip["id"],
+        "title": clip["title"],
+        **rows,
+        "failures": failures,
+        "judge_usd": judge_ledger.total_cost,
+    }
 
 
 SYSTEM_LABELS = {
@@ -249,6 +283,7 @@ def aggregate(clips: list[dict]) -> dict:
         "minutes": minutes,
         "systems": systems,
         "metric_labels": METRIC_LABELS,
+        "failures": [f for c in clips for f in c.get("failures", [])],
         "per_clip": [
             {k: v for k, v in c.items() if k not in ("oneshot", "unsaid")}
             | {

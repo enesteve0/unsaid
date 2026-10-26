@@ -348,7 +348,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
 
     @app.get("/api/eval")
     async def eval_report() -> JSONResponse:
-        path = Path("eval/report.json")
+        path = settings.eval_report
         return JSONResponse(json.loads(path.read_text()) if path.exists() else {"available": False})
 
     # ---- static files ---------------------------------------------------------------------------------------------
