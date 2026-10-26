@@ -15,3 +15,8 @@ credentials/
 
 # Local logs
 *.log
+
+# Local media and runtime data
+samples/raw/
+backend/data/
+backend/models/

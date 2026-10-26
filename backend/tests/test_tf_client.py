@@ -126,3 +126,83 @@ def test_strict_schema_inlines_definitions():
 
 def test_extract_json_strips_fences_and_prose():
     assert extract_json('Sure!\n```json\n{"a": 1}\n```') == '{"a": 1}'
+
+
+async def test_json_schema_rejection_downgrades_to_prompt_only():
+    tf, seen = make_tf(
+        httpx.Response(500, json={"message": "Failed to generate completions"}),
+        httpx.Response(200, json=completion('{"value": 3}')),
+        httpx.Response(200, json=completion('{"value": 4}')),
+    )
+    ledger = Ledger()
+    first = await tf.chat(
+        Role.CLASSIFY, [{"role": "user", "content": "x"}], stage="t", ledger=ledger, schema=Answer
+    )
+    second = await tf.chat(
+        Role.CLASSIFY, [{"role": "user", "content": "y"}], stage="t", ledger=ledger, schema=Answer
+    )
+    assert (first.parsed.value, second.parsed.value) == (3, 4)
+    assert (
+        "response_format" in seen[0] and "response_format" not in seen[1] and "response_format" not in seen[2]
+    )
+    assert "JSON Schema" in seen[1]["messages"][-1]["content"]  # the schema still travels in the prompt
+
+
+async def test_reasoning_calls_stream_and_collect_usage():
+    events = [
+        {
+            "id": "s1",
+            "object": "chat.completion.chunk",
+            "created": 0,
+            "model": "m",
+            "choices": [
+                {
+                    "index": 0,
+                    "delta": {"role": "assistant", "reasoning_content": "Let me think. "},
+                    "finish_reason": None,
+                }
+            ],
+        },
+        {
+            "id": "s1",
+            "object": "chat.completion.chunk",
+            "created": 0,
+            "model": "m",
+            "choices": [{"index": 0, "delta": {"content": '{"value": '}, "finish_reason": None}],
+        },
+        {
+            "id": "s1",
+            "object": "chat.completion.chunk",
+            "created": 0,
+            "model": "m",
+            "choices": [{"index": 0, "delta": {"content": "9}"}, "finish_reason": "stop"}],
+        },
+        {
+            "id": "s1",
+            "object": "chat.completion.chunk",
+            "created": 0,
+            "model": "m",
+            "choices": [],
+            "usage": {
+                "prompt_tokens": 50,
+                "completion_tokens": 30,
+                "total_tokens": 80,
+                "completion_tokens_details": {"reasoning_tokens": 22},
+            },
+        },
+    ]
+    body = "".join(f"data: {json.dumps(e)}\n\n" for e in events) + "data: [DONE]\n\n"
+    tf, seen = make_tf(httpx.Response(200, text=body, headers={"content-type": "text/event-stream"}))
+    ledger = Ledger()
+    result = await tf.chat(
+        Role.REASON,
+        [{"role": "user", "content": "x"}],
+        stage="t",
+        ledger=ledger,
+        thinking=True,
+        schema=Answer,
+        constrain=False,
+    )
+    assert seen[0]["stream"] is True and "response_format" not in seen[0]
+    assert result.parsed.value == 9 and result.reasoning == "Let me think. "
+    assert (ledger.entries[0].completion_tokens, ledger.entries[0].reasoning_tokens) == (30, 22)

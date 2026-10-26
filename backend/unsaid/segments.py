@@ -81,3 +81,22 @@ def gap_after(t: float, gaps: list[Gap], within: float = 12.0) -> Gap | None:
         if g.end > t and g.start - t <= within:
             return g
     return None
+
+
+def said_between(words: list[Word], start: float, end: float) -> str:
+    """What is spoken in [start, end), as plain text."""
+    return " ".join(w.text for w in words if start <= w.start < end).strip()
+
+
+def timed_transcript(words: list[Word], max_line_seconds: float = 12.0) -> str:
+    """Transcript as '[12.3] sentence' lines, compact enough for one long-context prompt."""
+    lines: list[str] = []
+    current: list[Word] = []
+    for w in words:
+        current.append(w)
+        if w.text.endswith((".", "?", "!")) or current[-1].end - current[0].start > max_line_seconds:
+            lines.append(f"[{current[0].start:.1f}] " + " ".join(x.text for x in current))
+            current = []
+    if current:
+        lines.append(f"[{current[0].start:.1f}] " + " ".join(x.text for x in current))
+    return "\n".join(lines)

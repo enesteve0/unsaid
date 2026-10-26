@@ -39,9 +39,9 @@ TOKEN_FACTORY_MODELS: dict[Role, list[str]] = {
 # so the API server refuses to start with this provider unless explicitly allowed.
 NVIDIA_BUILD_MODELS: dict[Role, list[str]] = {
     Role.VISION: ["nvidia/nemotron-3.5-super-vl-120b-a12b"],
-    Role.REASON: ["nvidia/nemotron-3-ultra-550b-a55b"],
-    Role.FAST: ["nvidia/nemotron-3.5-lightning-30b-a3b", "nvidia/nemotron-3-nano-30b-a3b"],
-    Role.CLASSIFY: ["nvidia/nemotron-3-nano-30b-a3b"],
+    Role.REASON: ["nvidia/nemotron-3-ultra-550b-a55b", "nvidia/nemotron-3-super-120b-a12b"],
+    Role.FAST: ["nvidia/nemotron-3.5-lightning-30b-a3b"],
+    Role.CLASSIFY: ["nvidia/nemotron-3.5-lightning-30b-a3b"],  # Nano is not enabled on every build account
 }
 
 
@@ -67,8 +67,9 @@ class Settings(BaseSettings):
     samples_dir: Path = Path("../samples")
     demo_mode: Literal["live", "recorded"] = "live"
 
-    # Audio-description timing. 2.6 words/s is roughly 155 words per minute, the pace used by synthetic describers.
-    words_per_second: float = 2.6
+    # Audio-description timing: plan at 2.5 words/s (150 wpm); describers avoid the 170-180 wpm of normal speech.
+    words_per_second: float = 2.5
+    speech_lead_seconds: float = 0.3  # synthesis start-up before the first word is heard
     min_gap_seconds: float = 1.2
     speech_guard_seconds: float = 0.15
 

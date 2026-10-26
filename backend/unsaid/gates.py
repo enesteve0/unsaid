@@ -254,9 +254,10 @@ def check_cue(
     known_vocabulary: set[str],
     words_per_second: float,
     guard: float,
+    lead: float = 0.3,
     extended: bool = False,
 ) -> GateReport:
-    report = GateReport(estimated_seconds=estimate_seconds(text, words_per_second))
+    report = GateReport(estimated_seconds=estimate_seconds(text, words_per_second) + lead)
     end = start + report.estimated_seconds
     if not text.strip():
         report.failures.append("empty")

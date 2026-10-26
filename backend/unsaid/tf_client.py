@@ -19,10 +19,14 @@ from __future__ import annotations
 
 import asyncio
 import copy
+import hashlib
 import json
+import os
 import re
 import time
 from dataclasses import dataclass, field
+from pathlib import Path
+from types import SimpleNamespace
 from typing import Any
 
 import httpx
@@ -67,6 +71,17 @@ class AllModelsFailed(TokenFactoryError):
 
 
 @dataclass
+class _Reply:
+    content: str
+    reasoning: str
+    tool_calls: list[Any]
+    finish: str
+    usage: Any
+    request_id: str
+    message: Any
+
+
+@dataclass
 class ChatResult:
     content: str
     reasoning: str
@@ -96,6 +111,25 @@ def strict_json_schema(model: type[BaseModel]) -> dict[str, Any]:
         return node
 
     return resolve(schema)
+
+
+def with_schema_instruction(messages: list[dict[str, Any]], schema: type[BaseModel]) -> list[dict[str, Any]]:
+    """Append the JSON schema to the last user turn. Constrained decoding alone is not guaranteed everywhere,
+    so the model always sees the exact shape it must return."""
+    instruction = (
+        "Reply with only a JSON object (no prose, no code fences) that matches this JSON Schema:\n"
+        + json.dumps(strict_json_schema(schema), separators=(",", ":"))
+    )
+    out = [dict(m) for m in messages]
+    for message in reversed(out):
+        if message.get("role") == "user":
+            content = message.get("content")
+            if isinstance(content, list):
+                message["content"] = [*content, {"type": "text", "text": instruction}]
+            else:
+                message["content"] = f"{content}\n\n{instruction}"
+            break
+    return out
 
 
 _FENCE = re.compile(r"^```(?:json)?\s*|\s*```$", re.MULTILINE)
@@ -145,6 +179,10 @@ class TokenFactory:
         self._semaphores = {role: asyncio.Semaphore(n) for role, n in CONCURRENCY.items()}
         self._retired_until: dict[str, float] = {}
         self._breaker_until: dict[str, float] = {}
+        self._json_schema_ok: dict[str, bool] = {}
+        # Development only: replay identical requests from disk (TF_CACHE_DIR). Never set in production.
+        cache_dir = os.getenv("TF_CACHE_DIR")
+        self._cache_dir = Path(cache_dir) if cache_dir else None
 
     def _make_client(self) -> AsyncOpenAI:
         key = self._keys[self._key_index] if self._keys else "missing-key"
@@ -155,6 +193,90 @@ class TokenFactory:
     def _available(self, model: str) -> bool:
         now = time.monotonic()
         return self._retired_until.get(model, 0) <= now and self._breaker_until.get(model, 0) <= now
+
+    async def _request(self, kwargs: dict[str, Any], stream: bool) -> _Reply:
+        """One HTTP exchange. Long reasoning calls stream, so gateways never see an idle connection."""
+        if not stream:
+            raw = await self._client.chat.completions.with_raw_response.create(**kwargs)
+            completion = raw.parse()
+            choice = completion.choices[0]
+            return _Reply(
+                content=(choice.message.content or "").strip(),
+                reasoning=_reasoning_of(choice.message),
+                tool_calls=list(choice.message.tool_calls or []),
+                finish=choice.finish_reason or "",
+                usage=completion.usage,
+                request_id=raw.headers.get("x-request-id", "") or getattr(completion, "id", ""),
+                message=choice.message,
+            )
+        raw = await self._client.chat.completions.with_raw_response.create(
+            **kwargs, stream=True, stream_options={"include_usage": True}
+        )
+        chunks = raw.parse()
+        content: list[str] = []
+        reasoning: list[str] = []
+        finish, usage, request_id = "", None, raw.headers.get("x-request-id", "")
+        async for chunk in chunks:
+            request_id = request_id or getattr(chunk, "id", "")
+            if getattr(chunk, "usage", None):
+                usage = chunk.usage
+            if not chunk.choices:
+                continue
+            delta = chunk.choices[0].delta
+            if delta.content:
+                content.append(delta.content)
+            piece = _reasoning_of(delta)
+            if piece:
+                reasoning.append(piece)
+            if chunk.choices[0].finish_reason:
+                finish = chunk.choices[0].finish_reason
+        text = "".join(content).strip()
+        return _Reply(
+            content=text,
+            reasoning="".join(reasoning),
+            tool_calls=[],
+            finish=finish,
+            usage=usage,
+            request_id=request_id,
+            message=SimpleNamespace(role="assistant", content=text, tool_calls=None),
+        )
+
+    def _cache_key(self, kwargs: dict[str, Any]) -> str:
+        material = {k: v for k, v in kwargs.items() if k != "timeout"}
+        return hashlib.sha256(json.dumps(material, sort_keys=True, default=str).encode()).hexdigest()
+
+    def _cache_get(self, key: str) -> _Reply | None:
+        path = self._cache_dir / f"{key}.json"  # type: ignore[operator]
+        if not path.exists():
+            return None
+        data = json.loads(path.read_text())
+        usage = SimpleNamespace(
+            prompt_tokens=data["prompt_tokens"],
+            completion_tokens=data["completion_tokens"],
+            prompt_tokens_details=SimpleNamespace(cached_tokens=data["cached_tokens"]),
+            completion_tokens_details=SimpleNamespace(reasoning_tokens=data["reasoning_tokens"]),
+        )
+        message = SimpleNamespace(
+            role="assistant", content=data["content"], tool_calls=None, latency_ms=data["latency_ms"]
+        )
+        return _Reply(
+            data["content"], data["reasoning"], [], data["finish"], usage, "cache:" + key[:12], message
+        )
+
+    def _cache_put(self, key: str, reply: _Reply, latency_ms: int) -> None:
+        self._cache_dir.mkdir(parents=True, exist_ok=True)  # type: ignore[union-attr]
+        prompt, cached, completion, reasoning = _usage_numbers(reply.usage)
+        record = {
+            "content": reply.content,
+            "reasoning": reply.reasoning,
+            "finish": reply.finish,
+            "prompt_tokens": prompt,
+            "cached_tokens": cached,
+            "completion_tokens": completion,
+            "reasoning_tokens": reasoning,
+            "latency_ms": latency_ms,
+        }
+        (self._cache_dir / f"{key}.json").write_text(json.dumps(record))  # type: ignore[operator]
 
     async def list_models(self) -> list[dict[str, Any]]:
         page = await self._client.models.list(extra_query={"verbose": "true"})
@@ -173,15 +295,21 @@ class TokenFactory:
         tools: list[dict[str, Any]] | None = None,
         tool_choice: Any = None,
         temperature: float | None = None,
+        constrain: bool = True,
     ) -> ChatResult:
+        """`constrain=False` keeps the schema in the prompt but skips constrained decoding (used when the model
+        should think freely before it answers)."""
         if schema is not None and tools:
             raise ValueError("response_format and tools must not be combined on Token Factory")
         chain = self.settings.chain(role)
+        candidates = [m for m in chain if self._available(m)]
+        if not candidates:
+            # Never lock a role out completely: retry anything not retired even if its breaker is open.
+            now = time.monotonic()
+            candidates = [m for m in chain if self._retired_until.get(m, 0) <= now]
         last_error: Exception | None = None
         async with self._semaphores[role]:
-            for model in chain:
-                if not self._available(model):
-                    continue
+            for model in candidates:
                 try:
                     return await self._call_model(
                         role,
@@ -195,6 +323,7 @@ class TokenFactory:
                         tools=tools,
                         tool_choice=tool_choice,
                         temperature=temperature,
+                        constrain=constrain,
                     )
                 except (CreditExhausted, AuthFailure):
                     raise
@@ -216,13 +345,15 @@ class TokenFactory:
         tools: list[dict[str, Any]] | None,
         tool_choice: Any,
         temperature: float | None,
+        constrain: bool,
     ) -> ChatResult:
-        convo = list(messages)
+        convo = with_schema_instruction(messages, schema) if schema is not None else list(messages)
         use_thinking = thinking
         repaired = False
         rate_limited_once = False
         key_switched = False
-        for _attempt in range(4):
+        transport_retried = False
+        for _attempt in range(5):
             kwargs: dict[str, Any] = {
                 "model": model,
                 "messages": convo,
@@ -237,7 +368,8 @@ class TokenFactory:
                 kwargs["tools"] = tools
                 if tool_choice is not None:
                     kwargs["tool_choice"] = tool_choice
-            if schema is not None:
+            constrained = schema is not None and constrain and self._json_schema_ok.get(model, True)
+            if constrained:
                 kwargs["response_format"] = {
                     "type": "json_schema",
                     "json_schema": {
@@ -249,10 +381,16 @@ class TokenFactory:
 
             entry = LedgerEntry(stage=stage, role=role.value, model=model, thinking=use_thinking)
             started = time.perf_counter()
+            cache_key = self._cache_key(kwargs) if self._cache_dir and not tools else None
             try:
-                raw = await self._client.chat.completions.with_raw_response.create(**kwargs)
-                completion = raw.parse()
-                entry.request_id = raw.headers.get("x-request-id", "") or getattr(completion, "id", "")
+                reply = self._cache_get(cache_key) if cache_key else None
+                if reply is None:
+                    reply = await self._request(kwargs, stream=role is Role.REASON and not tools)
+                    if cache_key and reply.content:
+                        self._cache_put(cache_key, reply, int((time.perf_counter() - started) * 1000))
+                else:
+                    started -= reply.message.latency_ms / 1000
+                entry.request_id = reply.request_id
             except APIStatusError as exc:
                 entry.ok, entry.error = False, f"HTTP {exc.status_code}"
                 entry.latency_ms = int((time.perf_counter() - started) * 1000)
@@ -277,25 +415,33 @@ class TokenFactory:
                         await asyncio.sleep(retry_after)
                         continue
                     raise
+                if constrained and status >= 500:
+                    # Some deployments reject json_schema decoding outright; the schema is also in the prompt,
+                    # so retry unconstrained and remember the choice for this model.
+                    self._json_schema_ok[model] = False
+                    continue
                 self._breaker_until[model] = time.monotonic() + BREAKER_SECONDS
                 raise
-            except (APITimeoutError, APIConnectionError) as exc:
+            except (APITimeoutError, APIConnectionError, httpx.HTTPError) as exc:
                 entry.ok, entry.error = False, type(exc).__name__
                 entry.latency_ms = int((time.perf_counter() - started) * 1000)
                 ledger.add(entry)
+                if not transport_retried:
+                    transport_retried = True
+                    await asyncio.sleep(2)
+                    continue
                 self._breaker_until[model] = time.monotonic() + BREAKER_SECONDS
                 raise
 
             entry.latency_ms = int((time.perf_counter() - started) * 1000)
-            prompt, cached, completion_tokens, reasoning_tokens = _usage_numbers(completion.usage)
+            prompt, cached, completion_tokens, reasoning_tokens = _usage_numbers(reply.usage)
             entry.prompt_tokens, entry.cached_tokens = prompt, cached
             entry.completion_tokens, entry.reasoning_tokens = completion_tokens, reasoning_tokens
 
-            choice = completion.choices[0]
-            message = choice.message
-            content = (message.content or "").strip()
-            tool_calls = list(message.tool_calls or [])
-            finish = choice.finish_reason or ""
+            message = reply.message
+            content = reply.content
+            tool_calls = reply.tool_calls
+            finish = reply.finish
 
             if not content and not tool_calls:
                 # Thinking consumed the budget (finish_reason "length") or the model returned nothing.
@@ -336,7 +482,7 @@ class TokenFactory:
             ledger.add(entry)
             return ChatResult(
                 content=content,
-                reasoning=_reasoning_of(message),
+                reasoning=reply.reasoning,
                 model=model,
                 finish_reason=finish,
                 message=message,

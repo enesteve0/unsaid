@@ -61,7 +61,7 @@ class VisualElement(BaseModel):
 
 
 class TimedEvent(BaseModel):
-    t: float = Field(description="Seconds from the start of this clip")
+    t: float = Field(description="Seconds from the start of the whole video")
     description: str
 
 
@@ -137,6 +137,29 @@ class Verification(BaseModel):
     supported: bool
     unsupported_claims: list[str]
     identifies_person: bool
+
+
+class CueVerification(Verification):
+    cue_id: str
+
+
+class VerificationBatch(BaseModel):
+    items: list[CueVerification]
+
+
+class TipText(BaseModel):
+    moment_id: str
+    suggestion: str
+
+
+class TipBatch(BaseModel):
+    items: list[TipText]
+
+
+class ContextNames(BaseModel):
+    title: str
+    people: list[str] = Field(description="People credited as presenters or authors on the page")
+    terms: list[str] = Field(description="Proper nouns and product names that may appear in the video")
 
 
 # ---- Pipeline outputs ----------------------------------------------------------------------------------------------
