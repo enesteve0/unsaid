@@ -123,7 +123,8 @@ async def coverage(tf: TokenFactory, ledger: Ledger, labels: list[dict], cues: l
         return float("nan")
     scores = []
     for label in labels:
-        nearby = [c.text for c in cues if label["t"] - 2 <= c.start <= label["t"] + 15]
+        # Describers often voice a visual when it appears, a few seconds before the speaker points at it.
+        nearby = [c.text for c in cues if label["t"] - 12 <= c.start <= label["t"] + 15]
         if not nearby:
             scores.append(0.0)
             continue

@@ -50,6 +50,13 @@ export function ResultView({ result: initial, media, runId }: { result: RunResul
               {result.bible.summary}
             </p>
           )}
+          {(result.metrics.flagged_by_check ?? 0) > 0 && (
+            <p style={{ margin: 0, color: 'var(--paper-dim)' }}>
+              The frame check flagged {result.metrics.flagged_by_check} draft
+              {result.metrics.flagged_by_check === 1 ? '' : 's'} with claims the picture did not support; Lightning corrected{' '}
+              {result.metrics.corrected_after_check ?? 0} and the rest wait for a person.
+            </p>
+          )}
           {result.failures && result.failures.length > 0 && (
             <p className="notice">
               {result.failures.length} segment{result.failures.length > 1 ? 's' : ''} could not be read and{' '}

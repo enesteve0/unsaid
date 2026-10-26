@@ -20,6 +20,7 @@ from .asr import SpeechRecognizer, Transcript
 from .bible import build_bible
 from .config import Settings
 from .context import ContextResult, gather_context
+from .correct import correct_unsupported
 from .cues import verified_names, write_all
 from .deixis import find_pointing_moments
 from .ledger import Ledger
@@ -39,7 +40,11 @@ STAGES = [
     ("context", "Context", "Tavily: names from the source page and slide citations"),
     ("understand", "Understand", "Nemotron 3 Ultra plans what is unsaid and where it fits"),
     ("write", "Write & fit", "Nemotron 3.5 Lightning writes cues; code gates check them"),
-    ("check", "Check", "Nemotron 3.5 Super VL verifies each cue against the frames"),
+    (
+        "check",
+        "Check",
+        "Nemotron 3.5 Super VL checks every claim against the frames; Lightning corrects what it flags",
+    ),
     ("deliver", "Deliver", "tracks, transcript, editor markers and lecturer tips"),
 ]
 
@@ -238,9 +243,30 @@ async def run_pipeline(
         cue.sources = ctx.sources
 
     allowed_names = verified_names(bible, observations, transcript.words, ctx.names)
-    await stage(
-        "check", lambda: verify_all(tf, ledger, video, cues, bible, info.duration, allowed_names, workdir)
-    )
+    check_counts: dict[str, int] = {}
+
+    async def check() -> None:
+        await verify_all(tf, ledger, video, cues, bible, info.duration, allowed_names, workdir)
+        check_counts["flagged"] = sum(
+            1 for c in cues if c.verification is not None and not c.verification.supported
+        )
+        check_counts["corrected"] = await correct_unsupported(
+            tf,
+            ledger,
+            settings,
+            video=video,
+            cues=cues,
+            bible=bible,
+            gaps=gaps,
+            speech=transcript.speech,
+            observations=observations,
+            words=transcript.words,
+            context_names=ctx.names,
+            duration=info.duration,
+            workdir=workdir,
+        )
+
+    await stage("check", check)
 
     async def deliver():
         tips = await lecturer_tips(tf, ledger, moments, resolutions, bible)
@@ -265,6 +291,8 @@ async def run_pipeline(
     tips = await stage("deliver", deliver)
 
     metrics = compute_metrics(cues, transcript.speech, moments, resolutions, info.duration)
+    metrics["flagged_by_check"] = check_counts.get("flagged", 0)
+    metrics["corrected_after_check"] = check_counts.get("corrected", 0)
     accepted = metrics["tiers"]["auto"]
     result = {
         "title": options.title,

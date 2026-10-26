@@ -74,6 +74,8 @@ export interface Cue {
   tier: Tier
   sources: Source[]
   edited?: boolean
+  origin?: string
+  corrected_from?: string
 }
 
 export interface Tip {
@@ -150,6 +152,8 @@ export interface Metrics {
   pointing_moments: number
   pointing_moments_visual: number
   pointing_moments_covered: number
+  flagged_by_check?: number
+  corrected_after_check?: number
 }
 
 export interface RunResult {

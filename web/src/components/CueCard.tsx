@@ -67,6 +67,7 @@ export function CueCard({ cue, result, active, runId, onPlay, onSaved }: Props) 
         {cue.extended && <span className="badge ext">Extended</span>}
         {cue.repairs > 0 && <span className="badge review">Rewritten {cue.repairs}× to fit</span>}
         {cue.edited && <span className="badge auto">Edited by a person</span>}
+        {cue.corrected_from && <span className="badge auto">Corrected after the frame check</span>}
         {cue.sources.length > 0 && <span className="badge tavily">Context via Tavily</span>}
         <button type="button" className="btn btn-ghost" style={{ marginLeft: 'auto', padding: '8px 12px' }} onClick={() => onPlay(Math.max(cue.start - 4, 0))}>
           Play this moment
@@ -94,6 +95,11 @@ export function CueCard({ cue, result, active, runId, onPlay, onSaved }: Props) 
         </p>
       )}
       {message && <p className="notice error">{message}</p>}
+      {cue.corrected_from && (
+        <p style={{ margin: 0, color: 'var(--muted)', fontSize: '0.88rem' }}>
+          First draft, rejected by the frame check: <s>{cue.corrected_from}</s>
+        </p>
+      )}
 
       <ul className="gate-list" aria-label="Checks">
         {gateRows(cue, result).map((row, i) => (

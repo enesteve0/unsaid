@@ -195,6 +195,7 @@ class Cue(BaseModel):
     gate_warnings: list[str] = Field(default_factory=list)
     repairs: int = 0
     origin: str = ""
+    corrected_from: str = ""
     verification: Verification | None = None
     tier: Tier = "review"
     sources: list[Source] = Field(default_factory=list)
