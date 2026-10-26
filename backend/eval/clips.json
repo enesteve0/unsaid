@@ -142,5 +142,44 @@
     "referent": "A grid of pixels drawn as coloured squares, orange on the left fading to green on the right, each with a zigzag connector."
    }
   ]
+ },
+ {
+  "id": "usgs",
+  "title": "PubTalk 11/2011: USGS Science for a Changing Bay Area, excerpt (U.S. Geological Survey)",
+  "path": "data/eval/clips/usgs.mp4",
+  "license": "Public domain",
+  "source": "https://www.usgs.gov/media/videos/pubtalk-112011-usgs-science-a-changing-bay-area",
+  "labels": [
+   {
+    "t": 10.9,
+    "said": "very strong eddies that form in areas, especially in these coves here",
+    "referent": "Map titled Mouth of SF Bay Tidal Currents: the fastest flow, in red, runs in a band through the Golden Gate channel and slows to yellow and green beyond it."
+   },
+   {
+    "t": 20.4,
+    "said": "which is right where the very large sandwave field is here",
+    "referent": "The current map at a later tide: slower flow in blue, with a swirl at the mouth of the bay."
+   },
+   {
+    "t": 39.6,
+    "said": "Here's sort of the Cliff House, you know, end of Geary here.",
+    "referent": "3D seafloor map titled View Toward the Bay: shallow areas in orange near the shore, the deepest channel in purple toward the bay."
+   },
+   {
+    "t": 77.4,
+    "said": "There's a lot of interesting features here.",
+    "referent": "Seafloor map titled Features off Baker Beach: ridged sand waves across the green area and a deep purple channel at the top."
+   },
+   {
+    "t": 86.0,
+    "said": "This is about 10 or 15 feet deep here.",
+    "referent": "The pointer rests on the orange shallow area next to the beach."
+   },
+   {
+    "t": 88.2,
+    "said": "This is about 350 feet deep right here.",
+    "referent": "The pointer moves to the dark purple area at the top of the channel."
+   }
+  ]
  }
 ]

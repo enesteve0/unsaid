@@ -15,3 +15,6 @@ cut capacitor.webm 60 175 capacitor
 cut laser.webm 120 230 laser
 cut ccd.webm 40 155 ccd
 echo "clips ready in $OUT"
+# USGS PubTalk (public domain): stream-cut 20:00-25:00, then the evaluated 2:10-4:10 of that.
+[ -f "$RAW/usgs_1200_1500.mp4" ] || ffmpeg -y -v error -ss 1200 -i "https://usgs-ocapsv2-public-output-media.s3.us-west-2.amazonaws.com/assets/palladium/production/s3fs-public/atoms/video/science_festival/MP4/science_festival.mp4" -t 300 -c copy "$RAW/usgs_1200_1500.mp4"
+cut usgs_1200_1500.mp4 130 250 usgs
