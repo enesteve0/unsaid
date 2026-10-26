@@ -92,6 +92,19 @@ Deadline: **Fri Oct 30, 2026 20:00 Istanbul** (submit by 16:00). Work directly o
   - Evaluation hygiene: prompt examples that came from the evaluation clips were replaced (Resolve recall 42/48 vs
     41/48), the report says the prompts were developed on these clips, and the held-out split is supported.
   - 72 backend tests, 8 e2e.
+- Development clips, prototype on the build endpoint, medium effort:
+
+  | | Before tonight | After the fixes | Pause waits for the picture |
+  | --- | --- | --- | --- |
+  | Coverage (one-shot) | 0.33 (0.54) | 0.45 (0.58) | 0.50 (0.68) |
+  | Unsupported claims | 0% | 17% | 19% |
+  | Invented numbers or names | 0% | 6% | 0% |
+  | Pauses per minute | 1.00 | 1.27 | 1.55 |
+
+  - Unsupported rose because the frame check became strict about timing; every remaining flag is a pause describing
+    a pointer position the checker cannot confirm.
+  - Run-to-run noise is about ±0.1 in coverage (the one-shot moved 0.58 → 0.68 with identical inputs). Tuning on
+    the six development clips is frozen except for bugs; the official run pools two runs per clip (`--repeat 2`).
 - Known gaps (low impact, from the data-flow review):
   - Ultra's style notes are unused;
   - the timing estimate counts maths symbols as one word;
