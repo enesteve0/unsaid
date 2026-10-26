@@ -2,8 +2,9 @@
 
     cd backend && uv run python scripts/smoke.py            # writes ../docs/EVIDENCE.md (no secrets)
 
-Checks: catalog IDs and status, thinking off on every model, strict json_schema on Super VL, Super VL with a video
-clip, Ultra reasoning streamed, cached-token reporting on a repeated prefix.
+Checks: catalog IDs and status, thinking off on every model, strict json_schema on Super VL, Super VL with a clip
+and a still under a strict schema (the perception request's shape), Ultra reasoning, cached-token reporting on a
+repeated prefix. Every call streams, as in production.
 """
 
 from __future__ import annotations
@@ -35,6 +36,10 @@ class Product(BaseModel):
 class Canary(BaseModel):
     greeting: str
     code: str
+
+
+class Seen(BaseModel):
+    summary: str
 
 
 async def main() -> None:
@@ -116,25 +121,32 @@ async def main() -> None:
         ],
         check=True,
     )
+    still = await media.still(clip, 3.0, clip.with_suffix(".jpg"))
     t0 = time.perf_counter()
+    # The perception request's shape: a clip plus a full-resolution still, strict json_schema, streamed.
     r = await tf.chat(
         Role.VISION,
         [
             {
                 "role": "user",
                 "content": [
-                    {"type": "text", "text": "Describe this video in one sentence."},
+                    {
+                        "type": "text",
+                        "text": "Describe this video in one sentence; the still is a frame at 3 s.",
+                    },
                     {"type": "video_url", "video_url": {"url": media.data_url(clip)}},
+                    {"type": "image_url", "image_url": {"url": media.data_url(still)}},
                 ],
             }
         ],
         stage="smoke",
         ledger=ledger,
-        max_tokens=200,
+        schema=Seen,
+        max_tokens=300,
     )
     record(
-        "video input, vision",
-        bool(r.content),
+        "video + still, strict json_schema, streamed, vision",
+        r.parsed is not None,
         f"'{r.content[:70]}' in {time.perf_counter() - t0:.1f}s, "
         f"{ledger.entries[-1].prompt_tokens} prompt tokens",
     )
