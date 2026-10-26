@@ -303,9 +303,11 @@ class TokenFactory:
         tool_choice: Any = None,
         temperature: float | None = None,
         constrain: bool = True,
+        medium_effort: bool = False,
     ) -> ChatResult:
         """`constrain=False` keeps the schema in the prompt but skips constrained decoding (used when the model
-        should think freely before it answers)."""
+        should think freely before it answers). `medium_effort` sets the chat-template flag of that name on a
+        thinking call; on Ultra it roughly halved the reasoning tokens in our measurements."""
         if schema is not None and tools:
             raise ValueError("response_format and tools must not be combined on Token Factory")
         chain = self.settings.chain(role)
@@ -331,6 +333,7 @@ class TokenFactory:
                         tool_choice=tool_choice,
                         temperature=temperature,
                         constrain=constrain,
+                        medium_effort=medium_effort,
                     )
                 except (CreditExhausted, AuthFailure):
                     raise
@@ -353,6 +356,7 @@ class TokenFactory:
         tool_choice: Any,
         temperature: float | None,
         constrain: bool,
+        medium_effort: bool,
     ) -> ChatResult:
         convo = with_schema_instruction(messages, schema) if schema is not None else list(messages)
         use_thinking = thinking
@@ -363,12 +367,15 @@ class TokenFactory:
         grown = False
         budget_lowered = False
         for _attempt in range(5):
+            template_kwargs: dict[str, bool] = {"enable_thinking": use_thinking}
+            if use_thinking and medium_effort:
+                template_kwargs["medium_effort"] = True
             kwargs: dict[str, Any] = {
                 "model": model,
                 "messages": convo,
                 "max_tokens": max_tokens or DEFAULT_MAX_TOKENS[(role, use_thinking)],
                 "temperature": temperature if temperature is not None else (0.6 if use_thinking else 0.2),
-                "extra_body": {"chat_template_kwargs": {"enable_thinking": use_thinking}},
+                "extra_body": {"chat_template_kwargs": template_kwargs},
                 "timeout": TIMEOUTS[role],
             }
             if use_thinking:

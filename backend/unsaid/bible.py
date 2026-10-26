@@ -118,5 +118,6 @@ async def build_bible(
         thinking=True,
         schema=LessonBible,
         constrain=False,
+        medium_effort=settings.reason_effort == "medium",
     )
     return result.parsed  # type: ignore[return-value]

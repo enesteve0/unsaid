@@ -241,6 +241,21 @@ async def test_transient_server_error_is_retried_on_the_same_model(monkeypatch):
     assert [e.ok for e in ledger.entries] == [False, True]
 
 
+async def test_medium_effort_sets_the_template_flag_only_when_thinking():
+    tf, seen = make_tf(httpx.Response(200, json=completion("a")), httpx.Response(200, json=completion("b")))
+    for thinking in (True, False):
+        await tf.chat(
+            Role.FAST,
+            [{"role": "user", "content": "x"}],
+            stage="t",
+            ledger=Ledger(),
+            thinking=thinking,
+            medium_effort=True,
+        )
+    assert seen[0]["chat_template_kwargs"] == {"enable_thinking": True, "medium_effort": True}
+    assert seen[1]["chat_template_kwargs"] == {"enable_thinking": False}
+
+
 async def test_json_schema_downgrade_wears_off(monkeypatch):
     monkeypatch.setattr(tf_client, "RETIRED_SECONDS", 0)
     tf, seen = make_tf(
