@@ -39,7 +39,7 @@ STAGES = [
     ("resolve", "Resolve", "Nemotron 3 Nano: what does each 'this' point at?"),
     ("context", "Context", "Tavily: names from the source page and slide citations"),
     ("understand", "Understand", "Nemotron 3 Ultra plans what is unsaid and where it fits"),
-    ("write", "Write & fit", "Nemotron 3.5 Lightning writes cues; code gates check them"),
+    ("write", "Write & fit", "code gates check Ultra's drafts; Nemotron 3.5 Lightning repairs failures"),
     (
         "check",
         "Check",
