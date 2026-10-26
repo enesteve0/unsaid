@@ -8,19 +8,66 @@ interface SystemRow {
   metrics: Record<string, number>
 }
 
+type MetricLabels = Record<string, { label: string; better: 'lower' | 'higher'; unit?: string }>
+
+interface Split {
+  key: string
+  label: string
+  clips: number
+  minutes: number
+  systems: SystemRow[]
+}
+
 interface Report {
   available?: boolean
   generated_at?: string
   clips?: number
   minutes?: number
   systems?: SystemRow[]
-  metric_labels?: Record<string, { label: string; better: 'lower' | 'higher'; unit?: string }>
+  splits?: Split[]
+  metric_labels?: MetricLabels
   failures?: { clip: string; t: number; text: string; problem: string }[]
   notes?: string[]
 }
 
 const fmt = (v: number, unit?: string) =>
   unit === '%' ? `${(v * 100).toFixed(0)}%` : unit === '$' ? `$${v.toFixed(4)}` : unit === 's' ? `${v.toFixed(2)} s` : v.toFixed(2)
+
+function MetricsTable({ systems, labels, caption }: { systems: SystemRow[]; labels: MetricLabels; caption: string }) {
+  return (
+    <div className="panel" style={{ overflowX: 'auto' }}>
+      <table>
+        <caption className="visually-hidden">{caption}</caption>
+        <thead>
+          <tr>
+            <th scope="col">System</th>
+            {Object.entries(labels).map(([key, meta]) => (
+              <th key={key} scope="col" className="num">
+                {meta.label}
+                <br />
+                <span style={{ textTransform: 'none', letterSpacing: 0 }}>{meta.better === 'lower' ? 'lower is better' : 'higher is better'}</span>
+              </th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {systems.map((s) => (
+            <tr key={s.key}>
+              <th scope="row" style={{ textTransform: 'none', letterSpacing: 0, font: '700 0.95rem var(--sans)', color: s.key === 'unsaid' ? 'var(--amber)' : 'var(--paper)' }}>
+                {s.label}
+              </th>
+              {Object.entries(labels).map(([key, meta]) => (
+                <td key={key} className="num">
+                  {s.metrics[key] === undefined ? '—' : fmt(s.metrics[key], meta.unit)}
+                </td>
+              ))}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  )
+}
 
 export function Evaluation() {
   const [report, setReport] = useState<Report | null>(null)
@@ -71,37 +118,21 @@ export function Evaluation() {
               />
             </div>
           )}
-          <div className="panel" style={{ overflowX: 'auto' }}>
-            <table>
-              <caption className="visually-hidden">Metrics per system</caption>
-              <thead>
-                <tr>
-                  <th scope="col">System</th>
-                  {Object.entries(labels).map(([key, meta]) => (
-                    <th key={key} scope="col" className="num">
-                      {meta.label}
-                      <br />
-                      <span style={{ textTransform: 'none', letterSpacing: 0 }}>{meta.better === 'lower' ? 'lower is better' : 'higher is better'}</span>
-                    </th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {systems.map((s) => (
-                  <tr key={s.key}>
-                    <th scope="row" style={{ textTransform: 'none', letterSpacing: 0, font: '700 0.95rem var(--sans)', color: s.key === 'unsaid' ? 'var(--amber)' : 'var(--paper)' }}>
-                      {s.label}
-                    </th>
-                    {Object.entries(labels).map(([key, meta]) => (
-                      <td key={key} className="num">
-                        {s.metrics[key] === undefined ? '—' : fmt(s.metrics[key], meta.unit)}
-                      </td>
-                    ))}
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+          <MetricsTable systems={systems} labels={labels} caption="Metrics per system, all clips" />
+
+          {report.splits &&
+            report.splits.length > 1 &&
+            report.splits.map((split) => (
+              <section key={split.key} aria-labelledby={`split-${split.key}`} style={{ marginTop: 32 }}>
+                <h2 id={`split-${split.key}`} style={{ fontSize: '1.6rem', marginBottom: 6 }}>
+                  {split.label}
+                </h2>
+                <p className="mono" style={{ color: 'var(--muted)', marginTop: 0 }}>
+                  {split.clips} {split.clips === 1 ? 'clip' : 'clips'} · {split.minutes.toFixed(1)} minutes of video
+                </p>
+                <MetricsTable systems={split.systems} labels={labels} caption={`Metrics per system, ${split.label}`} />
+              </section>
+            ))}
 
           {report.notes && (
             <ul style={{ color: 'var(--paper-dim)', marginTop: 20 }}>

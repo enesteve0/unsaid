@@ -264,6 +264,7 @@ async def evaluate_clip(tf: TokenFactory, asr: SpeechRecognizer, clip: dict, out
     return {
         "id": clip["id"],
         "title": clip["title"],
+        "split": clip.get("split", "dev"),
         **rows,
         "failures": failures,
         "judge_usd": judge_ledger.total_cost,
@@ -284,9 +285,14 @@ METRIC_LABELS = {
     "usd_per_min": {"label": "Cost per video minute", "better": "lower", "unit": "$"},
     "sec_per_min": {"label": "Seconds per video minute", "better": "lower"},
 }
+SPLIT_LABELS = {
+    "heldout": "Held-out clips: labelled blind, never used while developing Unsaid",
+    "dev": "Development clips: also used to develop Unsaid's prompts",
+}
 
 
-def aggregate(clips: list[dict]) -> dict:
+def summarize(clips: list[dict]) -> list[dict]:
+    """Both systems' metrics over a set of evaluated clips."""
     systems = []
     minutes = sum(c["unsaid"]["minutes"] for c in clips)
     for key in ("oneshot", "unsaid"):
@@ -310,12 +316,34 @@ def aggregate(clips: list[dict]) -> dict:
                 },
             }
         )
+    return systems
+
+
+def aggregate(clips: list[dict]) -> dict:
+    splits = [
+        {
+            "key": key,
+            "label": label,
+            "clips": len(subset),
+            "minutes": sum(c["unsaid"]["minutes"] for c in subset),
+            "systems": summarize(subset),
+        }
+        for key, label in SPLIT_LABELS.items()
+        if (subset := [c for c in clips if c.get("split", "dev") == key])
+    ]
+    provenance = (
+        "Held-out clips were labelled blind and never used while developing Unsaid; development clips were also "
+        "used to develop its prompts."
+        if any(s["key"] == "heldout" for s in splits)
+        else "Unsaid's prompts were developed on these same clips, so these are development results."
+    )
     return {
         "available": True,
         "generated_at": datetime.now(UTC).strftime("%Y-%m-%d %H:%M UTC"),
         "clips": len(clips),
-        "minutes": minutes,
-        "systems": systems,
+        "minutes": sum(c["unsaid"]["minutes"] for c in clips),
+        "systems": summarize(clips),
+        "splits": splits,
         "metric_labels": METRIC_LABELS,
         "failures": [f for c in clips for f in c.get("failures", [])],
         "per_clip": [
@@ -329,8 +357,7 @@ def aggregate(clips: list[dict]) -> dict:
         "notes": [
             "Talk-over uses the speech intervals from NVIDIA Parakeet for both systems; descriptions are timed at 2.5 words per second.",
             "Coverage labels were written by the builder after viewing the frames at each pointing moment; Nemotron 3 Ultra judges them.",
-            "Unsaid's prompts were developed on these same clips, so these are development results; no phrase from the "
-            "clips appears in a prompt.",
+            provenance + " No phrase from any clip appears in a prompt.",
             "The same Super VL verifier checks both systems' descriptions against the frames; descriptions it could not "
             "check are excluded from that rate and counted separately.",
         ],
