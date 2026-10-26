@@ -152,3 +152,68 @@ async def test_paused_description_waits_for_the_pointing_moment():
     )
     assert len(cues) == 1 and cues[0].extended
     assert cues[0].start == 86.26  # after "...deep here.", not at 73 s when the map first appeared
+
+
+def plan_fact(fid, t, moment_id=""):
+    return VisualFact(
+        id=fid,
+        t=t,
+        segment_id="s1",
+        fact="Front plate",
+        importance=3,
+        already_spoken=False,
+        moment_id=moment_id,
+    )
+
+
+async def place(plans, facts, gaps, moment_times):
+    bible = BIBLE.model_copy(update={"visual_facts": facts, "cue_plan": plans})
+    cues = await write_all(
+        StubTF(),
+        Ledger(),
+        SETTINGS,
+        bible=bible,
+        gaps=gaps,
+        speech=[],
+        observations={},
+        words=[],
+        context_names=[],
+        moment_times=moment_times,
+    )
+    return {c.fact_ids[0]: c for c in cues}
+
+
+SILENCES = [
+    Gap(id="g1", start=0.0, end=3.5),
+    Gap(id="g2", start=18.0, end=21.5),
+    Gap(id="g3", start=40.0, end=43.5),
+]
+DRAFT = "Front plate shows a faint waveform."
+
+
+async def test_pointing_description_moves_to_a_silence_near_the_moment():
+    # Ultra put "the function plotted here on the front" (17.7 s) into the first silence, 17 s early.
+    cues = await place(
+        [CuePlan(gap_id="g1", fact_ids=["f2"], draft=DRAFT)],
+        [plan_fact("f2", 0.0, "p2")],
+        SILENCES,
+        {"p2": 17.7},
+    )
+    assert cues["f2"].gap_id == "g2" and not cues["f2"].extended
+
+
+async def test_pointing_description_pauses_when_the_nearby_silence_is_taken():
+    plans = [
+        CuePlan(gap_id="g1", fact_ids=["f2"], draft=DRAFT),
+        CuePlan(gap_id="g2", fact_ids=["f3"], draft=DRAFT),  # placed well by Ultra: keeps its silence
+    ]
+    cues = await place(plans, [plan_fact("f2", 0.0, "p2"), plan_fact("f3", 17.0)], SILENCES, {"p2": 17.7})
+    assert cues["f3"].gap_id == "g2"
+    assert cues["f2"].extended and cues["f2"].start == 17.7
+
+
+async def test_description_without_a_pointing_moment_keeps_its_silence():
+    cues = await place(
+        [CuePlan(gap_id="g1", fact_ids=["f1"], draft=DRAFT)], [plan_fact("f1", 0.0)], SILENCES, {}
+    )
+    assert cues["f1"].gap_id == "g1"

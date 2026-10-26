@@ -20,7 +20,7 @@ from . import gates
 from .config import Role, Settings
 from .ledger import Ledger
 from .perceive import Observation
-from .schemas import Cue, CueText, Gap, Interval, LessonBible, VisualFact, Word
+from .schemas import Cue, CuePlan, CueText, Gap, Interval, LessonBible, VisualFact, Word
 from .tf_client import TokenFactory
 
 MAX_REPAIRS = 2
@@ -122,6 +122,22 @@ def _window(gap: Gap | None, start_hint: float, settings: Settings) -> tuple[flo
 
 
 TIMING = ("too_long", "talks_over_speech")
+# A description of something the speaker points at starts within this window around the pointing moment.
+POINTING_WINDOW = (-3.0, 10.0)
+
+
+@dataclass
+class _Placement:
+    n: int
+    plan: CuePlan
+    facts: list[VisualFact]
+    anchor: float  # the pointing moment the description resolves, else when its first fact appears
+    gap: Gap | None
+    pointed: bool  # resolves a pointing moment and still needs its silence checked or moved
+
+
+def _near(gap: Gap, anchor: float) -> bool:
+    return anchor + POINTING_WINDOW[0] <= gap.start <= anchor + POINTING_WINDOW[1]
 
 
 def _timing_only(report: gates.GateReport) -> bool:
@@ -268,36 +284,55 @@ async def write_all(
     facts_by_id = {f.id: f for f in bible.visual_facts if not f.already_spoken}
     gaps_by_id = {g.id: g for g in gaps}
     allowed_names = verified_names(bible, observations, words, context_names)
-    jobs = []
-    used_gaps: set[str] = set()
+
+    # A description of what the speaker points at belongs where they point, not where the thing first appeared.
+    placed: list[_Placement] = []
     for n, plan in enumerate(bible.cue_plan, start=1):
         facts = [facts_by_id[i] for i in plan.fact_ids if i in facts_by_id]
         if not facts:
             continue
-        gap = gaps_by_id.get(plan.gap_id)
-        if gap is not None and gap.id in used_gaps:
-            gap = None  # one cue per silence; a second plan for the same silence becomes extended
-        if gap is not None:
-            used_gaps.add(gap.id)
-        context = build_context(facts, observations, words, allowed_names)
-        # A description of what the speaker points at belongs where they point, not where the thing first appeared.
         pointed = [moment_times[f.moment_id] for f in facts if f.moment_id in moment_times]
         anchor = min(pointed) if pointed else min(f.t for f in facts)
-        jobs.append(
-            write_cue(
-                tf,
-                ledger,
-                settings,
-                cue_id=f"{n:03d}",
-                facts=facts,
-                draft=plan.draft,
-                gap=gap,
-                speech=speech,
-                context=context,
-                bible=bible,
-                allowed_names=allowed_names,
-                pause_at=pause_point(anchor, words),
-            )
+        gap = gaps_by_id.get(plan.gap_id)
+        placed.append(_Placement(n, plan, facts, anchor, gap, bool(pointed) and gap is not None))
+
+    # One cue per silence. Silences that Ultra chose well are taken first; a second plan for the same silence
+    # becomes extended. A pointing description that Ultra put far from its moment then moves to the first free
+    # silence near the moment, or pauses the video there.
+    used: set[str] = set()
+    for p in placed:
+        if p.gap is None:
+            continue
+        if p.pointed and not _near(p.gap, p.anchor):
+            p.gap = None
+            continue
+        p.pointed = False  # placed well: nothing to move
+        if p.gap.id in used:
+            p.gap = None
+        else:
+            used.add(p.gap.id)
+    for p in placed:
+        if p.pointed:
+            p.gap = next((g for g in gaps if g.id not in used and _near(g, p.anchor)), None)
+            if p.gap is not None:
+                used.add(p.gap.id)
+
+    jobs = [
+        write_cue(
+            tf,
+            ledger,
+            settings,
+            cue_id=f"{p.n:03d}",
+            facts=p.facts,
+            draft=p.plan.draft,
+            gap=p.gap,
+            speech=speech,
+            context=build_context(p.facts, observations, words, allowed_names),
+            bible=bible,
+            allowed_names=allowed_names,
+            pause_at=pause_point(p.anchor, words),
         )
+        for p in placed
+    ]
     written = await asyncio.gather(*jobs)
     return sorted((c for c in written if c is not None), key=lambda c: c.start)
