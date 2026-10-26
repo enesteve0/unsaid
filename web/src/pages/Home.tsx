@@ -177,7 +177,7 @@ export function Home() {
           <div className="check">
             <span className="value">Apr 2027</span>
             <span className="label">
-              US public universities serving 50,000+ people must meet WCAG 2.1 AA, which requires audio description (ADA Title II)
+              US public universities must meet WCAG 2.1 AA, which requires audio description (ADA Title II rule)
             </span>
           </div>
           <div className="check">
