@@ -11,12 +11,12 @@ from __future__ import annotations
 
 import asyncio
 import json
-import math
 import re
 from collections.abc import Iterator
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
 from . import gates
+from .bible import word_budget
 from .config import Role, Settings
 from .ledger import Ledger
 from .perceive import Observation
@@ -31,7 +31,7 @@ SYSTEM = """You write or repair one audio description cue for a blind student wa
 spoken by a synthetic voice in a pause in the lecture.
 Rules:
 - Describe only the facts given, most important first. Never add details that are not in the facts.
-- The on-screen text is only for copying spellings and numbers exactly.
+- The on-screen text and printed values are only for copying spellings and numbers exactly.
 - At most max_words words, counting each number as the words it takes to say. Shorter is better.
 - Present tense, objective, concrete: what is visible, never an explanation.
 - Start by naming what the thing is (a graph, a slide, a machine part, an action), then the key detail.
@@ -45,6 +45,7 @@ class CueContext:
     allowed_numbers: set[str]
     vocabulary: set[str]
     on_screen_text: list[str]
+    printed_values: list[str] = field(default_factory=list)  # values read off charts and tables
 
 
 def build_context(
@@ -68,7 +69,19 @@ def build_context(
     allowed = set().union(*(gates.numbers_in(t) for t in [*texts, spoken])) if texts or spoken else set()
     screen = [t for fact in facts if (o := observations.get(fact.segment_id)) for t in o.facts.on_screen_text]
     vocab = gates.vocabulary(screen, [spoken], registry_names)
-    return CueContext(allowed_numbers=allowed, vocabulary=vocab, on_screen_text=screen[:40])
+    values = [
+        x
+        for fact in facts
+        if (o := observations.get(fact.segment_id))
+        for v in o.facts.visuals
+        for x in v.values
+    ]
+    return CueContext(
+        allowed_numbers=allowed,
+        vocabulary=vocab,
+        on_screen_text=screen[:40],
+        printed_values=list(dict.fromkeys(values))[:40],
+    )
 
 
 def verified_names(
@@ -116,9 +129,7 @@ def trim_candidates(text: str) -> Iterator[str]:
 def _window(gap: Gap | None, start_hint: float, settings: Settings) -> tuple[float, float, int]:
     if gap is None:
         return start_hint, start_hint + EXTENDED_WORDS / settings.words_per_second, EXTENDED_WORDS
-    start = gap.start + settings.speech_guard_seconds
-    usable = gap.end - settings.speech_guard_seconds - start - settings.speech_lead_seconds
-    return start, gap.end, max(0, math.floor(usable * settings.words_per_second))
+    return gap.start + settings.speech_guard_seconds, gap.end, word_budget(gap, settings)
 
 
 TIMING = ("too_long", "talks_over_speech")
@@ -189,6 +200,7 @@ async def write_cue(
         "max_words": budget,
         "allowed_names": allowed_names[:60],
         "on_screen_text": context.on_screen_text,
+        "printed_values": context.printed_values,
         "how_to_read_symbols": bible.notation,
     }
     messages: list[dict] = [
@@ -211,12 +223,21 @@ async def write_cue(
         spoken = round(gates.spoken_word_count(text))
         notes = []
         for failure in report.failures:
-            if failure.startswith(TIMING):
+            if failure.startswith(TIMING) and spoken <= budget:
                 notes.append(
-                    f"It takes {spoken} spoken words; the pause allows {budget}. Rewrite it in {max(budget - 1, 2)} words or fewer, keeping the most important detail."
+                    f"Its {spoken} spoken words fit, but the pauses at its commas, colons and dashes make it too "
+                    "long. Use fewer of them, or drop one word, and keep every detail."
+                )
+            elif failure.startswith(TIMING):
+                notes.append(
+                    f"It takes {spoken} spoken words; the pause allows {budget}. Rewrite it in "
+                    f"{max(budget - 1, 2)} words or fewer, keeping the most important detail."
                 )
             elif failure.startswith("number_not_on_screen"):
-                notes.append(f"{failure}. Use only numbers that appear in the facts.")
+                notes.append(
+                    f"{failure}. Use a number only exactly as printed in on_screen_text or printed_values, "
+                    "or leave it out."
+                )
             elif failure.startswith("unknown_name"):
                 notes.append(f"{failure}. Describe it instead of naming it.")
             else:

@@ -10,6 +10,7 @@ from __future__ import annotations
 import json
 import math
 
+from . import gates
 from .config import Role, Settings
 from .ledger import Ledger
 from .perceive import Observation
@@ -51,8 +52,17 @@ Rules (DCMP Description Key, WCAG 2.1 SC 1.2.5): describe what is visible and ne
 interpret or explain; do not repeat what is said; copy numbers and names exactly as printed."""
 
 
+# The timing gate also counts the pauses a voice makes at punctuation; drafts typically have up to two marks.
+PUNCTUATION_ALLOWANCE = 2 * gates.PAUSE_PER_MARK
+
+
 def word_budget(gap: Gap, settings: Settings) -> int:
-    usable = gap.duration - 2 * settings.speech_guard_seconds - settings.speech_lead_seconds
+    usable = (
+        gap.duration
+        - 2 * settings.speech_guard_seconds
+        - settings.speech_lead_seconds
+        - PUNCTUATION_ALLOWANCE
+    )
     return max(0, math.floor(usable * settings.words_per_second))
 
 

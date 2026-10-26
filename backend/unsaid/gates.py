@@ -20,6 +20,7 @@ from .schemas import Interval
 
 NUMBER = re.compile(r"(?<![\w.])[-+−]?\d[\d,]*(?:\.\d+)?%?")
 WORD = re.compile(r"[A-Za-z][A-Za-z'’-]*|\d[\d,]*(?:\.\d+)?%?")
+PAUSE_PER_MARK = 0.12  # seconds a voice pauses at a comma, colon, semicolon or dash
 
 BANNED = {
     "we see": re.compile(r"\bwe (?:can |now )?see\b", re.I),
@@ -213,7 +214,7 @@ def spoken_word_count(text: str) -> float:
 
 
 def estimate_seconds(text: str, words_per_second: float) -> float:
-    pauses = len(re.findall(r"[,;:—–]", text)) * 0.12
+    pauses = len(re.findall(r"[,;:—–]", text)) * PAUSE_PER_MARK
     return spoken_word_count(text) / words_per_second + pauses
 
 

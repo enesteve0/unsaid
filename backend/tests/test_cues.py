@@ -1,5 +1,6 @@
 from types import SimpleNamespace
 
+from unsaid.bible import word_budget
 from unsaid.config import Settings
 from unsaid.cues import CueContext, pause_point, trim_candidates, write_all, write_cue
 from unsaid.ledger import Ledger
@@ -217,3 +218,20 @@ async def test_description_without_a_pointing_moment_keeps_its_silence():
         [CuePlan(gap_id="g1", fact_ids=["f1"], draft=DRAFT)], [plan_fact("f1", 0.0)], SILENCES, {}
     )
     assert cues["f1"].gap_id == "g1"
+
+
+def test_budget_leaves_room_for_punctuation_pauses():
+    # 3.0 s silence: 0.15 s guard each side, 0.3 s voice lead, 0.24 s for two punctuation pauses -> 2.16 s at 2.5 w/s.
+    assert word_budget(GAP, SETTINGS) == 5
+
+
+async def test_a_draft_that_only_punctuation_makes_too_long_is_told_so():
+    class Recording(StubTF):
+        async def chat(self, role, messages, **kwargs):
+            self.messages = messages
+            return await super().chat(role, messages, **kwargs)
+
+    tf = Recording("Wave flat low high flat.")
+    cue = await run("Wave: flat, low, high, flat.", tf)  # 5 words fit the budget; four pauses do not
+    assert cue is not None and cue.text == "Wave flat low high flat."
+    assert "pauses at its commas" in tf.messages[-1]["content"]

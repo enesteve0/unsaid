@@ -12,6 +12,7 @@ import json
 from pathlib import Path
 
 from . import gates
+from .bible import PUNCTUATION_ALLOWANCE
 from .config import Role, Settings
 from .cues import EXTENDED_WORDS, MIN_INLINE_WORDS, build_context, verified_names
 from .ledger import Ledger
@@ -61,7 +62,13 @@ async def correct_unsupported(
             window_end, budget = cue.start + EXTENDED_WORDS / settings.words_per_second, EXTENDED_WORDS
         else:
             window_end = gap.end
-            usable = gap.end - settings.speech_guard_seconds - cue.start - settings.speech_lead_seconds
+            usable = (
+                gap.end
+                - settings.speech_guard_seconds
+                - cue.start
+                - settings.speech_lead_seconds
+                - PUNCTUATION_ALLOWANCE
+            )
             budget = max(2, int(usable * settings.words_per_second))
         brief = {
             "description": cue.text,
