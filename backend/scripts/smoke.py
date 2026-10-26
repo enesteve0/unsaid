@@ -11,6 +11,7 @@ from __future__ import annotations
 
 import asyncio
 import json
+import statistics
 import subprocess
 import sys
 import time
@@ -164,6 +165,31 @@ async def main() -> None:
         f"reasoning streamed ({r.model})",
         bool(r.content),
         f"{last.reasoning_tokens} reasoning / {last.completion_tokens} output tokens in {time.perf_counter() - t0:.1f}s",
+    )
+
+    # REASON_EFFORT=medium only helps if Token Factory honours the chat template's medium_effort flag. On the NVIDIA
+    # API catalog it halved Ultra's output on this puzzle (medians 1,478 vs 2,794 tokens over four runs each).
+    puzzle = (
+        "Five silences last 1.2, 2.5, 3.1, 0.9 and 4.0 seconds. Four facts have importance 3, 2, 3 and 1 and lengths "
+        "of 6, 9, 4 and 7 words; speech runs at 2.5 words per second. Assign facts to silences, at most one fact per "
+        "silence, to maximise the total importance described. Reply with the total importance only."
+    )
+    spent: dict[bool, list[int]] = {False: [], True: []}
+    for medium in (False, True, False, True):
+        await tf.chat(
+            Role.REASON,
+            [{"role": "user", "content": puzzle}],
+            stage="smoke",
+            ledger=ledger,
+            thinking=True,
+            medium_effort=medium,
+        )
+        spent[medium].append(ledger.entries[-1].completion_tokens)
+    full, medium = statistics.median(spent[False]), statistics.median(spent[True])
+    record(
+        "medium_effort honoured, reason",
+        medium < 0.75 * full,
+        f"median {medium:.0f} output tokens at medium effort vs {full:.0f} at full effort (2 runs each)",
     )
 
     prefix = "You are a careful assistant. " * 400

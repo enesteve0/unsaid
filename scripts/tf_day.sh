@@ -31,6 +31,8 @@ if [[ "$STEP" == all || "$STEP" == samples ]]; then
 fi
 
 if [[ "$STEP" == all || "$STEP" == eval ]]; then
-  [ -f data/eval/clips/fourier-a.mp4 ] || eval/fetch_clips.sh
+  # Fetch the clips if any listed in clips.json (development or held-out) is missing.
+  uv run python -c "import json, os, sys; sys.exit(any(not os.path.exists(c['path']) for c in json.load(open('eval/clips.json'))))" \
+    || eval/fetch_clips.sh
   uv run python -m eval.run_eval --clips eval/clips.json --out data/eval/out --report eval/report.json
 fi
