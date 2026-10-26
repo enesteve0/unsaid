@@ -36,7 +36,7 @@ def test_held_out_clips_are_summarized_separately():
     assert (heldout["key"], heldout["clips"], dev["key"], dev["clips"]) == ("heldout", 1, "dev", 2)
     assert unsaid_metrics(heldout["systems"])["coverage"] == 0.5
     assert unsaid_metrics(report["systems"])["coverage"] == 0.5  # all three clips together
-    assert any("never used while developing" in note for note in report["notes"])
+    assert any("never used to tune" in note for note in report["notes"])
 
 
 def test_without_held_out_clips_the_report_says_they_are_development_results():
