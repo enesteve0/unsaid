@@ -40,6 +40,8 @@ export function Player({ result, media, mode, onModeChange, window: clip, onTime
   const [time, setTime] = useState(clip?.start ?? 0)
   const [active, setActive] = useState<Cue | null>(null)
   const [announce, setAnnounce] = useState('')
+  // Screen-reader users get descriptions through their own reader instead of a second voice.
+  const [output, setOutput] = useState<'speech' | 'reader'>('speech')
 
   const cues = useMemo(() => playableCues(result), [result])
   const lines = useMemo(() => sentences(result.transcript), [result])
@@ -124,7 +126,8 @@ export function Player({ result, media, mode, onModeChange, window: clip, onTime
           }
           // Keep the text on screen for at least as long as it takes to say, even if speech ends early.
           const shownUntil = performance.now() + Math.max(due.end - due.start, 1.5) * 1000
-          const speak = voiceOff ? (_: string, done: () => void) => window.setTimeout(done, (due.end - due.start) * 1000) : narrator.speak.bind(narrator)
+          const silent = voiceOff || output === 'reader'
+          const speak = silent ? (_: string, done: () => void) => window.setTimeout(done, (due.end - due.start) * 1000) : narrator.speak.bind(narrator)
           speak(due.text, () => {
             v.volume = 1
             const linger = Math.max(shownUntil - performance.now(), 0) + 600
@@ -140,7 +143,7 @@ export function Player({ result, media, mode, onModeChange, window: clip, onTime
     }
     raf = requestAnimationFrame(tick)
     return () => cancelAnimationFrame(raf)
-  }, [playing, describing, cues, clip, onTime, setCue, voiceOff])
+  }, [playing, describing, cues, clip, onTime, setCue, voiceOff, output])
 
   useEffect(() => () => narrator.cancel(), [])
 
@@ -227,12 +230,27 @@ export function Player({ result, media, mode, onModeChange, window: clip, onTime
             ))}
           </div>
         )}
+        {describing && (
+          <button
+            type="button"
+            className="btn btn-ghost"
+            style={{ padding: '10px 12px' }}
+            aria-pressed={output === 'reader'}
+            onClick={() => {
+              narrator.cancel()
+              setOutput(output === 'speech' ? 'reader' : 'speech')
+            }}
+            title="Send descriptions to your screen reader instead of speaking them"
+          >
+            {output === 'reader' ? 'Descriptions: screen reader' : 'Descriptions: spoken'}
+          </button>
+        )}
         <span className="time mono" aria-hidden="true">
           {fmtTime(time)} / {fmtTime(duration)}
         </span>
       </div>
-      <div className="visually-hidden" aria-live="polite" aria-atomic="true">
-        {describing ? announce : ''}
+      <div className="visually-hidden" aria-live={output === 'reader' ? 'assertive' : 'off'} aria-atomic="true">
+        {describing && output === 'reader' ? announce : ''}
       </div>
     </div>
   )
