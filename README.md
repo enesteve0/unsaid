@@ -81,9 +81,11 @@ Models write; code decides. A description is used only if:
   integrations. Model chains live in environment variables with fallbacks
   (Ultra → Nemotron 3 Super → Super VL; Lightning ↔ Nano) and are audited against `/v1/models?verbose=true` at boot.
 - **Structured output.** Strict `json_schema` decoding plus the schema in the prompt and pydantic validation; if a
-  deployment rejects constrained decoding, the client retries unconstrained and remembers the choice.
+  constrained request fails with a server error, the client retries with the schema in the prompt only and keeps that
+  model unconstrained for ten minutes.
 - **Reasoning control.** `chat_template_kwargs.enable_thinking=false` for perception and rewrites; Ultra thinks with
-  an explicit budget and streams, so gateways never see an idle connection.
+  an explicit budget. Every call streams, so gateways never see an idle connection, a stalled call is cut off after
+  a minute without a chunk, and the app shows Ultra's running token count while it plans.
 - **Prompt caching.** Stable instruction prefixes; cached tokens are shown in the ledger.
 - **Resilience built for the API's behaviour.** 402 switches the app to clearly labelled recorded runs; 401/403
   tries a backup key; 404/409/410 retires a model; 429 honours Retry-After once; 5xx and timeouts retry once, then
