@@ -277,6 +277,14 @@ def create_app(settings: Settings | None = None) -> FastAPI:
             raise HTTPException(404, "No such file")
         return FileResponse(path, filename=name if name != "transcript.html" else None)
 
+    @app.get("/api/runs/{run_id}/video")
+    async def run_video(request: Request, run_id: str) -> FileResponse:
+        own_run(request, run_id)
+        source = next(iter(sorted(store.run_dir(run_id).glob("source.*"))), None)
+        if source is None:
+            raise HTTPException(404, "The uploaded video has been deleted (uploads are kept for 24 hours).")
+        return FileResponse(source)
+
     @app.patch("/api/runs/{run_id}/cues/{cue_id}")
     async def edit_cue(request: Request, run_id: str, cue_id: str, body: CueEdit) -> dict[str, Any]:
         """A describer's edit is re-checked by the same code gates before it is saved."""

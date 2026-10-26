@@ -15,9 +15,13 @@ from .tf_client import TokenFactory
 
 SYSTEM = (
     "You coach lecturers to make recordings accessible to blind students. At each moment the lecturer pointed at "
-    "something instead of saying it. Rewrite the sentence so the words themselves carry the visual information "
-    "(values, shapes, labels, what changes), in the lecturer's own voice, at most 35 words, using only the facts "
-    "given. If the facts add nothing concrete, return an empty suggestion."
+    "something instead of saying it. Rewrite their sentence so the words themselves carry the visual information, "
+    "keeping the lecturer's own wording and voice, as one fluent sentence of at most 35 words, using only the facts "
+    "given.\n"
+    "Example. Said: 'As you can see, this curve drops really quickly.' Facts: 'Line graph: training error falls from "
+    "40% to 5% within 10 epochs.' Suggestion: 'As this graph shows, the training error drops really quickly, from "
+    "40% to 5% within the first 10 epochs.'\n"
+    "If the facts add nothing concrete, return an empty suggestion."
 )
 
 

@@ -1,0 +1,13 @@
+.git
+.env
+.env.*
+**/.DS_Store
+backend/.venv
+backend/data
+backend/models
+backend/.pytest_cache
+backend/.ruff_cache
+web/node_modules
+web/dist
+samples/raw
+tasks

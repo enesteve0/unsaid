@@ -1,8 +1,10 @@
-"""Stage 7, Write & fit: Nemotron 3.5 Lightning writes each cue; code decides whether it may be used.
+"""Stage 7, Write & fit: Ultra drafts, Lightning repairs, code decides.
 
-One independent call per cue (Lightning drifts over long loops), all in parallel, with the same instruction prefix
-so Token Factory can cache it. A cue that fails the gates gets up to two repair turns that quote the exact failure.
-If it still cannot fit its silence, it becomes an extended description (the player pauses the video).
+Nemotron 3 Ultra drafts every cue inside the lesson bible, with each silence's word budget in view. Code checks the
+draft. When a draft breaks a rule, Nemotron 3.5 Lightning repairs it (up to two turns quoting the exact failure), all
+cues in parallel. If the timing still fails, code trims trailing clauses, keeping the most important first clause.
+Only facts Ultra marked essential may become extended descriptions (the player pauses the video); anything else that
+cannot fit is left out and listed, never squeezed into a meaningless fragment.
 """
 
 from __future__ import annotations
@@ -10,6 +12,8 @@ from __future__ import annotations
 import asyncio
 import json
 import math
+import re
+from collections.abc import Iterator
 from dataclasses import dataclass
 
 from . import gates
@@ -21,15 +25,16 @@ from .tf_client import TokenFactory
 
 MAX_REPAIRS = 2
 EXTENDED_WORDS = 30
+MIN_INLINE_WORDS = 4  # a silence that holds fewer words than this only produces fragments like "Yellow box."
 
-SYSTEM = """You write one audio description cue for a blind student watching a lecture video. The cue is spoken \
-by a synthetic voice in a pause in the lecture.
+SYSTEM = """You write or repair one audio description cue for a blind student watching a lecture video. The cue is \
+spoken by a synthetic voice in a pause in the lecture.
 Rules:
-- Describe only the facts given, in order of importance. Never add details that are not in the facts.
-- The on-screen text is only for copying spellings and numbers exactly; do not describe it unless a fact does.
-- At most max_words words. Shorter is better; drop the least important detail first.
+- Describe only the facts given, most important first. Never add details that are not in the facts.
+- The on-screen text is only for copying spellings and numbers exactly.
+- At most max_words words, counting each number as the words it takes to say. Shorter is better.
 - Present tense, objective, concrete: what is visible, never an explanation.
-- Start with the thing itself ("Line chart: ...", "Slide: ...", "The presenter presses ...").
+- Start by naming what the thing is (a graph, a slide, a machine part, an action), then the key detail.
 - Never say "we see", "you can see", "the image shows" or "in this video".
 - Use digits for numbers. Name things only with names from allowed_names; otherwise describe them.
 Reply with JSON: {"text": "..."}."""
@@ -89,6 +94,33 @@ def _window(gap: Gap | None, start_hint: float, settings: Settings) -> tuple[flo
     return start, gap.end, max(0, math.floor(usable * settings.words_per_second))
 
 
+def trim_candidates(text: str) -> Iterator[str]:
+    """Shorter versions of a cue that keep its opening: drop trailing sentences, then trailing clauses."""
+    sentences = [x for x in re.split(r"(?<=[.!?;])\s+", text.strip()) if x]
+    for k in range(len(sentences) - 1, 0, -1):
+        yield " ".join(sentences[:k])
+    clauses = [x for x in re.split(r",\s+|\s+[—–]\s+", sentences[0]) if x] if sentences else []
+    for k in range(len(clauses) - 1, 0, -1):
+        candidate = ", ".join(clauses[:k]).rstrip(".;:,") + "."
+        if len(candidate.split()) >= 3:
+            yield candidate
+
+
+def _window(gap: Gap | None, start_hint: float, settings: Settings) -> tuple[float, float, int]:
+    if gap is None:
+        return start_hint, start_hint + EXTENDED_WORDS / settings.words_per_second, EXTENDED_WORDS
+    start = gap.start + settings.speech_guard_seconds
+    usable = gap.end - settings.speech_guard_seconds - start - settings.speech_lead_seconds
+    return start, gap.end, max(0, math.floor(usable * settings.words_per_second))
+
+
+TIMING = ("too_long", "talks_over_speech")
+
+
+def _timing_only(report: gates.GateReport) -> bool:
+    return bool(report.failures) and all(f.startswith(TIMING) for f in report.failures)
+
+
 async def write_cue(
     tf: TokenFactory,
     ledger: Ledger,
@@ -96,38 +128,25 @@ async def write_cue(
     *,
     cue_id: str,
     facts: list[VisualFact],
+    draft: str,
     gap: Gap | None,
     speech: list[Interval],
     context: CueContext,
     bible: LessonBible,
     allowed_names: list[str],
-) -> Cue:
+) -> Cue | None:
+    essential = max(f.importance for f in facts) >= 3
     start_hint = min(f.t for f in facts)
     start, window_end, budget = _window(gap, start_hint, settings)
-    extended = gap is None or budget < 3
-    if extended and gap is not None:
+    extended = gap is None
+    if gap is not None and budget < MIN_INLINE_WORDS:
+        if not essential:
+            return None
+        extended = True
         start, window_end, budget = _window(None, gap.start + settings.speech_guard_seconds, settings)
 
-    prompt = {
-        "facts": [f.fact for f in facts],
-        "max_words": budget,
-        "allowed_names": allowed_names[:60],
-        "on_screen_text": context.on_screen_text,
-        "how_to_read_symbols": bible.notation,
-    }
-    messages = [
-        {"role": "system", "content": SYSTEM},
-        {"role": "user", "content": json.dumps(prompt, ensure_ascii=False)},
-    ]
-    repairs = 0
-    text = ""
-    report = gates.GateReport()
-    while True:
-        result = await tf.chat(
-            Role.FAST, messages, stage="write", ledger=ledger, schema=CueText, max_tokens=300
-        )
-        text = result.parsed.text.strip()  # type: ignore[union-attr]
-        report = gates.check_cue(
+    def check(text: str, as_extended: bool) -> gates.GateReport:
+        return gates.check_cue(
             text,
             start,
             window_end,
@@ -137,37 +156,74 @@ async def write_cue(
             words_per_second=settings.words_per_second,
             guard=settings.speech_guard_seconds,
             lead=settings.speech_lead_seconds,
-            extended=extended,
+            extended=as_extended,
         )
-        if report.passed or repairs >= MAX_REPAIRS:
-            break
+
+    brief = {
+        "facts": [f.fact for f in facts],
+        "max_words": budget,
+        "allowed_names": allowed_names[:60],
+        "on_screen_text": context.on_screen_text,
+        "how_to_read_symbols": bible.notation,
+    }
+    messages: list[dict] = [
+        {"role": "system", "content": SYSTEM},
+        {"role": "user", "content": json.dumps(brief, ensure_ascii=False)},
+    ]
+    origin = ["Ultra draft"]
+    text = draft.strip()
+    if not text:
+        result = await tf.chat(
+            Role.FAST, messages, stage="write", ledger=ledger, schema=CueText, max_tokens=300
+        )
+        text = result.parsed.text.strip()  # type: ignore[union-attr]
+        origin = ["Lightning"]
+    report = check(text, extended)
+
+    repairs = 0
+    while not report.passed and repairs < MAX_REPAIRS:
         repairs += 1
-        words_now = round(gates.spoken_word_count(text))
+        spoken = round(gates.spoken_word_count(text))
         notes = []
         for failure in report.failures:
-            if failure.startswith("too_long") or failure == "talks_over_speech":
+            if failure.startswith(TIMING):
                 notes.append(
-                    f"It is {words_now} spoken words; the pause allows {budget}. Cut it to {max(budget - 1, 2)} words or fewer."
+                    f"It takes {spoken} spoken words; the pause allows {budget}. Rewrite it in {max(budget - 1, 2)} words or fewer, keeping the most important detail."
                 )
             elif failure.startswith("number_not_on_screen"):
-                notes.append(f"{failure}. Use only numbers printed on screen.")
+                notes.append(f"{failure}. Use only numbers that appear in the facts.")
             elif failure.startswith("unknown_name"):
-                notes.append(f"{failure}. Describe instead of naming.")
+                notes.append(f"{failure}. Describe it instead of naming it.")
             else:
                 notes.append(failure)
         messages = [
             *messages,
             {"role": "assistant", "content": json.dumps({"text": text}, ensure_ascii=False)},
-            {"role": "user", "content": "Revise. " + " ".join(notes)},
+            {"role": "user", "content": "Revise. " + " ".join(dict.fromkeys(notes))},
         ]
+        result = await tf.chat(
+            Role.FAST, messages, stage="write", ledger=ledger, schema=CueText, max_tokens=300
+        )
+        text = result.parsed.text.strip()  # type: ignore[union-attr]
+        report = check(text, extended)
+    if repairs:
+        origin.append(f"{repairs} Lightning repair{'s' if repairs > 1 else ''}")
 
-    timing_failed = any(f.startswith("too_long") or f == "talks_over_speech" for f in report.failures)
-    if timing_failed and not extended:
-        # It cannot fit the silence: make it an extended description instead of talking over the lecture.
+    if not extended and _timing_only(report):
+        for candidate in trim_candidates(text):
+            trial = check(candidate, False)
+            if trial.passed:
+                text, report = candidate, trial
+                origin.append("trimmed to fit")
+                break
+
+    if not extended and any(f.startswith(TIMING) for f in report.failures):
+        if not essential:
+            return None
         extended = True
-        report.failures = [
-            f for f in report.failures if not (f.startswith("too_long") or f == "talks_over_speech")
-        ]
+        start, window_end, _ = _window(None, start, settings)
+        report = check(text, True)
+        origin.append("extended: video pauses")
 
     end = start + report.estimated_seconds if not extended else start + 0.5
     return Cue(
@@ -182,6 +238,7 @@ async def write_cue(
         gate_failures=report.failures,
         gate_warnings=report.warnings,
         repairs=repairs,
+        origin=" + ".join(origin),
     )
 
 
@@ -219,6 +276,7 @@ async def write_all(
                 settings,
                 cue_id=f"{n:03d}",
                 facts=facts,
+                draft=plan.draft,
                 gap=gap,
                 speech=speech,
                 context=context,
@@ -226,5 +284,5 @@ async def write_all(
                 allowed_names=allowed_names,
             )
         )
-    cues = await asyncio.gather(*jobs)
-    return sorted(cues, key=lambda c: c.start)
+    written = await asyncio.gather(*jobs)
+    return sorted((c for c in written if c is not None), key=lambda c: c.start)

@@ -31,11 +31,13 @@ transcript (source "speech") or listed as verified context (source "context"). N
 when the fact becomes visible (seconds from the start of the video); fact is at most 25 words, objective, present \
 tense, specific (values, labels, shapes, what changes), built only from the visual reports; importance 3 = needed to follow the lecture, 2 = helpful, 1 = nice to \
 have; already_spoken is true when the speech already conveys it; moment_id is the pointing moment it resolves, or "".
-5. cue_plan: assign facts to silences, at most one plan per silence. Prefer the first silence at or after the fact's time, within about 10 \
-seconds. Respect each silence's word budget: everything assigned to it must fit. Most important facts first; drop \
-importance-1 facts when space is short. If an importance-3 fact has no silence that fits, use gap_id "extended" and \
-the player will pause the video for it. Never plan facts that are already_spoken. Every pointing moment that refers \
-to something visible should be covered.
+5. cue_plan: assign facts to silences, at most one plan per silence, and write the draft to speak there. Prefer \
+the first silence at or after the fact's time, within about 10 seconds. Use only silences with a word_budget of at \
+least 4. The draft must fit the silence's word budget (count each number as the words needed to say it); start by \
+naming what the thing is, then the key detail; present tense; no "we see". Most important facts first; drop \
+importance-1 facts when space is short. If an importance-3 fact has no silence that fits, use gap_id "extended" \
+(the player pauses the video) with a draft of at most 30 words. Never plan facts that are already_spoken. Every \
+pointing moment that refers to something visible should be covered.
 6. style_notes: short guidance for the writer, such as what to call recurring elements.
 
 Rules (DCMP Description Key, WCAG 2.1 SC 1.2.5): describe what is visible and needed for comprehension; do not \

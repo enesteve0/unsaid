@@ -48,6 +48,44 @@ async def _describe(args: argparse.Namespace) -> None:
         print(f"[{cue['start']:7.2f}] {cue['tier']:6} {cue['id']}: {cue['text']}")
 
 
+def _publish(args: argparse.Namespace) -> None:
+    """Copy a finished run into samples/<id>/ (video, tracks, result) and register it in samples/manifest.json."""
+    import shutil
+
+    run = Path(args.run)
+    target = Path(args.samples) / args.id
+    target.mkdir(parents=True, exist_ok=True)
+    shutil.copyfile(args.video, target / "video.mp4")
+    for name in (
+        "result.json",
+        "descriptions.vtt",
+        "captions.vtt",
+        "captions.srt",
+        "transcript.html",
+        "markers.fcpxml",
+    ):
+        shutil.copyfile(run / name, target / name)
+    manifest_path = Path(args.samples) / "manifest.json"
+    manifest = json.loads(manifest_path.read_text()) if manifest_path.exists() else []
+    result = json.loads((run / "result.json").read_text())
+    entry = {
+        "id": args.id,
+        "title": result["title"],
+        "credit": args.credit,
+        "license": args.license,
+        "license_url": args.license_url,
+        "source_url": args.source_url,
+        "duration": result["video"]["duration"],
+    }
+    if args.hero:
+        start, end = (float(x) for x in args.hero.split(","))
+        entry["hero"] = {"start": start, "end": end}
+    manifest = [m for m in manifest if m["id"] != args.id]
+    manifest.insert(0 if args.first else len(manifest), entry)
+    manifest_path.write_text(json.dumps(manifest, indent=1) + "\n")
+    print(f"published {args.id} -> {target}")
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(prog="unsaid")
     sub = parser.add_subparsers(dest="command", required=True)
@@ -57,9 +95,22 @@ def main() -> None:
     d.add_argument("--title", default="Lecture")
     d.add_argument("--source-url", default=None)
     d.add_argument("--models", default="models")
+    p = sub.add_parser("publish-sample", help="publish a finished run as a sample")
+    p.add_argument("--run", required=True)
+    p.add_argument("--video", required=True)
+    p.add_argument("--id", required=True)
+    p.add_argument("--credit", required=True)
+    p.add_argument("--license", required=True)
+    p.add_argument("--license-url", required=True)
+    p.add_argument("--source-url", required=True)
+    p.add_argument("--hero", default="", help="start,end seconds of the home-page excerpt")
+    p.add_argument("--first", action="store_true")
+    p.add_argument("--samples", default="../samples")
     args = parser.parse_args()
     if args.command == "describe":
         asyncio.run(_describe(args))
+    elif args.command == "publish-sample":
+        _publish(args)
 
 
 if __name__ == "__main__":

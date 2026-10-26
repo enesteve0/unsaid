@@ -111,7 +111,7 @@ class VisualFact(BaseModel):
 class CuePlan(BaseModel):
     gap_id: str
     fact_ids: list[str]
-    intent: str
+    draft: str = Field(description="The description to speak, within the silence's word budget")
 
 
 class LessonBible(BaseModel):
@@ -194,6 +194,7 @@ class Cue(BaseModel):
     gate_failures: list[str] = Field(default_factory=list)
     gate_warnings: list[str] = Field(default_factory=list)
     repairs: int = 0
+    origin: str = ""
     verification: Verification | None = None
     tier: Tier = "review"
     sources: list[Source] = Field(default_factory=list)
