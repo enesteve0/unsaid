@@ -55,6 +55,10 @@ class Cancelled(Exception):
     pass
 
 
+class PerceptionFailed(RuntimeError):
+    """Most of the video could not be read; reporting "nothing to describe" would be false."""
+
+
 @dataclass
 class RunOptions:
     title: str = "Lecture"
@@ -189,6 +193,10 @@ async def run_pipeline(
         return {o.segment.id: o for o in results}
 
     observations: dict[str, Observation] = await stage("watch", watch)
+    if segments and len(failures) * 2 > len(segments):
+        raise PerceptionFailed(
+            f"could not read {len(failures)} of {len(segments)} segments of the video; try again later"
+        )
 
     resolutions: dict[str, PointerResolution] = await stage(
         "resolve", lambda: resolve_moments(tf, ledger, moments, observations, transcript.words)

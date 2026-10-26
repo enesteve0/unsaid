@@ -14,7 +14,7 @@ from typing import Any
 
 from .asr import SpeechRecognizer
 from .config import Settings
-from .pipeline import Cancelled, RunOptions, run_pipeline
+from .pipeline import Cancelled, PerceptionFailed, RunOptions, run_pipeline
 from .store import Store
 from .tf_client import AuthFailure, CreditExhausted, TokenFactory
 
@@ -100,6 +100,16 @@ class RunQueue:
                     "type": "finished",
                     "status": "failed",
                     "error": "Live describing is paused (model credit exhausted). Recorded examples still work.",
+                },
+            )
+        except PerceptionFailed as exc:
+            self.store.update_run(run_id, status="failed", finished=time.time(), error=str(exc))
+            self._publish(
+                run_id,
+                {
+                    "type": "finished",
+                    "status": "failed",
+                    "error": "The video model could not read most of this video right now. Please try again in a few minutes.",
                 },
             )
         except AuthFailure:

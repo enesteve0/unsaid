@@ -35,7 +35,7 @@ from unsaid import gates, media
 from unsaid.asr import SpeechRecognizer
 from unsaid.config import Role, get_settings
 from unsaid.ledger import Ledger
-from unsaid.pipeline import RunOptions, run_pipeline
+from unsaid.pipeline import PerceptionFailed, RunOptions, run_pipeline
 from unsaid.schemas import Cue, Interval, Word
 from unsaid.segments import timed_transcript
 from unsaid.tf_client import AuthFailure, CreditExhausted, TokenFactory
@@ -107,9 +107,18 @@ def timing(cues: list[Cue], speech: list[Interval]) -> tuple[float, float]:
 
 
 def grounding(cues: list[Cue], result: dict) -> int:
+    """Descriptions with a number or name found nowhere on screen, in what the vision model saw, or in the speech.
+    Uses the same sources as the pipeline's gates, for both systems."""
+    seen: list[str] = []
+    for facts in result["observations"].values():
+        seen += facts["on_screen_text"]
+        seen += [v["description"] for v in facts["visuals"]] + [
+            x for v in facts["visuals"] for x in v["values"]
+        ]
+        seen += [e["description"] for e in facts["events"]]
     screen = [t for o in result["observations"].values() for t in o["on_screen_text"]]
     spoken = " ".join(w["text"] for w in result["transcript"])
-    allowed = set().union(*(gates.numbers_in(t) for t in [*screen, spoken]))
+    allowed = set().union(*(gates.numbers_in(t) for t in [*seen, spoken]))
     vocab = gates.vocabulary(screen, [spoken], result["context"]["names"])
     bad = 0
     for c in cues:
@@ -143,8 +152,10 @@ async def coverage(
             ],
             stage="judge",
             ledger=ledger,
+            thinking=True,
             schema=CoverageVerdict,
-            max_tokens=2000,
+            constrain=False,
+            max_tokens=12000,
         )
         scores.append({"yes": 1.0, "partial": 0.5, "no": 0.0}[verdict.parsed.verdict])  # type: ignore[union-attr]
     return sum(scores) / len(scores), scores
@@ -157,9 +168,18 @@ async def evaluate_clip(tf: TokenFactory, asr: SpeechRecognizer, clip: dict, out
     video = Path(clip["path"])
 
     t0 = time.perf_counter()
-    result = await run_pipeline(
-        video, workdir / "unsaid", settings=settings, tf=tf, asr=asr, options=RunOptions(title=clip["title"])
-    )
+    try:
+        result = await run_pipeline(
+            video,
+            workdir / "unsaid",
+            settings=settings,
+            tf=tf,
+            asr=asr,
+            options=RunOptions(title=clip["title"]),
+        )
+    except PerceptionFailed as exc:
+        # An infrastructure failure, not a judgement on either system: leave the clip out and say why.
+        return {"id": clip["id"], "title": clip["title"], "skipped": str(exc)}
     unsaid_seconds = time.perf_counter() - t0
     unsaid_cues = [Cue(**c) for c in result["cues"] if c["tier"] != "never"]
     speech = [Interval(**s) for s in result["speech"]]
