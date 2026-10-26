@@ -1,0 +1,146 @@
+[
+ {
+  "id": "fourier-a",
+  "title": "Explaining Fourier analysis with a machine, 0:00-1:40 (engineerguy)",
+  "path": "data/eval/clips/fourier-a.mp4",
+  "license": "CC BY 3.0",
+  "source": "https://commons.wikimedia.org/wiki/File:3_of_4_-_Analysis_-_Explaining_Fourier_analysis_with_a_machines.webm",
+  "labels": [
+   {
+    "t": 11.4,
+    "said": "...turned into cosines here, multiplied by coefficients.",
+    "referent": "The presenter points at the tall machine's vertical rods; a title card reads Albert Michelson's Harmonic Analyzer, Synthesis, video 2 of 4."
+   },
+   {
+    "t": 17.7,
+    "said": "the resulting function plotted here on the front.",
+    "referent": "He points at a white card on the front of the machine where the pen draws the resulting curve."
+   },
+   {
+    "t": 32.5,
+    "said": "if I want to plot a particular function here, how do I set the amplitude bars",
+    "referent": "On-screen text: adding sinusoids to form a function is synthesis; decomposing a function into sinusoids is analysis."
+   },
+   {
+    "t": 52.6,
+    "said": "All of the information that function carries is contained in half a period.",
+    "referent": "Graph titled square wave: f(x) alternates between 0 and 10, pulses centred on 0 and on plus and minus 2 pi."
+   },
+   {
+    "t": 64.0,
+    "said": "We use the values of these points as the inputs for the machine.",
+    "referent": "Dot plot of value against rocker bar: bars 1 to 10 sit at 10, bars 11 to 20 at 0."
+   },
+   {
+    "t": 78.6,
+    "said": "we'll look at the side of the machine.",
+    "referent": "Side of the machine: a hand turns a crank that drives a cone-shaped stack of gears below rows of vertical rods."
+   },
+   {
+    "t": 90.0,
+    "said": "The indices on the rocker arms run from high on the left to low on the right.",
+    "referent": "Rocker arm tips are numbered 20 at the far left down to 1 at the far right."
+   }
+  ]
+ },
+ {
+  "id": "fourier-b",
+  "title": "Explaining Fourier analysis with a machine, 2:05-3:45 (engineerguy)",
+  "path": "data/eval/clips/fourier-b.mp4",
+  "license": "CC BY 3.0",
+  "source": "https://commons.wikimedia.org/wiki/File:3_of_4_-_Analysis_-_Explaining_Fourier_analysis_with_a_machines.webm",
+  "labels": [
+   {
+    "t": 15.9,
+    "said": "If we look at the output from the machine, and compare it to a sinc calculated by a computer",
+    "referent": "A curve labelled drawn by the machine: one tall central peak with small ripples on both sides, matched by computed dots."
+   },
+   {
+    "t": 28.2,
+    "said": "and use these values on the rocker arms.",
+    "referent": "White markers set on the rocker arms trace a curve, highest in the middle."
+   },
+   {
+    "t": 70.2,
+    "said": "Extract the coefficients and then synthesize that function to approximate the original.",
+    "referent": "Diagram: a square wave, analyzed, gives a sinc curve; the sinc, synthesized, gives back an approximate square wave."
+   },
+   {
+    "t": 95.5,
+    "said": "You can learn more about the book here.",
+    "referent": "End screen tiles: The Book + Posters, the entire book Page-by-Page, bonus video Rocker Arms, and the other videos in the series."
+   }
+  ]
+ },
+ {
+  "id": "capacitor",
+  "title": "A-level Physics Core Practical: Capacitor Discharge, 1:00-2:55 (NUSTEM)",
+  "path": "data/eval/clips/capacitor.mp4",
+  "license": "CC BY 3.0",
+  "source": "https://commons.wikimedia.org/wiki/File:A-level_Physics_Core_Practical-_Capacitor_Discharge.webm",
+  "labels": [
+   {
+    "t": 25.0,
+    "said": "You can see that the data's been plotted on the screen behind me.",
+    "referent": "The data logger's voltage-time graph: a reading near 15 volts and a line that falls steadily as time passes."
+   }
+  ],
+  "excluded": [
+   {
+    "t": 14.5,
+    "said": "So let's have a look at what happens.",
+    "why": "no specific referent"
+   },
+   {
+    "t": 27.4,
+    "said": "on the screen behind me",
+    "why": "same moment as 25.0"
+   },
+   {
+    "t": 40.9,
+    "said": "They could also look at the graph and try to find out how long it takes...",
+    "why": "hypothetical, not pointing"
+   }
+  ]
+ },
+ {
+  "id": "laser",
+  "title": "How a laser works, 2:00-3:50 (engineerguy)",
+  "path": "data/eval/clips/laser.mp4",
+  "license": "CC BY 3.0",
+  "source": "https://commons.wikimedia.org/wiki/File:How_a_Laser_Works.webm",
+  "labels": [
+   {
+    "t": 16.7,
+    "said": "let's look at what happens with a weaker lamp.",
+    "referent": "Diagram: a flashtube coils around a ruby cylinder with a fully mirrored end and a partially mirrored end; a red beam leaves the partially mirrored end."
+   },
+   {
+    "t": 50.2,
+    "said": "Here, more electrons in the energy level just above the ground state than in the ground state.",
+    "referent": "Energy diagram: five red electrons on the excited state at the top, an empty lower energy state, three electrons on the ground state."
+   }
+  ],
+  "excluded": [
+   {
+    "t": 76.3,
+    "said": "Now, at this point, we have coherent light",
+    "why": "temporal 'at this point', not pointing"
+   }
+  ]
+ },
+ {
+  "id": "ccd",
+  "title": "CCD: the heart of a digital camera, 0:40-2:35 (engineerguy)",
+  "path": "data/eval/clips/ccd.mp4",
+  "license": "CC BY 3.0",
+  "source": "https://commons.wikimedia.org/wiki/File:CCD_-_The_heart_of_a_digital_camera_(how_a_charge-coupled_device_works).webm",
+  "labels": [
+   {
+    "t": 45.9,
+    "said": "Here's what goes wrong.",
+    "referent": "A grid of pixels drawn as coloured squares, orange on the left fading to green on the right, each with a zigzag connector."
+   }
+  ]
+ }
+]
