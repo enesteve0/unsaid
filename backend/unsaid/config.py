@@ -76,8 +76,9 @@ class Settings(BaseSettings):
     min_gap_seconds: float = 1.2
     speech_guard_seconds: float = 0.15
 
-    # Ultra's reasoning depth for the lesson plan. "medium" sets the chat template's medium_effort flag.
-    reason_effort: Literal["full", "medium"] = "full"
+    # Ultra's reasoning depth for the lesson plan. "medium" sets the chat template's medium_effort flag: on six clips
+    # it planned with 58% fewer tokens at the same coverage as "full" (prototype on the NVIDIA API catalog).
+    reason_effort: Literal["full", "medium"] = "medium"
 
     # Access and spend controls (see README "Operations").
     judge_code: str = ""
