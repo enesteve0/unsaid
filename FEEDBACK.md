@@ -8,14 +8,22 @@ Items are ordered by how much time they cost us.
 We prototyped prompts on build.nvidia.com before our Token Factory account was ready. These notes concern that API,
 not Token Factory.
 
-1. **Strict structured output fails on Nemotron 3.5 Super VL with image input.**
-   `POST https://integrate.api.nvidia.com/v1/chat/completions` with `model: nvidia/nemotron-3.5-super-vl-120b-a12b`,
-   one `image_url` data URL, `chat_template_kwargs.enable_thinking: false` and
-   `response_format: {type: json_schema, json_schema: {strict: true, schema: {...}}}` returns
-   `HTTP 500 {"message": "Failed to generate completions"}` in under a second. The same request without
-   `response_format` returns valid JSON when the schema is in the prompt. Our client now retries without constrained
-   decoding when a server error follows a `json_schema` request, and remembers that for the model.
-   *Suggestion:* return a 400 that names the unsupported parameter, or support `json_schema` for multimodal input.
+1. **Intermittent bare 500s and stalled requests on Nemotron 3.5 Super VL.** Our perception request to
+   `nvidia/nemotron-3.5-super-vl-120b-a12b` (`POST https://integrate.api.nvidia.com/v1/chat/completions`: a 40-second
+   clip, three stills and the JSON schema in the prompt, about 6,100 prompt tokens, thinking off) usually returns in
+   8–14 s. Sometimes the identical request instead:
+   - returns `HTTP 500 {"message": "Failed to generate completions"}` within 1–2 s, often in bursts: three
+     concurrent requests failed within 30 ms of each other, and one request failed three times in a row within a few
+     seconds. Repeated minutes later, the same requests succeeded, apart from the stalls below;
+   - or sends nothing at all: four requests had no response after 60–240 s, and their retries finished in about
+     10 s.
+
+   We first took one of these 500s for a `json_schema` limitation with image input and reported it as such here.
+   Repeated tests (4 of 4 successful with an image and strict `json_schema`) showed that it is intermittent, so we
+   withdrew that report. Our client now retries a 5xx once after 5 s and streams every call, so a stalled request is
+   cut off after 60 s without a chunk instead of after the whole 180 s budget.
+   *Suggestion:* answer capacity problems with 503 and `Retry-After`, so they can't be mistaken for a bad request,
+   and include a request ID in error bodies.
 
 2. **A model listed in `/v1/models` that the account cannot call.** `nvidia/nemotron-nano-3-30b-a3b` appears in
    `GET /v1/models`, but chat completions return
@@ -27,7 +35,15 @@ not Token Factory.
    in about 6.5 minutes. *Suggestion:* document "stream reasoning calls" next to the reasoning examples, or raise the
    gateway timeout for reasoning models.
 
-4. **Model IDs differ between the NVIDIA catalog and Token Factory.**
+4. **Reasoning length can be controlled, but only through an undocumented template flag.** On
+   `nvidia/nemotron-3-ultra-550b-a55b`, `thinking_token_budget` returns
+   `400 {"message": "Validation: Unsupported parameter(s): thinking_token_budget"}`. `reasoning_effort: "low"` is
+   accepted, but a single test showed no clear effect. The chat template's `medium_effort` flag
+   (`chat_template_kwargs: {"enable_thinking": true, "medium_effort": true}`) does work: over four runs each of the
+   same planning puzzle, Ultra wrote a median of 1,478 tokens instead of 2,794, two to three times faster, with the
+   same correct answer every time. *Suggestion:* document the effort flags per model, and accept a token budget.
+
+5. **Model IDs differ between the NVIDIA catalog and Token Factory.**
    - Nano is `nvidia/nemotron-nano-3-30b-a3b` on build.nvidia.com but `nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B` on Token
      Factory.
    - Lightning is `nvidia/nemotron-3.5-lightning-30b-a3b` versus `nvidia/Nemotron-3_5-Lightning`.
@@ -35,12 +51,18 @@ not Token Factory.
    Moving a prototype between the two is a lookup-table exercise. *Suggestion:* a published alias table, or
    accepting the NVIDIA catalog IDs as aliases on Token Factory.
 
-5. **Video understanding without audio.** Nemotron 3.5 Super VL reads slides, charts and actions well, but it has no
+6. **Usage does not report reasoning tokens for Ultra.** Streamed and non-streamed responses from
+   `nvidia/nemotron-3-ultra-550b-a55b` contain only `prompt_tokens`, `completion_tokens` and `total_tokens`, with no
+   `completion_tokens_details.reasoning_tokens`, although the reasoning arrives in `reasoning_content`. Costs can
+   still be tracked, because reasoning is counted in `completion_tokens`, but not how much of a call was thinking.
+   *Suggestion:* fill `completion_tokens_details.reasoning_tokens`, which the OpenAI-compatible schema provides for.
+
+7. **Video understanding without audio.** Nemotron 3.5 Super VL reads slides, charts and actions well, but it has no
    audio input, so any task that depends on *when people speak* needs a separate speech model. We run NVIDIA Parakeet
    TDT 0.6B v2 on CPU for that. A vision-language model that also hears (Nemotron 3 Nano Omni was retired from Token
    Factory on Aug 31, 2026) would remove a whole stage.
 
-6. **Word timestamps for Parakeet on CPU.** The community ONNX export we use returns token start times on an 80 ms grid,
+8. **Word timestamps for Parakeet on CPU.** The community ONNX export we use returns token start times on an 80 ms grid,
    with no end times. *Suggestion:* official ONNX exports of Parakeet with word-level start and end times would make
    timing-sensitive accessibility work much easier.
 

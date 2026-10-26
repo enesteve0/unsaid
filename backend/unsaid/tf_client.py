@@ -463,9 +463,9 @@ class TokenFactory:
                     max_tokens = min(16_000, (max_tokens or DEFAULT_MAX_TOKENS[(role, use_thinking)]) // 2)
                     continue
                 if constrained and status >= 500:
-                    # Some deployments reject json_schema decoding outright; the schema is also in the prompt,
-                    # so retry unconstrained and keep this model unconstrained for a while (not for good: the
-                    # 500 may have been a transient one).
+                    # A 5xx after a constrained request may be the deployment failing on json_schema or just a
+                    # transient error. The schema is also in the prompt, so retry unconstrained and keep this
+                    # model unconstrained for a while, not for good.
                     constrain = False
                     self._unconstrained_until[model] = time.monotonic() + RETIRED_SECONDS
                     continue
