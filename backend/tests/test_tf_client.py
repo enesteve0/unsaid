@@ -219,3 +219,9 @@ async def test_max_tokens_rejection_retries_with_smaller_budget():
     assert result.content == "ok"
     assert seen[0]["max_tokens"] == 40_000 and seen[1]["max_tokens"] == 16_000
     assert seen[1]["model"] == seen[0]["model"]  # same model, not a silent fallback
+
+
+def test_extract_json_ignores_trailing_characters():
+    assert json.loads(extract_json('{"descriptions": [{"t": 1, "text": "x"}]}}')) == {
+        "descriptions": [{"t": 1, "text": "x"}]
+    }

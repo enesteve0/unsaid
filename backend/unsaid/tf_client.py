@@ -136,12 +136,17 @@ _FENCE = re.compile(r"^```(?:json)?\s*|\s*```$", re.MULTILINE)
 
 
 def extract_json(text: str) -> str:
-    """Pull the JSON object out of a reply that may carry code fences or stray prose."""
+    """Pull the first complete JSON object out of a reply that may carry code fences, prose or trailing junk."""
     cleaned = _FENCE.sub("", text.strip())
-    start, end = cleaned.find("{"), cleaned.rfind("}")
-    if start == -1 or end == -1 or end < start:
+    start = cleaned.find("{")
+    if start == -1:
         return cleaned
-    return cleaned[start : end + 1]
+    try:
+        value, _ = json.JSONDecoder().raw_decode(cleaned[start:])
+        return json.dumps(value)
+    except json.JSONDecodeError:
+        end = cleaned.rfind("}")
+        return cleaned[start : end + 1] if end > start else cleaned
 
 
 def _reasoning_of(message: Any) -> str:

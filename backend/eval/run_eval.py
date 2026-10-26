@@ -168,7 +168,18 @@ async def evaluate_clip(tf: TokenFactory, asr: SpeechRecognizer, clip: dict, out
 
     base_ledger = Ledger()
     t0 = time.perf_counter()
-    base_cues = await oneshot(tf, base_ledger, video, words, duration, workdir)
+    base_cues: list[Cue] | None = None
+    for _ in range(2):
+        try:
+            base_cues = await oneshot(tf, base_ledger, video, words, duration, workdir)
+            break
+        except (CreditExhausted, AuthFailure):
+            raise
+        except Exception as exc:
+            print(f"  one-shot failed on {clip['id']}: {type(exc).__name__}", flush=True)
+    if base_cues is None:
+        # Never score a failed baseline as an empty, perfect one: leave the clip out for both systems.
+        return {"id": clip["id"], "title": clip["title"], "skipped": "one-shot baseline failed twice"}
     base_seconds = time.perf_counter() - t0
     for cue in base_cues:
         times = [min(cue.start + 0.3, duration - 0.1), min(cue.start + 1.3, duration - 0.1)]
@@ -324,7 +335,9 @@ def main(argv: list[str] | None = None) -> None:
         return results
 
     results = asyncio.run(run_all())
-    report = aggregate(results)
+    skipped = [r for r in results if "skipped" in r]
+    report = aggregate([r for r in results if "skipped" not in r])
+    report["skipped"] = [{"id": r["id"], "reason": r["skipped"]} for r in skipped]
     Path(args.report).write_text(json.dumps(report, indent=1))
     print(json.dumps(report["systems"], indent=1))
 
