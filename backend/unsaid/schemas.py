@@ -35,6 +35,7 @@ class Segment(BaseModel):
     start: float
     end: float
     keyframes: list[float] = Field(default_factory=list)
+    moment_frames: list[float] = Field(default_factory=list)  # just after each pointing moment in the segment
 
 
 class PointingMoment(BaseModel):

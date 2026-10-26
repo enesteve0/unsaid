@@ -13,7 +13,7 @@ from . import media
 from .config import Role
 from .ledger import Ledger
 from .schemas import Segment, SegmentFacts, Word
-from .segments import said_between
+from .segments import said_between, still_times
 from .tf_client import TokenFactory
 
 SYSTEM = (
@@ -54,7 +54,7 @@ async def perceive(
     tf: TokenFactory, ledger: Ledger, video: Path, segment: Segment, words: list[Word], workdir: Path
 ) -> Observation:
     clip = await media.cut_clip(video, segment.start, segment.end, workdir / f"{segment.id}.mp4")
-    times = segment.keyframes[-3:] if len(segment.keyframes) > 3 else segment.keyframes
+    times = still_times(segment)
     stills = [
         (t, await media.still(video, t, workdir / f"{segment.id}_{i}.jpg")) for i, t in enumerate(times)
     ]

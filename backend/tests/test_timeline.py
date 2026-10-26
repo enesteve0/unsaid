@@ -1,6 +1,13 @@
 from unsaid.deixis import find_pointing_moments
-from unsaid.schemas import Word
-from unsaid.segments import attach_moments, build_segments, find_gaps, gap_after, speech_intervals
+from unsaid.schemas import Segment, Word
+from unsaid.segments import (
+    attach_moments,
+    build_segments,
+    find_gaps,
+    gap_after,
+    speech_intervals,
+    still_times,
+)
 
 
 def words_from(text: str, start: float = 0.0, step: float = 0.4) -> list[Word]:
@@ -56,7 +63,18 @@ def test_attach_moments_adds_keyframe_after_pointing():
     moments = find_pointing_moments(ws)
     attach_moments(moments, segs)
     assert moments[0].segment_id == "s1"
-    assert round(moments[0].t + 0.8, 2) in segs[0].keyframes
+    assert round(moments[0].t + 0.8, 2) in segs[0].moment_frames
+
+
+def test_perception_stills_put_pointing_moments_first():
+    # USGS s1: three keyframes plus two pointing moments; the old "last three" rule dropped the frame at 11.73 s.
+    seg = Segment(id="s1", start=0.0, end=40.0, keyframes=[6.0, 20.01, 36.02], moment_frames=[11.73, 21.31])
+    assert still_times(seg) == [11.73, 21.31, 36.02]  # 36.02 adds more than 20.01, next to 21.31
+    assert still_times(Segment(id="s2", start=0.0, end=40.0, keyframes=[6.0, 20.0, 36.0])) == [
+        6.0,
+        20.0,
+        36.0,
+    ]
 
 
 def test_gap_after_finds_next_silence():

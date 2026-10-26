@@ -66,13 +66,27 @@ def segment_at(t: float, segments: list[Segment]) -> Segment:
 
 
 def attach_moments(moments: list[PointingMoment], segments: list[Segment]) -> None:
-    """Assign each pointing moment to its segment and add a keyframe just after it (the thing being pointed at)."""
+    """Assign each pointing moment to its segment and add a frame just after it (the thing being pointed at)."""
     for m in moments:
         seg = segment_at(m.t, segments)
         m.segment_id = seg.id
         frame = round(min(m.t + 0.8, seg.end - 0.05), 2)
-        if frame not in seg.keyframes:
-            seg.keyframes = sorted([*seg.keyframes, frame])
+        if frame not in seg.moment_frames:
+            seg.moment_frames = sorted([*seg.moment_frames, frame])
+
+
+def still_times(segment: Segment, cap: int = 3) -> list[float]:
+    """Full-resolution stills for perception, at most `cap`: the frames just after pointing moments first (what the
+    speaker points at), then each next keyframe farthest from those already chosen (the middle one if none)."""
+    picked = segment.moment_frames[:cap]
+    rest = list(segment.keyframes)
+    middle = (segment.start + segment.end) / 2
+    while len(picked) < cap and rest:
+        best = max(rest, key=lambda t: min((abs(t - p) for p in picked), default=-abs(t - middle)))
+        rest.remove(best)
+        if all(abs(best - p) >= 1.0 for p in picked):
+            picked = [*picked, best]
+    return sorted(picked)
 
 
 def gap_after(t: float, gaps: list[Gap], within: float = 12.0) -> Gap | None:
