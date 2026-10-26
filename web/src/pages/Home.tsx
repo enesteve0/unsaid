@@ -41,6 +41,10 @@ export function Home() {
   }, [])
 
   const hero = useMemo(() => (result && sample ? heroWindow(result, sample) : null), [result, sample])
+  const heroTip = useMemo(() => {
+    if (!result || !hero?.cue) return undefined
+    return result.tips.find((t) => hero.cue!.moment_ids.includes(t.moment_id)) ?? result.tips.find((t) => t.t >= hero.start && t.t <= hero.end)
+  }, [result, hero])
 
   const listen = (next: Mode) => {
     setMode(next)
@@ -117,6 +121,15 @@ export function Home() {
             <CueCard cue={hero.cue} result={result} onPlay={(t) => player.current?.play(t)} />
             <Checks result={result} />
           </div>
+          {heroTip && (
+            <div className="panel" style={{ marginTop: 18, display: 'grid', gap: 10 }}>
+              <p className="eyebrow">And the fix at the source: a tip for the lecturer</p>
+              <p style={{ margin: 0, color: 'var(--paper-dim)' }}>Said: “{heroTip.said}”</p>
+              <p style={{ margin: 0, fontFamily: 'var(--serif)', fontSize: '1.45rem', lineHeight: 1.3 }}>
+                Next time, try: “{heroTip.suggestion}”
+              </p>
+            </div>
+          )}
         </section>
       )}
 
