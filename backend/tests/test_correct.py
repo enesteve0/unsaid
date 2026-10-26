@@ -78,6 +78,12 @@ async def test_flagged_cue_is_corrected_and_rechecked(monkeypatch):
     assert cue.tier == "auto" and "corrected after the frame check" in cue.origin
 
 
+async def test_correction_that_leaves_only_a_fragment_is_not_kept(monkeypatch):
+    fixed, cue = await run(StubTF("Rock bars adjusted."), "supported", monkeypatch)
+    assert fixed == 0
+    assert cue.text == "Mirrored end on the right." and cue.tier == "review"
+
+
 async def test_correction_that_is_still_contradicted_reverts(monkeypatch):
     fixed, cue = await run(StubTF("Fully mirrored end on the left."), "contradicted", monkeypatch)
     assert fixed == 0

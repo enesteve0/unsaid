@@ -13,7 +13,7 @@ from pathlib import Path
 
 from . import gates
 from .config import Role, Settings
-from .cues import EXTENDED_WORDS, build_context, verified_names
+from .cues import EXTENDED_WORDS, MIN_INLINE_WORDS, build_context, verified_names
 from .ledger import Ledger
 from .perceive import Observation
 from .schemas import Cue, CueText, Gap, Interval, LessonBible, Word
@@ -42,6 +42,7 @@ async def correct_unsupported(
     context_names: list[str],
     duration: float,
     workdir: Path,
+    moment_times: dict[str, float] | None = None,
 ) -> int:
     facts_by_id = {f.id: f for f in bible.visual_facts}
     gaps_by_id = {g.id: g for g in gaps}
@@ -65,7 +66,10 @@ async def correct_unsupported(
         brief = {
             "description": cue.text,
             "problems": [
-                f"{c.claim} ({c.verdict.replace('_', ' ')})" for c in v.claims if c.verdict != "supported"
+                f"{c.claim} ({c.verdict.replace('_', ' ')})"
+                + (f"; observed: {c.observed}" if c.observed else "")
+                for c in v.claims
+                if c.verdict != "supported"
             ],
             "facts": [f.fact for f in facts],
             "max_words": budget,
@@ -85,6 +89,9 @@ async def correct_unsupported(
         text = result.parsed.text.strip()  # type: ignore[union-attr]
         if not text or text == cue.text:
             return False
+        if not cue.extended and len(text.split()) < MIN_INLINE_WORDS:
+            # What survives is a fragment ("rock bars adjusted"); keep the original in review for a person.
+            return False
         report = gates.check_cue(
             text,
             cue.start,
@@ -103,7 +110,7 @@ async def correct_unsupported(
         cue.text = text
         if not cue.extended:
             cue.end = round(cue.start + report.estimated_seconds, 3)
-        await verify_cue(tf, ledger, video, cue, check_times(cue, bible, duration), workdir)
+        await verify_cue(tf, ledger, video, cue, check_times(cue, bible, duration, moment_times), workdir)
         after = cue.verification
         unsupported_before = sum(c.verdict != "supported" for c in v.claims)
         if after is not None and not any(c.verdict == "contradicted" for c in after.claims):
