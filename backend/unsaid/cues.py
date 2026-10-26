@@ -86,12 +86,19 @@ def verified_names(
     return list(dict.fromkeys([*names, *context_names]))
 
 
-def _window(gap: Gap | None, start_hint: float, settings: Settings) -> tuple[float, float, int]:
-    if gap is None:
-        return start_hint, start_hint + EXTENDED_WORDS / settings.words_per_second, EXTENDED_WORDS
-    start = gap.start + settings.speech_guard_seconds
-    usable = gap.end - settings.speech_guard_seconds - start - settings.speech_lead_seconds
-    return start, gap.end, max(0, math.floor(usable * settings.words_per_second))
+def pause_point(anchor: float, words: list[Word], max_wait: float = 6.0) -> float:
+    """When to pause the video for an extended description about `anchor`: right away if nobody is speaking then,
+    otherwise at the end of the sentence being spoken, so no word is cut (or at the end of the current word if
+    that sentence runs on for more than max_wait seconds)."""
+    upcoming = [w for w in words if w.end > anchor]
+    if not upcoming or upcoming[0].start > anchor:
+        return anchor
+    for w in upcoming:
+        if w.end - anchor > max_wait:
+            break
+        if w.text.rstrip().endswith((".", "?", "!")):
+            return w.end
+    return upcoming[0].end
 
 
 def trim_candidates(text: str) -> Iterator[str]:
@@ -134,9 +141,11 @@ async def write_cue(
     context: CueContext,
     bible: LessonBible,
     allowed_names: list[str],
+    pause_at: float | None = None,
 ) -> Cue | None:
+    """`pause_at` is where an extended description pauses the video; by default, where its first fact appears."""
     essential = max(f.importance for f in facts) >= 3
-    start_hint = min(f.t for f in facts)
+    start_hint = pause_at if pause_at is not None else min(f.t for f in facts)
     start, window_end, budget = _window(gap, start_hint, settings)
     extended = gap is None
     if gap is not None and budget < MIN_INLINE_WORDS:
@@ -253,7 +262,9 @@ async def write_all(
     observations: dict[str, Observation],
     words: list[Word],
     context_names: list[str],
+    moment_times: dict[str, float] | None = None,
 ) -> list[Cue]:
+    moment_times = moment_times or {}
     facts_by_id = {f.id: f for f in bible.visual_facts if not f.already_spoken}
     gaps_by_id = {g.id: g for g in gaps}
     allowed_names = verified_names(bible, observations, words, context_names)
@@ -269,6 +280,9 @@ async def write_all(
         if gap is not None:
             used_gaps.add(gap.id)
         context = build_context(facts, observations, words, allowed_names)
+        # A description of what the speaker points at belongs where they point, not where the thing first appeared.
+        pointed = [moment_times[f.moment_id] for f in facts if f.moment_id in moment_times]
+        anchor = min(pointed) if pointed else min(f.t for f in facts)
         jobs.append(
             write_cue(
                 tf,
@@ -282,6 +296,7 @@ async def write_all(
                 context=context,
                 bible=bible,
                 allowed_names=allowed_names,
+                pause_at=pause_point(anchor, words),
             )
         )
     written = await asyncio.gather(*jobs)

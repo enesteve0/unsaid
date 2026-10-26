@@ -1,9 +1,9 @@
 from types import SimpleNamespace
 
 from unsaid.config import Settings
-from unsaid.cues import CueContext, trim_candidates, write_cue
+from unsaid.cues import CueContext, pause_point, trim_candidates, write_all, write_cue
 from unsaid.ledger import Ledger
-from unsaid.schemas import CueText, Gap, Interval, LessonBible, VisualFact
+from unsaid.schemas import CuePlan, CueText, Gap, Interval, LessonBible, VisualFact, Word
 
 SETTINGS = Settings(_env_file=None)
 SPEECH = [Interval(start=0.0, end=10.0), Interval(start=13.0, end=30.0)]  # a 3 s silence from 10 to 13
@@ -92,3 +92,63 @@ async def test_tiny_silence_never_produces_a_fragment():
     assert await run("Yellow box.", StubTF(), importance=2, gap=tiny) is None
     cue = await run("Yellow box highlights half a period.", StubTF(), importance=3, gap=tiny)
     assert cue is not None and cue.extended
+
+
+def words_of(*spans):
+    return [Word(text=text, start=start, end=end) for text, start, end in spans]
+
+
+# From the USGS clip: two back-to-back sentences, each pointing "here" at the map.
+SENTENCES = words_of(
+    ("This", 84.26, 84.34),
+    ("is", 84.34, 84.5),
+    ("deep", 85.7, 86.02),
+    ("here.", 86.02, 86.26),
+    ("This", 86.26, 86.34),
+    ("is", 86.34, 86.5),
+    ("deep", 87.86, 88.26),
+    ("right", 88.26, 88.42),
+    ("here.", 88.42, 88.9),
+)
+
+
+def test_pause_waits_for_the_end_of_the_sentence():
+    assert pause_point(86.02, SENTENCES) == 86.26
+    assert pause_point(88.26, SENTENCES) == 88.9
+    assert pause_point(80.0, SENTENCES) == 80.0  # nobody speaking yet: pause right away
+    run_on = words_of(*((f"word{i}", 10.0 + i, 10.9 + i) for i in range(12)))
+    assert pause_point(10.5, run_on) == 10.9  # no sentence end within 6 s: end of the current word
+
+
+async def test_paused_description_waits_for_the_pointing_moment():
+    pointed = VisualFact(
+        id="f5",
+        t=73.0,
+        segment_id="s3",
+        fact="Pointer on the shallow area",
+        importance=3,
+        already_spoken=False,
+        moment_id="p5",
+    )
+    bible = BIBLE.model_copy(
+        update={
+            "visual_facts": [pointed],
+            "cue_plan": [
+                CuePlan(gap_id="extended", fact_ids=["f5"], draft="Pointer on the shallow area by the beach.")
+            ],
+        }
+    )
+    cues = await write_all(
+        StubTF(),
+        Ledger(),
+        SETTINGS,
+        bible=bible,
+        gaps=[],
+        speech=[],
+        observations={},
+        words=SENTENCES,
+        context_names=[],
+        moment_times={"p5": 86.02},
+    )
+    assert len(cues) == 1 and cues[0].extended
+    assert cues[0].start == 86.26  # after "...deep here.", not at 73 s when the map first appeared

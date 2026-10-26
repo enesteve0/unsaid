@@ -29,6 +29,9 @@ def trace(label: dict, result: dict, verdict: str) -> tuple[str, list[str]]:
         c for c in result["cues"] if t + WINDOW[0] <= c["start"] <= t + WINDOW[1] and c["tier"] != "never"
     ]
     linked = [c for c in cues if fact_ids & set(c["fact_ids"])]
+    elsewhere = [
+        c for c in result["cues"] if fact_ids & set(c["fact_ids"]) and c not in cues and c["tier"] != "never"
+    ]
 
     lines = [f'  said: "{label["said"]}"', f"  showed: {label['referent']}"]
     for m, r in zip(moments, resolutions, strict=True):
@@ -48,6 +51,10 @@ def trace(label: dict, result: dict, verdict: str) -> tuple[str, list[str]]:
             f"  cue {c['id']} {mark} at {c['start']:.1f}s [{c['tier']}{', paused' if c['extended'] else ''}]: "
             f"{c['text']}" + (f" (gates: {', '.join(c['gate_failures'])})" if c["gate_failures"] else "")
         )
+    for c in elsewhere:
+        lines.append(
+            f"  cue {c['id']} linked but outside the judge's window, at {c['start']:.1f}s: {c['text']}"
+        )
 
     if verdict == "covered":
         stage = "covered"
@@ -56,11 +63,17 @@ def trace(label: dict, result: dict, verdict: str) -> tuple[str, list[str]]:
     elif not visual:
         stage = "resolved as not visual"
     elif not facts:
-        stage = "no fact planned"
-    elif not linked:
-        stage = "planned but not described"
-    else:
+        stage = "no fact for the moment"
+    elif not plans:
+        stage = "fact not planned" + (
+            " (marked already spoken)" if all(f["already_spoken"] for f in facts) else ""
+        )
+    elif linked:
         stage = "described but judged " + verdict
+    elif elsewhere:
+        stage = "described outside the judge's window"
+    else:
+        stage = "planned but not described"
     return stage, lines
 
 

@@ -235,6 +235,7 @@ async def run_pipeline(
         ),
     )
 
+    moment_times = {m.id: m.t for m in moments}
     cues: list[Cue] = await stage(
         "write",
         lambda: write_all(
@@ -247,6 +248,7 @@ async def run_pipeline(
             observations=observations,
             words=transcript.words,
             context_names=ctx.names,
+            moment_times=moment_times,
         ),
     )
     for cue in cues:
@@ -256,7 +258,6 @@ async def run_pipeline(
 
     allowed_names = verified_names(bible, observations, transcript.words, ctx.names)
     check_counts: dict[str, int] = {}
-    moment_times = {m.id: m.t for m in moments}
 
     async def check() -> None:
         await verify_all(tf, ledger, video, cues, bible, info.duration, allowed_names, workdir, moment_times)
