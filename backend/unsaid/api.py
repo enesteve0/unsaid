@@ -10,6 +10,7 @@ import asyncio
 import contextlib
 import json
 import secrets
+import shutil
 import time
 import uuid
 from pathlib import Path
@@ -204,8 +205,10 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         try:
             info = await media.probe(target)
         except Exception as exc:
+            shutil.rmtree(workdir, ignore_errors=True)
             raise HTTPException(415, "That file does not look like a playable video.") from exc
         if info.duration > settings.max_upload_seconds + 1:
+            shutil.rmtree(workdir, ignore_errors=True)
             raise HTTPException(
                 413,
                 f"Live runs take clips up to {int(settings.max_upload_seconds // 60)} minutes. Trim it, or use the overnight backlog.",
