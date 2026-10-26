@@ -240,7 +240,9 @@ async def run_pipeline(
         ),
     )
     for cue in cues:
-        cue.sources = ctx.sources
+        # Credit Tavily only where a description actually uses a name it supplied.
+        if any(name.lower() in cue.text.lower() for name in ctx.names):
+            cue.sources = ctx.sources
 
     allowed_names = verified_names(bible, observations, transcript.words, ctx.names)
     check_counts: dict[str, int] = {}
