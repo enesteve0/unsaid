@@ -67,12 +67,16 @@ Factory list prices, next to what the same text work would have cost on Ultra al
 Models write; code decides. A description is used only if:
 
 - it starts inside a silence and finishes before speech resumes (150 ms guard on both sides, 300 ms synthesis
-  lead-in), planned at 2.5 words per second, slower than normal speech;
+  lead-in), planned at 2.5 words per second, slower than normal speech, plus a short pause at each comma, colon or
+  dash;
+- a description of something the speaker points at starts between 3 s before and 10 s after the pointing, and not
+  before the thing is on screen;
 - it contains no number that is not printed on screen or spoken, and no name that is not on screen, in the speech
   or on the video’s page (fetched with Tavily);
 - it avoids “we see”, “the image shows” and “in this video”; hedges and past tense are flagged for review;
-- if nothing fits, it becomes an extended description (the player pauses the video, WCAG 2.1 SC 1.2.7), but only for
-  facts Ultra marked essential. Anything else is left out rather than squeezed into a fragment;
+- if nothing fits, it becomes an extended description of at most 30 words (the player pauses the video at the end of
+  the speaker's sentence, WCAG 2.1 SC 1.2.7), but only for facts Ultra marked essential. Anything else is left out
+  rather than squeezed into a fragment;
 - a description that identifies a person without a source is withheld.
 
 ## Where Nebius Token Factory accelerated the work
