@@ -1,0 +1,91 @@
+1
+00:00:02,754 --> 00:00:07,474
+In the previous video, I showed how turning the crank on this machine generates 20
+
+2
+00:00:07,474 --> 00:00:11,954
+different frequencies, also known as harmonics, which are turned into cosines here,
+
+3
+00:00:11,954 --> 00:00:15,166
+multiplied by coefficients. Then summed?
+
+4
+00:00:15,618 --> 00:00:19,038
+magnified and the resulting function plotted here on the front.
+
+5
+00:00:19,330 --> 00:00:21,374
+This process is called synthesis.
+
+6
+00:00:21,730 --> 00:00:24,830
+But this machine is called a harmonic analyzer.
+
+7
+00:00:25,186 --> 00:00:29,106
+which means it can be used to solve the much more difficult inverse problem called
+
+8
+00:00:29,106 --> 00:00:33,986
+analysis. For example, if I want to plot a particular function here, how do I set
+
+9
+00:00:33,986 --> 00:00:36,158
+the amplitude bars to produce it?
+
+10
+00:00:36,546 --> 00:00:39,902
+To illustrate how this machine does analysis, let's start with a square wave.
+
+11
+00:00:40,930 --> 00:00:43,810
+First, we use some unique properties of the square wave.
+
+12
+00:00:43,810 --> 00:00:49,214
+Since it's periodic, And even.
+
+13
+00:00:51,490 --> 00:00:55,486
+All of the information that function carries is contained in half a period.
+
+14
+00:00:57,442 --> 00:00:59,198
+So we'll take that half a period.
+
+15
+00:00:59,522 --> 00:01:02,110
+and sample to twenty equally spaced points.
+
+16
+00:01:02,914 --> 00:01:06,270
+We use the values of these points as the inputs for the machine.
+
+17
+00:01:11,938 --> 00:01:15,378
+When we turn the crank, we produce a new function that reveals the correct
+
+18
+00:01:15,378 --> 00:01:19,474
+coefficients. To see how we get these coefficients, we'll look at the side of the
+
+19
+00:01:19,474 --> 00:01:24,542
+machine. As I turn the crank, the tips of the rocker arms form a sinusoid.
+
+20
+00:01:27,490 --> 00:01:31,838
+The indices on the rocker arms run from high on the left to low on the right.
+
+21
+00:01:32,226 --> 00:01:34,750
+I'll flip the video to make it a little more intuitive.
+
+22
+00:01:35,426 --> 00:01:39,186
+When the rocker arm tips are lined up in a straight line, we'll call that crank
+
+23
+00:01:39,186 --> 00:01:40,006
+number zero.

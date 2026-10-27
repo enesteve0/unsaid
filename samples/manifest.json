@@ -1,0 +1,15 @@
+[
+ {
+  "id": "fourier-machine",
+  "title": "Explaining Fourier analysis with a machine (engineerguy)",
+  "credit": "Bill Hammack, Steve Kranz and Bruce Carpenter (engineerguy)",
+  "license": "CC BY 3.0",
+  "license_url": "https://creativecommons.org/licenses/by/3.0/",
+  "source_url": "https://commons.wikimedia.org/wiki/File:3_of_4_-_Analysis_-_Explaining_Fourier_analysis_with_a_machines.webm",
+  "duration": 100.0,
+  "hero": {
+   "start": 55.0,
+   "end": 73.0
+  }
+ }
+]

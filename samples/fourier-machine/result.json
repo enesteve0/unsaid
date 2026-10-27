@@ -1,0 +1,3069 @@
+{
+ "title": "Explaining Fourier analysis with a machine (engineerguy)",
+ "video": {
+  "duration": 100.0,
+  "width": 1920,
+  "height": 1080,
+  "fps": 29.97002997002997
+ },
+ "transcript": [
+  {
+   "text": "In",
+   "start": 2.754,
+   "end": 2.994
+  },
+  {
+   "text": "the",
+   "start": 2.994,
+   "end": 3.074
+  },
+  {
+   "text": "previous",
+   "start": 3.074,
+   "end": 3.394
+  },
+  {
+   "text": "video,",
+   "start": 3.394,
+   "end": 3.794
+  },
+  {
+   "text": "I",
+   "start": 3.794,
+   "end": 3.954
+  },
+  {
+   "text": "showed",
+   "start": 3.954,
+   "end": 4.194
+  },
+  {
+   "text": "how",
+   "start": 4.194,
+   "end": 4.354
+  },
+  {
+   "text": "turning",
+   "start": 4.354,
+   "end": 4.674
+  },
+  {
+   "text": "the",
+   "start": 4.674,
+   "end": 4.834
+  },
+  {
+   "text": "crank",
+   "start": 4.834,
+   "end": 5.234
+  },
+  {
+   "text": "on",
+   "start": 5.234,
+   "end": 5.394
+  },
+  {
+   "text": "this",
+   "start": 5.394,
+   "end": 5.554
+  },
+  {
+   "text": "machine",
+   "start": 5.554,
+   "end": 6.274
+  },
+  {
+   "text": "generates",
+   "start": 6.274,
+   "end": 6.914
+  },
+  {
+   "text": "20",
+   "start": 6.914,
+   "end": 7.474
+  },
+  {
+   "text": "different",
+   "start": 7.474,
+   "end": 7.794
+  },
+  {
+   "text": "frequencies,",
+   "start": 7.794,
+   "end": 8.594
+  },
+  {
+   "text": "also",
+   "start": 8.594,
+   "end": 8.834
+  },
+  {
+   "text": "known",
+   "start": 8.834,
+   "end": 8.994
+  },
+  {
+   "text": "as",
+   "start": 8.994,
+   "end": 9.154
+  },
+  {
+   "text": "harmonics,",
+   "start": 9.154,
+   "end": 9.874
+  },
+  {
+   "text": "which",
+   "start": 9.874,
+   "end": 9.954
+  },
+  {
+   "text": "are",
+   "start": 9.954,
+   "end": 10.114
+  },
+  {
+   "text": "turned",
+   "start": 10.114,
+   "end": 10.354
+  },
+  {
+   "text": "into",
+   "start": 10.354,
+   "end": 10.594
+  },
+  {
+   "text": "cosines",
+   "start": 10.594,
+   "end": 11.394
+  },
+  {
+   "text": "here,",
+   "start": 11.394,
+   "end": 11.954
+  },
+  {
+   "text": "multiplied",
+   "start": 11.954,
+   "end": 12.594
+  },
+  {
+   "text": "by",
+   "start": 12.594,
+   "end": 12.754
+  },
+  {
+   "text": "coefficients.",
+   "start": 12.754,
+   "end": 13.726
+  },
+  {
+   "text": "Then",
+   "start": 14.162,
+   "end": 14.482
+  },
+  {
+   "text": "summed?",
+   "start": 14.482,
+   "end": 15.166
+  },
+  {
+   "text": "magnified",
+   "start": 15.618,
+   "end": 16.338
+  },
+  {
+   "text": "and",
+   "start": 16.338,
+   "end": 16.498
+  },
+  {
+   "text": "the",
+   "start": 16.498,
+   "end": 16.658
+  },
+  {
+   "text": "resulting",
+   "start": 16.658,
+   "end": 17.138
+  },
+  {
+   "text": "function",
+   "start": 17.138,
+   "end": 17.698
+  },
+  {
+   "text": "plotted",
+   "start": 17.698,
+   "end": 18.098
+  },
+  {
+   "text": "here",
+   "start": 18.098,
+   "end": 18.338
+  },
+  {
+   "text": "on",
+   "start": 18.338,
+   "end": 18.498
+  },
+  {
+   "text": "the",
+   "start": 18.498,
+   "end": 18.578
+  },
+  {
+   "text": "front.",
+   "start": 18.578,
+   "end": 19.038
+  },
+  {
+   "text": "This",
+   "start": 19.33,
+   "end": 19.57
+  },
+  {
+   "text": "process",
+   "start": 19.57,
+   "end": 19.97
+  },
+  {
+   "text": "is",
+   "start": 19.97,
+   "end": 20.21
+  },
+  {
+   "text": "called",
+   "start": 20.21,
+   "end": 20.53
+  },
+  {
+   "text": "synthesis.",
+   "start": 20.53,
+   "end": 21.374
+  },
+  {
+   "text": "But",
+   "start": 21.73,
+   "end": 21.89
+  },
+  {
+   "text": "this",
+   "start": 21.89,
+   "end": 22.05
+  },
+  {
+   "text": "machine",
+   "start": 22.05,
+   "end": 22.45
+  },
+  {
+   "text": "is",
+   "start": 22.45,
+   "end": 22.69
+  },
+  {
+   "text": "called",
+   "start": 22.69,
+   "end": 22.93
+  },
+  {
+   "text": "a",
+   "start": 22.93,
+   "end": 23.17
+  },
+  {
+   "text": "harmonic",
+   "start": 23.17,
+   "end": 23.89
+  },
+  {
+   "text": "analyzer.",
+   "start": 23.89,
+   "end": 24.83
+  },
+  {
+   "text": "which",
+   "start": 25.186,
+   "end": 25.426
+  },
+  {
+   "text": "means",
+   "start": 25.426,
+   "end": 25.666
+  },
+  {
+   "text": "it",
+   "start": 25.666,
+   "end": 25.826
+  },
+  {
+   "text": "can",
+   "start": 25.826,
+   "end": 25.986
+  },
+  {
+   "text": "be",
+   "start": 25.986,
+   "end": 26.066
+  },
+  {
+   "text": "used",
+   "start": 26.066,
+   "end": 26.306
+  },
+  {
+   "text": "to",
+   "start": 26.306,
+   "end": 26.386
+  },
+  {
+   "text": "solve",
+   "start": 26.386,
+   "end": 26.706
+  },
+  {
+   "text": "the",
+   "start": 26.706,
+   "end": 26.866
+  },
+  {
+   "text": "much",
+   "start": 26.866,
+   "end": 27.106
+  },
+  {
+   "text": "more",
+   "start": 27.106,
+   "end": 27.346
+  },
+  {
+   "text": "difficult",
+   "start": 27.346,
+   "end": 27.906
+  },
+  {
+   "text": "inverse",
+   "start": 27.906,
+   "end": 28.546
+  },
+  {
+   "text": "problem",
+   "start": 28.546,
+   "end": 28.866
+  },
+  {
+   "text": "called",
+   "start": 28.866,
+   "end": 29.106
+  },
+  {
+   "text": "analysis.",
+   "start": 29.106,
+   "end": 30.066
+  },
+  {
+   "text": "For",
+   "start": 30.066,
+   "end": 30.306
+  },
+  {
+   "text": "example,",
+   "start": 30.306,
+   "end": 30.706
+  },
+  {
+   "text": "if",
+   "start": 30.706,
+   "end": 30.786
+  },
+  {
+   "text": "I",
+   "start": 30.786,
+   "end": 30.866
+  },
+  {
+   "text": "want",
+   "start": 30.866,
+   "end": 31.026
+  },
+  {
+   "text": "to",
+   "start": 31.026,
+   "end": 31.106
+  },
+  {
+   "text": "plot",
+   "start": 31.106,
+   "end": 31.346
+  },
+  {
+   "text": "a",
+   "start": 31.346,
+   "end": 31.426
+  },
+  {
+   "text": "particular",
+   "start": 31.426,
+   "end": 31.906
+  },
+  {
+   "text": "function",
+   "start": 31.906,
+   "end": 32.546
+  },
+  {
+   "text": "here,",
+   "start": 32.546,
+   "end": 33.186
+  },
+  {
+   "text": "how",
+   "start": 33.186,
+   "end": 33.346
+  },
+  {
+   "text": "do",
+   "start": 33.346,
+   "end": 33.506
+  },
+  {
+   "text": "I",
+   "start": 33.506,
+   "end": 33.666
+  },
+  {
+   "text": "set",
+   "start": 33.666,
+   "end": 33.986
+  },
+  {
+   "text": "the",
+   "start": 33.986,
+   "end": 34.306
+  },
+  {
+   "text": "amplitude",
+   "start": 34.306,
+   "end": 35.026
+  },
+  {
+   "text": "bars",
+   "start": 35.026,
+   "end": 35.426
+  },
+  {
+   "text": "to",
+   "start": 35.426,
+   "end": 35.506
+  },
+  {
+   "text": "produce",
+   "start": 35.506,
+   "end": 35.826
+  },
+  {
+   "text": "it?",
+   "start": 35.826,
+   "end": 36.158
+  },
+  {
+   "text": "To",
+   "start": 36.546,
+   "end": 36.706
+  },
+  {
+   "text": "illustrate",
+   "start": 36.706,
+   "end": 37.106
+  },
+  {
+   "text": "how",
+   "start": 37.106,
+   "end": 37.266
+  },
+  {
+   "text": "this",
+   "start": 37.266,
+   "end": 37.426
+  },
+  {
+   "text": "machine",
+   "start": 37.426,
+   "end": 37.826
+  },
+  {
+   "text": "does",
+   "start": 37.826,
+   "end": 37.986
+  },
+  {
+   "text": "analysis,",
+   "start": 37.986,
+   "end": 38.626
+  },
+  {
+   "text": "let's",
+   "start": 38.626,
+   "end": 38.786
+  },
+  {
+   "text": "start",
+   "start": 38.786,
+   "end": 38.946
+  },
+  {
+   "text": "with",
+   "start": 38.946,
+   "end": 39.106
+  },
+  {
+   "text": "a",
+   "start": 39.106,
+   "end": 39.186
+  },
+  {
+   "text": "square",
+   "start": 39.186,
+   "end": 39.506
+  },
+  {
+   "text": "wave.",
+   "start": 39.506,
+   "end": 39.902
+  },
+  {
+   "text": "First,",
+   "start": 40.93,
+   "end": 41.33
+  },
+  {
+   "text": "we",
+   "start": 41.33,
+   "end": 41.49
+  },
+  {
+   "text": "use",
+   "start": 41.49,
+   "end": 41.65
+  },
+  {
+   "text": "some",
+   "start": 41.65,
+   "end": 41.81
+  },
+  {
+   "text": "unique",
+   "start": 41.81,
+   "end": 42.21
+  },
+  {
+   "text": "properties",
+   "start": 42.21,
+   "end": 42.61
+  },
+  {
+   "text": "of",
+   "start": 42.61,
+   "end": 42.69
+  },
+  {
+   "text": "the",
+   "start": 42.69,
+   "end": 42.77
+  },
+  {
+   "text": "square",
+   "start": 42.77,
+   "end": 43.17
+  },
+  {
+   "text": "wave.",
+   "start": 43.17,
+   "end": 43.81
+  },
+  {
+   "text": "Since",
+   "start": 43.81,
+   "end": 44.05
+  },
+  {
+   "text": "it's",
+   "start": 44.05,
+   "end": 44.29
+  },
+  {
+   "text": "periodic,",
+   "start": 44.29,
+   "end": 45.054
+  },
+  {
+   "text": "And",
+   "start": 48.514,
+   "end": 48.834
+  },
+  {
+   "text": "even.",
+   "start": 48.834,
+   "end": 49.214
+  },
+  {
+   "text": "All",
+   "start": 51.49,
+   "end": 51.73
+  },
+  {
+   "text": "of",
+   "start": 51.73,
+   "end": 51.89
+  },
+  {
+   "text": "the",
+   "start": 51.89,
+   "end": 52.05
+  },
+  {
+   "text": "information",
+   "start": 52.05,
+   "end": 52.61
+  },
+  {
+   "text": "that",
+   "start": 52.61,
+   "end": 52.85
+  },
+  {
+   "text": "function",
+   "start": 52.85,
+   "end": 53.33
+  },
+  {
+   "text": "carries",
+   "start": 53.33,
+   "end": 53.73
+  },
+  {
+   "text": "is",
+   "start": 53.73,
+   "end": 53.97
+  },
+  {
+   "text": "contained",
+   "start": 53.97,
+   "end": 54.29
+  },
+  {
+   "text": "in",
+   "start": 54.29,
+   "end": 54.53
+  },
+  {
+   "text": "half",
+   "start": 54.53,
+   "end": 54.77
+  },
+  {
+   "text": "a",
+   "start": 54.77,
+   "end": 54.93
+  },
+  {
+   "text": "period.",
+   "start": 54.93,
+   "end": 55.486
+  },
+  {
+   "text": "So",
+   "start": 57.442,
+   "end": 57.682
+  },
+  {
+   "text": "we'll",
+   "start": 57.682,
+   "end": 58.002
+  },
+  {
+   "text": "take",
+   "start": 58.002,
+   "end": 58.162
+  },
+  {
+   "text": "that",
+   "start": 58.162,
+   "end": 58.322
+  },
+  {
+   "text": "half",
+   "start": 58.322,
+   "end": 58.642
+  },
+  {
+   "text": "a",
+   "start": 58.642,
+   "end": 58.722
+  },
+  {
+   "text": "period.",
+   "start": 58.722,
+   "end": 59.198
+  },
+  {
+   "text": "and",
+   "start": 59.522,
+   "end": 59.762
+  },
+  {
+   "text": "sample",
+   "start": 59.762,
+   "end": 60.162
+  },
+  {
+   "text": "to",
+   "start": 60.162,
+   "end": 60.402
+  },
+  {
+   "text": "twenty",
+   "start": 60.402,
+   "end": 60.722
+  },
+  {
+   "text": "equally",
+   "start": 60.722,
+   "end": 61.122
+  },
+  {
+   "text": "spaced",
+   "start": 61.122,
+   "end": 61.522
+  },
+  {
+   "text": "points.",
+   "start": 61.522,
+   "end": 62.11
+  },
+  {
+   "text": "We",
+   "start": 62.914,
+   "end": 63.074
+  },
+  {
+   "text": "use",
+   "start": 63.074,
+   "end": 63.314
+  },
+  {
+   "text": "the",
+   "start": 63.314,
+   "end": 63.394
+  },
+  {
+   "text": "values",
+   "start": 63.394,
+   "end": 63.794
+  },
+  {
+   "text": "of",
+   "start": 63.794,
+   "end": 63.954
+  },
+  {
+   "text": "these",
+   "start": 63.954,
+   "end": 64.114
+  },
+  {
+   "text": "points",
+   "start": 64.114,
+   "end": 64.514
+  },
+  {
+   "text": "as",
+   "start": 64.514,
+   "end": 64.754
+  },
+  {
+   "text": "the",
+   "start": 64.754,
+   "end": 64.914
+  },
+  {
+   "text": "inputs",
+   "start": 64.914,
+   "end": 65.394
+  },
+  {
+   "text": "for",
+   "start": 65.394,
+   "end": 65.554
+  },
+  {
+   "text": "the",
+   "start": 65.554,
+   "end": 65.634
+  },
+  {
+   "text": "machine.",
+   "start": 65.634,
+   "end": 66.27
+  },
+  {
+   "text": "When",
+   "start": 71.938,
+   "end": 72.178
+  },
+  {
+   "text": "we",
+   "start": 72.178,
+   "end": 72.258
+  },
+  {
+   "text": "turn",
+   "start": 72.258,
+   "end": 72.498
+  },
+  {
+   "text": "the",
+   "start": 72.498,
+   "end": 72.658
+  },
+  {
+   "text": "crank,",
+   "start": 72.658,
+   "end": 73.138
+  },
+  {
+   "text": "we",
+   "start": 73.138,
+   "end": 73.218
+  },
+  {
+   "text": "produce",
+   "start": 73.218,
+   "end": 73.458
+  },
+  {
+   "text": "a",
+   "start": 73.458,
+   "end": 73.618
+  },
+  {
+   "text": "new",
+   "start": 73.618,
+   "end": 73.778
+  },
+  {
+   "text": "function",
+   "start": 73.778,
+   "end": 74.258
+  },
+  {
+   "text": "that",
+   "start": 74.258,
+   "end": 74.418
+  },
+  {
+   "text": "reveals",
+   "start": 74.418,
+   "end": 74.818
+  },
+  {
+   "text": "the",
+   "start": 74.818,
+   "end": 74.978
+  },
+  {
+   "text": "correct",
+   "start": 74.978,
+   "end": 75.378
+  },
+  {
+   "text": "coefficients.",
+   "start": 75.378,
+   "end": 76.254
+  },
+  {
+   "text": "To",
+   "start": 76.834,
+   "end": 76.994
+  },
+  {
+   "text": "see",
+   "start": 76.994,
+   "end": 77.154
+  },
+  {
+   "text": "how",
+   "start": 77.154,
+   "end": 77.314
+  },
+  {
+   "text": "we",
+   "start": 77.314,
+   "end": 77.394
+  },
+  {
+   "text": "get",
+   "start": 77.394,
+   "end": 77.474
+  },
+  {
+   "text": "these",
+   "start": 77.474,
+   "end": 77.634
+  },
+  {
+   "text": "coefficients,",
+   "start": 77.634,
+   "end": 78.354
+  },
+  {
+   "text": "we'll",
+   "start": 78.354,
+   "end": 78.594
+  },
+  {
+   "text": "look",
+   "start": 78.594,
+   "end": 78.754
+  },
+  {
+   "text": "at",
+   "start": 78.754,
+   "end": 78.834
+  },
+  {
+   "text": "the",
+   "start": 78.834,
+   "end": 78.994
+  },
+  {
+   "text": "side",
+   "start": 78.994,
+   "end": 79.234
+  },
+  {
+   "text": "of",
+   "start": 79.234,
+   "end": 79.314
+  },
+  {
+   "text": "the",
+   "start": 79.314,
+   "end": 79.474
+  },
+  {
+   "text": "machine.",
+   "start": 79.474,
+   "end": 80.094
+  },
+  {
+   "text": "As",
+   "start": 80.962,
+   "end": 81.122
+  },
+  {
+   "text": "I",
+   "start": 81.122,
+   "end": 81.282
+  },
+  {
+   "text": "turn",
+   "start": 81.282,
+   "end": 81.522
+  },
+  {
+   "text": "the",
+   "start": 81.522,
+   "end": 81.602
+  },
+  {
+   "text": "crank,",
+   "start": 81.602,
+   "end": 82.082
+  },
+  {
+   "text": "the",
+   "start": 82.082,
+   "end": 82.242
+  },
+  {
+   "text": "tips",
+   "start": 82.242,
+   "end": 82.482
+  },
+  {
+   "text": "of",
+   "start": 82.482,
+   "end": 82.562
+  },
+  {
+   "text": "the",
+   "start": 82.562,
+   "end": 82.642
+  },
+  {
+   "text": "rocker",
+   "start": 82.642,
+   "end": 83.122
+  },
+  {
+   "text": "arms",
+   "start": 83.122,
+   "end": 83.442
+  },
+  {
+   "text": "form",
+   "start": 83.442,
+   "end": 83.602
+  },
+  {
+   "text": "a",
+   "start": 83.602,
+   "end": 83.682
+  },
+  {
+   "text": "sinusoid.",
+   "start": 83.682,
+   "end": 84.542
+  },
+  {
+   "text": "The",
+   "start": 87.49,
+   "end": 87.65
+  },
+  {
+   "text": "indices",
+   "start": 87.65,
+   "end": 88.21
+  },
+  {
+   "text": "on",
+   "start": 88.21,
+   "end": 88.29
+  },
+  {
+   "text": "the",
+   "start": 88.29,
+   "end": 88.37
+  },
+  {
+   "text": "rocker",
+   "start": 88.37,
+   "end": 88.85
+  },
+  {
+   "text": "arms",
+   "start": 88.85,
+   "end": 89.25
+  },
+  {
+   "text": "run",
+   "start": 89.25,
+   "end": 89.41
+  },
+  {
+   "text": "from",
+   "start": 89.41,
+   "end": 89.65
+  },
+  {
+   "text": "high",
+   "start": 89.65,
+   "end": 89.97
+  },
+  {
+   "text": "on",
+   "start": 89.97,
+   "end": 90.13
+  },
+  {
+   "text": "the",
+   "start": 90.13,
+   "end": 90.29
+  },
+  {
+   "text": "left",
+   "start": 90.29,
+   "end": 90.69
+  },
+  {
+   "text": "to",
+   "start": 90.69,
+   "end": 90.93
+  },
+  {
+   "text": "low",
+   "start": 90.93,
+   "end": 91.25
+  },
+  {
+   "text": "on",
+   "start": 91.25,
+   "end": 91.33
+  },
+  {
+   "text": "the",
+   "start": 91.33,
+   "end": 91.49
+  },
+  {
+   "text": "right.",
+   "start": 91.49,
+   "end": 91.838
+  },
+  {
+   "text": "I'll",
+   "start": 92.226,
+   "end": 92.466
+  },
+  {
+   "text": "flip",
+   "start": 92.466,
+   "end": 92.786
+  },
+  {
+   "text": "the",
+   "start": 92.786,
+   "end": 92.866
+  },
+  {
+   "text": "video",
+   "start": 92.866,
+   "end": 93.186
+  },
+  {
+   "text": "to",
+   "start": 93.186,
+   "end": 93.346
+  },
+  {
+   "text": "make",
+   "start": 93.346,
+   "end": 93.426
+  },
+  {
+   "text": "it",
+   "start": 93.426,
+   "end": 93.586
+  },
+  {
+   "text": "a",
+   "start": 93.586,
+   "end": 93.666
+  },
+  {
+   "text": "little",
+   "start": 93.666,
+   "end": 93.826
+  },
+  {
+   "text": "more",
+   "start": 93.826,
+   "end": 94.066
+  },
+  {
+   "text": "intuitive.",
+   "start": 94.066,
+   "end": 94.75
+  },
+  {
+   "text": "When",
+   "start": 95.426,
+   "end": 95.506
+  },
+  {
+   "text": "the",
+   "start": 95.506,
+   "end": 95.586
+  },
+  {
+   "text": "rocker",
+   "start": 95.586,
+   "end": 96.066
+  },
+  {
+   "text": "arm",
+   "start": 96.066,
+   "end": 96.306
+  },
+  {
+   "text": "tips",
+   "start": 96.306,
+   "end": 96.546
+  },
+  {
+   "text": "are",
+   "start": 96.546,
+   "end": 96.706
+  },
+  {
+   "text": "lined",
+   "start": 96.706,
+   "end": 96.946
+  },
+  {
+   "text": "up",
+   "start": 96.946,
+   "end": 97.106
+  },
+  {
+   "text": "in",
+   "start": 97.106,
+   "end": 97.266
+  },
+  {
+   "text": "a",
+   "start": 97.266,
+   "end": 97.346
+  },
+  {
+   "text": "straight",
+   "start": 97.346,
+   "end": 97.746
+  },
+  {
+   "text": "line,",
+   "start": 97.746,
+   "end": 98.146
+  },
+  {
+   "text": "we'll",
+   "start": 98.146,
+   "end": 98.386
+  },
+  {
+   "text": "call",
+   "start": 98.386,
+   "end": 98.546
+  },
+  {
+   "text": "that",
+   "start": 98.546,
+   "end": 98.706
+  },
+  {
+   "text": "crank",
+   "start": 98.706,
+   "end": 99.186
+  },
+  {
+   "text": "number",
+   "start": 99.186,
+   "end": 99.506
+  },
+  {
+   "text": "zero.",
+   "start": 99.506,
+   "end": 100.006
+  }
+ ],
+ "speech": [
+  {
+   "start": 2.754,
+   "end": 13.726
+  },
+  {
+   "start": 14.082,
+   "end": 15.166
+  },
+  {
+   "start": 15.458,
+   "end": 19.038
+  },
+  {
+   "start": 19.33,
+   "end": 21.374
+  },
+  {
+   "start": 21.73,
+   "end": 24.83
+  },
+  {
+   "start": 25.186,
+   "end": 36.158
+  },
+  {
+   "start": 36.546,
+   "end": 39.902
+  },
+  {
+   "start": 40.93,
+   "end": 45.054
+  },
+  {
+   "start": 48.514,
+   "end": 49.214
+  },
+  {
+   "start": 51.49,
+   "end": 55.486
+  },
+  {
+   "start": 57.442,
+   "end": 59.198
+  },
+  {
+   "start": 59.522,
+   "end": 62.11
+  },
+  {
+   "start": 62.914,
+   "end": 66.27
+  },
+  {
+   "start": 71.938,
+   "end": 76.254
+  },
+  {
+   "start": 76.834,
+   "end": 80.094
+  },
+  {
+   "start": 80.962,
+   "end": 84.542
+  },
+  {
+   "start": 87.49,
+   "end": 91.838
+  },
+  {
+   "start": 92.226,
+   "end": 94.75
+  },
+  {
+   "start": 95.426,
+   "end": 100.006
+  }
+ ],
+ "gaps": [
+  {
+   "start": 0.0,
+   "end": 2.754,
+   "id": "g1"
+  },
+  {
+   "start": 45.054,
+   "end": 48.514,
+   "id": "g2"
+  },
+  {
+   "start": 49.214,
+   "end": 51.49,
+   "id": "g3"
+  },
+  {
+   "start": 55.486,
+   "end": 57.442,
+   "id": "g4"
+  },
+  {
+   "start": 66.27,
+   "end": 71.938,
+   "id": "g5"
+  },
+  {
+   "start": 84.542,
+   "end": 87.49,
+   "id": "g6"
+  }
+ ],
+ "segments": [
+  {
+   "id": "s1",
+   "start": 0.0,
+   "end": 33.333,
+   "keyframes": [
+    5.0,
+    12.19,
+    16.67,
+    18.5,
+    30.0,
+    33.28
+   ]
+  },
+  {
+   "id": "s2",
+   "start": 33.333,
+   "end": 66.667,
+   "keyframes": [
+    38.33,
+    50.0,
+    53.41,
+    63.33,
+    64.75
+   ]
+  },
+  {
+   "id": "s3",
+   "start": 66.667,
+   "end": 100.0,
+   "keyframes": [
+    71.67,
+    79.39,
+    83.33,
+    90.77,
+    96.67
+   ]
+  }
+ ],
+ "moments": [
+  {
+   "id": "p1",
+   "t": 11.394,
+   "phrase": "here",
+   "sentence": "In the previous video, I showed how turning the crank on this machine generates 20 different frequencies, also known as harmonics, which are turned into cosines here, multiplied by coefficients.",
+   "strength": "weak",
+   "segment_id": "s1"
+  },
+  {
+   "id": "p2",
+   "t": 17.698,
+   "phrase": "plotted here",
+   "sentence": "magnified and the resulting function plotted here on the front.",
+   "strength": "strong",
+   "segment_id": "s1"
+  },
+  {
+   "id": "p3",
+   "t": 32.546,
+   "phrase": "here",
+   "sentence": "For example, if I want to plot a particular function here, how do I set the amplitude bars to produce it?",
+   "strength": "weak",
+   "segment_id": "s1"
+  },
+  {
+   "id": "p4",
+   "t": 52.61,
+   "phrase": "that function",
+   "sentence": "All of the information that function carries is contained in half a period.",
+   "strength": "strong",
+   "segment_id": "s2"
+  },
+  {
+   "id": "p5",
+   "t": 63.954,
+   "phrase": "these points",
+   "sentence": "We use the values of these points as the inputs for the machine.",
+   "strength": "strong",
+   "segment_id": "s2"
+  },
+  {
+   "id": "p6",
+   "t": 78.594,
+   "phrase": "look at",
+   "sentence": "To see how we get these coefficients, we'll look at the side of the machine.",
+   "strength": "strong",
+   "segment_id": "s3"
+  },
+  {
+   "id": "p7",
+   "t": 89.97,
+   "phrase": "on the left",
+   "sentence": "The indices on the rocker arms run from high on the left to low on the right.",
+   "strength": "strong",
+   "segment_id": "s3"
+  }
+ ],
+ "resolutions": {
+  "p1": {
+   "moment_id": "p1",
+   "refers_to_visual": false,
+   "target": "",
+   "unsaid": "",
+   "confidence": 0.9
+  },
+  "p2": {
+   "moment_id": "p2",
+   "refers_to_visual": true,
+   "target": "white rectangular plate",
+   "unsaid": "faint waveform printed on it",
+   "confidence": 0.95
+  },
+  "p3": {
+   "moment_id": "p3",
+   "refers_to_visual": true,
+   "target": "Harmonic Analyzer machine",
+   "unsaid": "how the machine does analysis",
+   "confidence": 0.9
+  },
+  "p4": {
+   "moment_id": "p4",
+   "refers_to_visual": true,
+   "target": "square wave",
+   "unsaid": "half period and even function symmetry",
+   "confidence": 0.95
+  },
+  "p5": {
+   "moment_id": "p5",
+   "refers_to_visual": true,
+   "target": "sampled square wave",
+   "unsaid": "values of twenty equally spaced points",
+   "confidence": 0.95
+  },
+  "p6": {
+   "moment_id": "p6",
+   "refers_to_visual": true,
+   "target": "rocker arm tips",
+   "unsaid": "sinusoid formed by tips as crank turns",
+   "confidence": 0.9
+  },
+  "p7": {
+   "moment_id": "p7",
+   "refers_to_visual": true,
+   "target": "rocker arm tips",
+   "unsaid": "indices from high on left to low on right",
+   "confidence": 0.9
+  }
+ },
+ "observations": {
+  "s1": {
+   "on_screen_text": [
+    "Albert Michelson's Harmonic Analyzer Analysis video 3 of 4",
+    "Bill Hammack University of Illinois",
+    "Albert Michelson's Harmonic Analyzer Synthesis video 2 of 4 previous video",
+    "Adding sinusoids to form a function is synthesis.",
+    "Decomposing a function into sinusoids is analysis."
+   ],
+   "visuals": [
+    {
+     "kind": "demo",
+     "label": "Harmonic Analyzer machine",
+     "description": "A tall green metal frame with vertical rods, pulleys, gears, chains, and a horizontal bar holding a white rectangular plate with a faint waveform printed on it.",
+     "values": []
+    }
+   ],
+   "events": [
+    {
+     "t": 0.0,
+     "description": "Title card appears on black background."
+    },
+    {
+     "t": 2.0,
+     "description": "Man in pink shirt stands next to the machine."
+    },
+    {
+     "t": 5.0,
+     "description": "Text box for previous video appears on the right."
+    },
+    {
+     "t": 6.0,
+     "description": "Man turns a crank at the base of the machine."
+    },
+    {
+     "t": 14.0,
+     "description": "Man gestures upward along the machine frame."
+    },
+    {
+     "t": 18.0,
+     "description": "Man points to the white plate on the machine."
+    },
+    {
+     "t": 20.0,
+     "description": "Text about synthesis appears on the right."
+    },
+    {
+     "t": 30.0,
+     "description": "Text about analysis appears below synthesis text."
+    }
+   ],
+   "setting": "Black background studio with a large mechanical device.",
+   "people": [
+    "Man with blond hair wearing a pink button-down shirt standing beside the machine and gesturing toward its parts."
+   ]
+  },
+  "s2": {
+   "on_screen_text": [
+    "Adding sinusoids to form a function is synthesis.",
+    "Decomposing a function into sinusoids is analysis.",
+    "square wave",
+    "f(x)",
+    "0",
+    "10",
+    "-2\u03c0",
+    "-1\u03c0",
+    "0\u03c0",
+    "1\u03c0",
+    "2\u03c0",
+    "x",
+    "one period",
+    "origin",
+    "Even functions are mirrored about the origin.",
+    "half period",
+    "Value",
+    "Rocker bar"
+   ],
+   "visuals": [
+    {
+     "kind": "chart",
+     "label": "square wave",
+     "description": "Green step function oscillating between 0 and 10 across x-axis labeled with multiples of pi.",
+     "values": [
+      "10",
+      "0",
+      "-2\u03c0",
+      "-1\u03c0",
+      "0\u03c0",
+      "1\u03c0",
+      "2\u03c0"
+     ]
+    },
+    {
+     "kind": "chart",
+     "label": "sampled square wave",
+     "description": "White dots at value 10 for rocker bars 0 through 10, then value 0 for bars 11 through 20.",
+     "values": [
+      "10",
+      "0",
+      "0",
+      "5",
+      "10",
+      "15",
+      "20"
+     ]
+    },
+    {
+     "kind": "demo",
+     "label": "harmonic analyzer",
+     "description": "Tall green metal machine with vertical rocker bars and connecting rods; a hand adjusts a bar.",
+     "values": []
+    }
+   ],
+   "events": [
+    {
+     "t": 33.33,
+     "description": "Text on screen defines synthesis and analysis next to the machine."
+    },
+    {
+     "t": 35.33,
+     "description": "Person in pink shirt adjusts a rocker bar on the machine."
+    },
+    {
+     "t": 40.33,
+     "description": "Square wave graph appears with green line."
+    },
+    {
+     "t": 44.33,
+     "description": "Yellow bracket labels one period on the graph."
+    },
+    {
+     "t": 48.33,
+     "description": "Vertical line marks origin and text notes even functions are mirrored."
+    },
+    {
+     "t": 54.33,
+     "description": "Yellow box highlights half period of the wave."
+    },
+    {
+     "t": 58.33,
+     "description": "Graph of sampled values appears with dots at 10 then 0."
+    },
+    {
+     "t": 64.33,
+     "description": "Close-up of machine rocker bars as a hand touches them."
+    }
+   ],
+   "setting": "Lecture studio with black background.",
+   "people": [
+    "Person in pink shirt standing beside the machine."
+   ]
+  },
+  "s3": {
+   "on_screen_text": [
+    "side of the machine",
+    "sinusoid",
+    "high",
+    "low",
+    "flipped video",
+    "crank 0",
+    "20",
+    "19",
+    "18",
+    "17",
+    "16",
+    "15",
+    "14",
+    "13",
+    "12",
+    "11",
+    "10",
+    "9",
+    "8",
+    "7",
+    "6",
+    "5",
+    "4",
+    "3",
+    "2",
+    "1"
+   ],
+   "visuals": [
+    {
+     "kind": "photo",
+     "label": "side of machine",
+     "description": "A hand turns a crank on the left side of a green mechanical device with vertical metal bars and a conical gear assembly.",
+     "values": []
+    },
+    {
+     "kind": "photo",
+     "label": "sinusoid overlay",
+     "description": "A white sinusoidal curve is superimposed over the crank handle area.",
+     "values": []
+    },
+    {
+     "kind": "photo",
+     "label": "rocker arm tips",
+     "description": "Close-up of vertical metal bars with numbered tabs at their tips; numbers descend from 20 on the left to 1 on the right.",
+     "values": [
+      "20",
+      "19",
+      "18",
+      "17",
+      "16",
+      "15",
+      "14",
+      "13",
+      "12",
+      "11",
+      "10",
+      "9",
+      "8",
+      "7",
+      "6",
+      "5",
+      "4",
+      "3",
+      "2",
+      "1"
+     ]
+    },
+    {
+     "kind": "photo",
+     "label": "flipped view",
+     "description": "The same numbered bars are shown mirrored horizontally; text labels 'low' appear on both outer edges and 'high' near the center.",
+     "values": [
+      "1",
+      "2",
+      "3",
+      "4",
+      "5",
+      "6",
+      "7",
+      "8",
+      "9",
+      "10",
+      "11",
+      "12",
+      "13",
+      "14",
+      "15",
+      "16",
+      "17",
+      "18",
+      "19",
+      "20"
+     ]
+    },
+    {
+     "kind": "photo",
+     "label": "crank 0 alignment",
+     "description": "The tips of all rocker arms are aligned in a straight horizontal line.",
+     "values": []
+    }
+   ],
+   "events": [
+    {
+     "t": 78.67,
+     "description": "A hand turns the crank on the side of the machine."
+    },
+    {
+     "t": 83.67,
+     "description": "A white sinusoidal curve appears overlaid on the crank area."
+    },
+    {
+     "t": 87.67,
+     "description": "The camera zooms in on the numbered rocker arm tips."
+    },
+    {
+     "t": 90.67,
+     "description": "Text labels 'high' and 'low' appear over the rocker arm tips."
+    },
+    {
+     "t": 92.67,
+     "description": "The video is flipped horizontally and text 'flipped video' appears."
+    },
+    {
+     "t": 97.67,
+     "description": "The rocker arm tips align into a straight line and text 'crank 0' appears."
+    }
+   ],
+   "setting": "A close-up view of a mechanical computing device against a black background.",
+   "people": [
+    "A hand with light skin turns a crank."
+   ]
+  }
+ },
+ "context": {
+  "names": [],
+  "sources": []
+ },
+ "bible": {
+  "summary": "The lecture demonstrates how Albert Michelson's harmonic analyzer performs Fourier analysis by decomposing a square wave into sinusoidal coefficients using a mechanical computer.",
+  "registry": [
+   {
+    "name": "Albert Michelson",
+    "source": "slide"
+   },
+   {
+    "name": "Bill Hammack",
+    "source": "slide"
+   },
+   {
+    "name": "University of Illinois",
+    "source": "slide"
+   },
+   {
+    "name": "Harmonic Analyzer",
+    "source": "slide"
+   }
+  ],
+  "notation": [
+   "\u03c0 \u2192 'pi'",
+   "f(x) \u2192 'f of x'",
+   "crank 0 \u2192 'crank zero'",
+   "high/low \u2192 'high' and 'low'",
+   "20, 19, \u2026, 1 \u2192 read as numbers",
+   "square wave \u2192 'square wave'",
+   "synthesis \u2192 'synthesis'",
+   "analysis \u2192 'analysis'"
+  ],
+  "visual_facts": [
+   {
+    "id": "f1",
+    "t": 0.0,
+    "segment_id": "s1",
+    "fact": "Title card reads 'Albert Michelson's Harmonic Analyzer Analysis video 3 of 4' and 'Bill Hammack University of Illinois'.",
+    "importance": 1,
+    "already_spoken": false,
+    "moment_id": ""
+   },
+   {
+    "id": "f2",
+    "t": 2.0,
+    "segment_id": "s1",
+    "fact": "Tall green metal frame with vertical rods, pulleys, gears, chains, and a horizontal bar holding a white rectangular plate.",
+    "importance": 3,
+    "already_spoken": false,
+    "moment_id": "p3"
+   },
+   {
+    "id": "f3",
+    "t": 18.0,
+    "segment_id": "s1",
+    "fact": "White rectangular plate on machine front displays a faint waveform.",
+    "importance": 3,
+    "already_spoken": false,
+    "moment_id": "p2"
+   },
+   {
+    "id": "f4",
+    "t": 5.0,
+    "segment_id": "s1",
+    "fact": "Text box on right shows 'Albert Michelson's Harmonic Analyzer Synthesis video 2 of 4 previous video'.",
+    "importance": 1,
+    "already_spoken": false,
+    "moment_id": ""
+   },
+   {
+    "id": "f5",
+    "t": 14.0,
+    "segment_id": "s1",
+    "fact": "Presenter gestures upward along the machine frame.",
+    "importance": 2,
+    "already_spoken": false,
+    "moment_id": ""
+   },
+   {
+    "id": "f6",
+    "t": 40.33,
+    "segment_id": "s2",
+    "fact": "Green square wave oscillates between 0 and 10 on x-axis labeled -2\u03c0, -\u03c0, 0, \u03c0, 2\u03c0.",
+    "importance": 3,
+    "already_spoken": false,
+    "moment_id": ""
+   },
+   {
+    "id": "f7",
+    "t": 44.33,
+    "segment_id": "s2",
+    "fact": "Yellow bracket marks one period of the square wave.",
+    "importance": 2,
+    "already_spoken": false,
+    "moment_id": ""
+   },
+   {
+    "id": "f8",
+    "t": 48.33,
+    "segment_id": "s2",
+    "fact": "Vertical line at origin with text stating even functions are mirrored about the origin.",
+    "importance": 2,
+    "already_spoken": false,
+    "moment_id": ""
+   },
+   {
+    "id": "f9",
+    "t": 54.33,
+    "segment_id": "s2",
+    "fact": "Yellow box highlights the left half period of the square wave.",
+    "importance": 3,
+    "already_spoken": false,
+    "moment_id": "p4"
+   },
+   {
+    "id": "f10",
+    "t": 58.33,
+    "segment_id": "s2",
+    "fact": "Sampled square wave shows 11 dots at value 10 for bars 0-10 and 10 dots at value 0 for bars 11-20.",
+    "importance": 3,
+    "already_spoken": false,
+    "moment_id": "p5"
+   },
+   {
+    "id": "f11",
+    "t": 64.33,
+    "segment_id": "s2",
+    "fact": "Close-up shows vertical rocker bars with connecting rods; a hand adjusts a bar.",
+    "importance": 2,
+    "already_spoken": false,
+    "moment_id": ""
+   },
+   {
+    "id": "f12",
+    "t": 78.67,
+    "segment_id": "s3",
+    "fact": "Side view shows crank on left, vertical metal bars, and conical gear assembly.",
+    "importance": 3,
+    "already_spoken": false,
+    "moment_id": "p6"
+   },
+   {
+    "id": "f13",
+    "t": 87.67,
+    "segment_id": "s3",
+    "fact": "Numbered tabs on rocker arm tips show 20 on left descending to 1 on right.",
+    "importance": 3,
+    "already_spoken": false,
+    "moment_id": "p7"
+   },
+   {
+    "id": "f14",
+    "t": 92.67,
+    "segment_id": "s3",
+    "fact": "Flipped view shows numbers 1 to 20 left to right, with 'low' labels on outer edges and 'high' near center.",
+    "importance": 2,
+    "already_spoken": false,
+    "moment_id": ""
+   },
+   {
+    "id": "f15",
+    "t": 97.67,
+    "segment_id": "s3",
+    "fact": "All rocker arm tips align in a straight horizontal line; text 'crank 0' appears.",
+    "importance": 2,
+    "already_spoken": true,
+    "moment_id": ""
+   }
+  ],
+  "cue_plan": [
+   {
+    "gap_id": "g1",
+    "fact_ids": [
+     "f2"
+    ],
+    "intent": "Describe the harmonic analyzer's front: green frame, vertical rods, white plate."
+   },
+   {
+    "gap_id": "g2",
+    "fact_ids": [
+     "f6",
+     "f7"
+    ],
+    "intent": "Describe square wave graph and period bracket."
+   },
+   {
+    "gap_id": "g3",
+    "fact_ids": [
+     "f8"
+    ],
+    "intent": "Note vertical line at origin indicating even symmetry."
+   },
+   {
+    "gap_id": "g4",
+    "fact_ids": [
+     "f9"
+    ],
+    "intent": "Indicate yellow box highlighting half period."
+   },
+   {
+    "gap_id": "g5",
+    "fact_ids": [
+     "f10",
+     "f11"
+    ],
+    "intent": "Describe sampled points and rocker bar adjustment."
+   },
+   {
+    "gap_id": "g6",
+    "fact_ids": [
+     "f12"
+    ],
+    "intent": "Describe side view with crank and vertical bars."
+   },
+   {
+    "gap_id": "extended",
+    "fact_ids": [
+     "f3"
+    ],
+    "intent": "Describe faint waveform on white plate."
+   },
+   {
+    "gap_id": "extended",
+    "fact_ids": [
+     "f13"
+    ],
+    "intent": "Describe numbered rocker arm tips from 20 to 1."
+   }
+  ],
+  "style_notes": [
+   "Refer to the device as 'the harmonic analyzer' or 'the machine'.",
+   "Call the vertical rods 'amplitude bars' or 'rocker bars' when they are adjusted.",
+   "Describe the square wave as 'green step function from 0 to 10'.",
+   "Use 'crank zero' for the aligned position.",
+   "Keep descriptions concise and objective; do not interpret or explain."
+  ]
+ },
+ "cues": [
+  {
+   "id": "ext-001",
+   "gap_id": "g1",
+   "start": 0.15,
+   "end": 0.65,
+   "text": "Slide: tall green frame with rods, pulleys, gears, chains.",
+   "extended": true,
+   "fact_ids": [
+    "f2"
+   ],
+   "moment_ids": [
+    "p3"
+   ],
+   "gate_failures": [],
+   "gate_warnings": [],
+   "repairs": 2,
+   "verification": {
+    "claims": [
+     {
+      "claim": "The slide shows a tall green frame",
+      "verdict": "supported"
+     },
+     {
+      "claim": "The frame has rods",
+      "verdict": "supported"
+     },
+     {
+      "claim": "The frame has pulleys",
+      "verdict": "supported"
+     },
+     {
+      "claim": "The frame has gears",
+      "verdict": "supported"
+     },
+     {
+      "claim": "The frame has chains",
+      "verdict": "supported"
+     }
+    ],
+    "identifies_person": false,
+    "supported": true,
+    "unsupported_claims": []
+   },
+   "tier": "auto",
+   "sources": []
+  },
+  {
+   "id": "ext-007",
+   "gap_id": null,
+   "start": 18.0,
+   "end": 18.5,
+   "text": "Line chart: White rectangular plate on machine front displays a faint waveform.",
+   "extended": true,
+   "fact_ids": [
+    "f3"
+   ],
+   "moment_ids": [
+    "p2"
+   ],
+   "gate_failures": [],
+   "gate_warnings": [],
+   "repairs": 0,
+   "verification": {
+    "claims": [
+     {
+      "claim": "White rectangular plate on machine front displays a faint waveform",
+      "verdict": "supported"
+     },
+     {
+      "claim": "Line chart",
+      "verdict": "supported"
+     }
+    ],
+    "identifies_person": false,
+    "supported": true,
+    "unsupported_claims": []
+   },
+   "tier": "auto",
+   "sources": []
+  },
+  {
+   "id": "ext-002",
+   "gap_id": "g2",
+   "start": 45.204,
+   "end": 45.704,
+   "text": "Square wave: 0 to 10. Bracket marks period.",
+   "extended": true,
+   "fact_ids": [
+    "f6",
+    "f7"
+   ],
+   "moment_ids": [],
+   "gate_failures": [],
+   "gate_warnings": [],
+   "repairs": 2,
+   "verification": {
+    "claims": [
+     {
+      "claim": "Square wave: 0 to 10",
+      "verdict": "supported"
+     },
+     {
+      "claim": "Bracket marks period",
+      "verdict": "supported"
+     }
+    ],
+    "identifies_person": false,
+    "supported": true,
+    "unsupported_claims": []
+   },
+   "tier": "auto",
+   "sources": []
+  },
+  {
+   "id": "ext-003",
+   "gap_id": "g3",
+   "start": 49.364,
+   "end": 49.864,
+   "text": "Line chart: vertical line.",
+   "extended": true,
+   "fact_ids": [
+    "f8"
+   ],
+   "moment_ids": [],
+   "gate_failures": [],
+   "gate_warnings": [],
+   "repairs": 2,
+   "verification": {
+    "claims": [
+     {
+      "claim": "The chart is a line chart.",
+      "verdict": "supported"
+     },
+     {
+      "claim": "There is a vertical line.",
+      "verdict": "supported"
+     }
+    ],
+    "identifies_person": false,
+    "supported": true,
+    "unsupported_claims": []
+   },
+   "tier": "auto",
+   "sources": []
+  },
+  {
+   "id": "ad-004",
+   "gap_id": "g4",
+   "start": 55.636,
+   "end": 56.736,
+   "text": "Yellow box",
+   "extended": false,
+   "fact_ids": [
+    "f9"
+   ],
+   "moment_ids": [
+    "p4"
+   ],
+   "gate_failures": [],
+   "gate_warnings": [],
+   "repairs": 1,
+   "verification": {
+    "claims": [
+     {
+      "claim": "There is a yellow box",
+      "verdict": "supported"
+     }
+    ],
+    "identifies_person": false,
+    "supported": true,
+    "unsupported_claims": []
+   },
+   "tier": "auto",
+   "sources": []
+  },
+  {
+   "id": "ext-005",
+   "gap_id": "g5",
+   "start": 66.42,
+   "end": 66.92,
+   "text": "Line chart: 11 dots at value 10 for bars 0-10 and 10 dots at value 0 for bars 11-20. Hand adjusts rocker bar.",
+   "extended": true,
+   "fact_ids": [
+    "f10",
+    "f11"
+   ],
+   "moment_ids": [
+    "p5"
+   ],
+   "gate_failures": [],
+   "gate_warnings": [],
+   "repairs": 2,
+   "verification": {
+    "claims": [
+     {
+      "claim": "Line chart: 11 dots at value 10 for bars 0-10",
+      "verdict": "supported"
+     },
+     {
+      "claim": "and 10 dots at value 0 for bars 11-20",
+      "verdict": "supported"
+     },
+     {
+      "claim": "Hand adjusts rocker bar",
+      "verdict": "not_visible"
+     }
+    ],
+    "identifies_person": false,
+    "supported": false,
+    "unsupported_claims": [
+     "Hand adjusts rocker bar (not visible)"
+    ]
+   },
+   "tier": "review",
+   "sources": []
+  },
+  {
+   "id": "ad-006",
+   "gap_id": "g6",
+   "start": 84.692,
+   "end": 86.432,
+   "text": "Crank, bars, gears.",
+   "extended": false,
+   "fact_ids": [
+    "f12"
+   ],
+   "moment_ids": [
+    "p6"
+   ],
+   "gate_failures": [],
+   "gate_warnings": [],
+   "repairs": 1,
+   "verification": {
+    "claims": [
+     {
+      "claim": "Crank",
+      "verdict": "supported"
+     },
+     {
+      "claim": "bars",
+      "verdict": "supported"
+     },
+     {
+      "claim": "gears",
+      "verdict": "supported"
+     }
+    ],
+    "identifies_person": false,
+    "supported": true,
+    "unsupported_claims": []
+   },
+   "tier": "auto",
+   "sources": []
+  },
+  {
+   "id": "ext-008",
+   "gap_id": null,
+   "start": 87.67,
+   "end": 88.17,
+   "text": "Line chart: numbered tabs on rocker arm tips count down from 20 on left to 1 on right.",
+   "extended": true,
+   "fact_ids": [
+    "f13"
+   ],
+   "moment_ids": [
+    "p7"
+   ],
+   "gate_failures": [],
+   "gate_warnings": [],
+   "repairs": 0,
+   "verification": {
+    "claims": [
+     {
+      "claim": "Line chart: numbered tabs on rocker arm tips count down from 20 on left to 1 on right",
+      "verdict": "supported"
+     },
+     {
+      "claim": "numbered tabs on rocker arm tips count down from 20 on left to 1 on right",
+      "verdict": "supported"
+     }
+    ],
+    "identifies_person": false,
+    "supported": true,
+    "unsupported_claims": []
+   },
+   "tier": "auto",
+   "sources": []
+  }
+ ],
+ "tips": [
+  {
+   "moment_id": "p2",
+   "t": 17.698,
+   "said": "magnified and the resulting function plotted here on the front.",
+   "suggestion": "Magnified waveform plotted on front white rectangular plate displays faint waveform"
+  },
+  {
+   "moment_id": "p3",
+   "t": 32.546,
+   "said": "For example, if I want to plot a particular function here, how do I set the amplitude bars to produce it?",
+   "suggestion": "Tall green metal frame with vertical rods pulleys gears chains and horizontal bar holding white rectangular plate how machine does analysis"
+  },
+  {
+   "moment_id": "p4",
+   "t": 52.61,
+   "said": "All of the information that function carries is contained in half a period.",
+   "suggestion": "Yellow box highlights left half period of square wave half period and even function symmetry"
+  },
+  {
+   "moment_id": "p5",
+   "t": 63.954,
+   "said": "We use the values of these points as the inputs for the machine.",
+   "suggestion": "Sampled square wave shows 11 dots at value 10 for bars 0-10 and 10 dots at value 0 for bars 11-20 values of twenty equally spaced points"
+  },
+  {
+   "moment_id": "p6",
+   "t": 78.594,
+   "said": "To see how we get these coefficients, we'll look at the side of the machine.",
+   "suggestion": "Side view shows crank on left vertical metal bars and conical gear assembly sinusoid formed by tips as crank turns"
+  },
+  {
+   "moment_id": "p7",
+   "t": 89.97,
+   "said": "The indices on the rocker arms run from high on the left to low on the right.",
+   "suggestion": "Numbered tabs on rocker arm tips show 20 on left descending to 1 on right indices from high on left to low on right"
+  }
+ ],
+ "metrics": {
+  "duration_seconds": 100.0,
+  "cues": 8,
+  "inline_cues": 2,
+  "extended_cues": 6,
+  "tiers": {
+   "auto": 7,
+   "review": 1,
+   "never": 0
+  },
+  "talk_over_seconds": 0.0,
+  "repairs": 10,
+  "gate_failures_after_repair": {},
+  "pointing_moments": 7,
+  "pointing_moments_visual": 6,
+  "pointing_moments_covered": 6
+ },
+ "ledger": {
+  "summary": {
+   "calls": 35,
+   "failed_calls": 3,
+   "total_usd": 0.0,
+   "ultra_only_usd": 0.116957,
+   "by_model": {
+    "nvidia/nemotron-3.5-super-vl-120b-a12b": {
+     "calls": 12,
+     "prompt_tokens": 37178,
+     "cached_tokens": 0,
+     "completion_tokens": 2059,
+     "cost_usd": 0.0
+    },
+    "nvidia/nemotron-3.5-lightning-30b-a3b": {
+     "calls": 22,
+     "prompt_tokens": 14624,
+     "cached_tokens": 0,
+     "completion_tokens": 1137,
+     "cost_usd": 0.0
+    },
+    "nvidia/nemotron-3-ultra-550b-a55b": {
+     "calls": 1,
+     "prompt_tokens": 3832,
+     "cached_tokens": 0,
+     "completion_tokens": 17245,
+     "cost_usd": 0.0
+    }
+   },
+   "usd_per_video_minute": 0.0,
+   "usd_per_accepted_cue": 0.0
+  },
+  "calls": [
+   {
+    "stage": "watch",
+    "role": "vision",
+    "model": "nvidia/nemotron-3.5-super-vl-120b-a12b",
+    "thinking": false,
+    "prompt_tokens": 6067,
+    "cached_tokens": 0,
+    "completion_tokens": 676,
+    "reasoning_tokens": 0,
+    "latency_ms": 9624,
+    "ok": true,
+    "error": "",
+    "request_id": "chatcmpl-f60a19ec-f061-45b5-938f-91a2cca0741c",
+    "at": 1793037762.507995,
+    "cost_usd": 0.0,
+    "ultra_counterfactual_usd": 0.008095,
+    "model_label": "nvidia/nemotron-3.5-super-vl-120b-a12b"
+   },
+   {
+    "stage": "watch",
+    "role": "vision",
+    "model": "nvidia/nemotron-3.5-super-vl-120b-a12b",
+    "thinking": false,
+    "prompt_tokens": 6059,
+    "cached_tokens": 0,
+    "completion_tokens": 364,
+    "reasoning_tokens": 0,
+    "latency_ms": 10765,
+    "ok": true,
+    "error": "",
+    "request_id": "chatcmpl-708ade36-4807-4864-a1c6-65bbb9c1496f",
+    "at": 1793037762.0341709,
+    "cost_usd": 0.0,
+    "ultra_counterfactual_usd": 0.007151,
+    "model_label": "nvidia/nemotron-3.5-super-vl-120b-a12b"
+   },
+   {
+    "stage": "watch",
+    "role": "vision",
+    "model": "nvidia/nemotron-3.5-super-vl-120b-a12b",
+    "thinking": false,
+    "prompt_tokens": 6050,
+    "cached_tokens": 0,
+    "completion_tokens": 509,
+    "reasoning_tokens": 0,
+    "latency_ms": 24815,
+    "ok": true,
+    "error": "",
+    "request_id": "chatcmpl-3cc2b381-ec79-4bf5-80ed-bafd690c93a6",
+    "at": 1793037761.9506822,
+    "cost_usd": 0.0,
+    "ultra_counterfactual_usd": 0.007577,
+    "model_label": "nvidia/nemotron-3.5-super-vl-120b-a12b"
+   },
+   {
+    "stage": "resolve",
+    "role": "classify",
+    "model": "nvidia/nemotron-3.5-lightning-30b-a3b",
+    "thinking": false,
+    "prompt_tokens": 3277,
+    "cached_tokens": 0,
+    "completion_tokens": 397,
+    "reasoning_tokens": 0,
+    "latency_ms": 4598,
+    "ok": true,
+    "error": "",
+    "request_id": "chatcmpl-cbaa8c72-0ffa-47d8-aa2f-88492defc5ff",
+    "at": 1793037786.769737,
+    "cost_usd": 0.0,
+    "ultra_counterfactual_usd": 0.004468,
+    "model_label": "nvidia/nemotron-3.5-lightning-30b-a3b"
+   },
+   {
+    "stage": "understand",
+    "role": "reason",
+    "model": "nvidia/nemotron-3-ultra-550b-a55b",
+    "thinking": true,
+    "prompt_tokens": 3832,
+    "cached_tokens": 0,
+    "completion_tokens": 17245,
+    "reasoning_tokens": 0,
+    "latency_ms": 386853,
+    "ok": true,
+    "error": "",
+    "request_id": "chatcmpl-c09d1cfc-6c75-4ba2-ad12-23d903b0320f",
+    "at": 1793037791.372635,
+    "cost_usd": 0.0,
+    "ultra_counterfactual_usd": 0.055567,
+    "model_label": "nvidia/nemotron-3-ultra-550b-a55b"
+   },
+   {
+    "stage": "write",
+    "role": "fast",
+    "model": "nvidia/nemotron-3.5-lightning-30b-a3b",
+    "thinking": false,
+    "prompt_tokens": 477,
+    "cached_tokens": 0,
+    "completion_tokens": 34,
+    "reasoning_tokens": 0,
+    "latency_ms": 547,
+    "ok": true,
+    "error": "",
+    "request_id": "chatcmpl-23ed6b1a-e376-459f-838f-ea719e15bc42",
+    "at": 1793038178.2410529,
+    "cost_usd": 0.0,
+    "ultra_counterfactual_usd": 0.000579,
+    "model_label": "nvidia/nemotron-3.5-lightning-30b-a3b"
+   },
+   {
+    "stage": "write",
+    "role": "fast",
+    "model": "nvidia/nemotron-3.5-lightning-30b-a3b",
+    "thinking": false,
+    "prompt_tokens": 483,
+    "cached_tokens": 0,
+    "completion_tokens": 15,
+    "reasoning_tokens": 0,
+    "latency_ms": 617,
+    "ok": true,
+    "error": "",
+    "request_id": "chatcmpl-ea5d2088-8a1e-4ded-8383-ea430c0e4d64",
+    "at": 1793038178.2515929,
+    "cost_usd": 0.0,
+    "ultra_counterfactual_usd": 0.000528,
+    "model_label": "nvidia/nemotron-3.5-lightning-30b-a3b"
+   },
+   {
+    "stage": "write",
+    "role": "fast",
+    "model": "nvidia/nemotron-3.5-lightning-30b-a3b",
+    "thinking": false,
+    "prompt_tokens": 497,
+    "cached_tokens": 0,
+    "completion_tokens": 19,
+    "reasoning_tokens": 0,
+    "latency_ms": 679,
+    "ok": true,
+    "error": "",
+    "request_id": "chatcmpl-d1c2b129-74c9-4194-bf76-5666629e74e8",
+    "at": 1793038178.255184,
+    "cost_usd": 0.0,
+    "ultra_counterfactual_usd": 0.000554,
+    "model_label": "nvidia/nemotron-3.5-lightning-30b-a3b"
+   },
+   {
+    "stage": "write",
+    "role": "fast",
+    "model": "nvidia/nemotron-3.5-lightning-30b-a3b",
+    "thinking": false,
+    "prompt_tokens": 603,
+    "cached_tokens": 0,
+    "completion_tokens": 25,
+    "reasoning_tokens": 0,
+    "latency_ms": 706,
+    "ok": true,
+    "error": "",
+    "request_id": "chatcmpl-a822797c-00fe-41af-a841-a2f22c9defd5",
+    "at": 1793038178.2436721,
+    "cost_usd": 0.0,
+    "ultra_counterfactual_usd": 0.000678,
+    "model_label": "nvidia/nemotron-3.5-lightning-30b-a3b"
+   },
+   {
+    "stage": "write",
+    "role": "fast",
+    "model": "nvidia/nemotron-3.5-lightning-30b-a3b",
+    "thinking": false,
+    "prompt_tokens": 462,
+    "cached_tokens": 0,
+    "completion_tokens": 20,
+    "reasoning_tokens": 0,
+    "latency_ms": 725,
+    "ok": true,
+    "error": "",
+    "request_id": "chatcmpl-309dc78e-efe5-420c-aa15-c679c8b8a088",
+    "at": 1793038178.256476,
+    "cost_usd": 0.0,
+    "ultra_counterfactual_usd": 0.000522,
+    "model_label": "nvidia/nemotron-3.5-lightning-30b-a3b"
+   },
+   {
+    "stage": "write",
+    "role": "fast",
+    "model": "nvidia/nemotron-3.5-lightning-30b-a3b",
+    "thinking": false,
+    "prompt_tokens": 486,
+    "cached_tokens": 0,
+    "completion_tokens": 24,
+    "reasoning_tokens": 0,
+    "latency_ms": 751,
+    "ok": true,
+    "error": "",
+    "request_id": "chatcmpl-57891cc5-329b-4289-8039-1a768e76094b",
+    "at": 1793038178.2494621,
+    "cost_usd": 0.0,
+    "ultra_counterfactual_usd": 0.000558,
+    "model_label": "nvidia/nemotron-3.5-lightning-30b-a3b"
+   },
+   {
+    "stage": "write",
+    "role": "fast",
+    "model": "nvidia/nemotron-3.5-lightning-30b-a3b",
+    "thinking": false,
+    "prompt_tokens": 0,
+    "cached_tokens": 0,
+    "completion_tokens": 0,
+    "reasoning_tokens": 0,
+    "latency_ms": 74,
+    "ok": false,
+    "error": "HTTP 429",
+    "request_id": "",
+    "at": 1793038178.935193,
+    "cost_usd": 0.0,
+    "ultra_counterfactual_usd": 0.0,
+    "model_label": "nvidia/nemotron-3.5-lightning-30b-a3b"
+   },
+   {
+    "stage": "write",
+    "role": "fast",
+    "model": "nvidia/nemotron-3.5-lightning-30b-a3b",
+    "thinking": false,
+    "prompt_tokens": 503,
+    "cached_tokens": 0,
+    "completion_tokens": 30,
+    "reasoning_tokens": 0,
+    "latency_ms": 898,
+    "ok": true,
+    "error": "",
+    "request_id": "chatcmpl-21d9bd12-18c7-4f2c-bb24-ebbfe0b9fd7f",
+    "at": 1793038178.257251,
+    "cost_usd": 0.0,
+    "ultra_counterfactual_usd": 0.000593,
+    "model_label": "nvidia/nemotron-3.5-lightning-30b-a3b"
+   },
+   {
+    "stage": "write",
+    "role": "fast",
+    "model": "nvidia/nemotron-3.5-lightning-30b-a3b",
+    "thinking": false,
+    "prompt_tokens": 572,
+    "cached_tokens": 0,
+    "completion_tokens": 26,
+    "reasoning_tokens": 0,
+    "latency_ms": 435,
+    "ok": true,
+    "error": "",
+    "request_id": "chatcmpl-57b76b13-9ba6-4128-b7cb-4b8fa8e65d58",
+    "at": 1793038178.789393,
+    "cost_usd": 0.0,
+    "ultra_counterfactual_usd": 0.00065,
+    "model_label": "nvidia/nemotron-3.5-lightning-30b-a3b"
+   },
+   {
+    "stage": "write",
+    "role": "fast",
+    "model": "nvidia/nemotron-3.5-lightning-30b-a3b",
+    "thinking": false,
+    "prompt_tokens": 0,
+    "cached_tokens": 0,
+    "completion_tokens": 0,
+    "reasoning_tokens": 0,
+    "latency_ms": 71,
+    "ok": false,
+    "error": "HTTP 429",
+    "request_id": "",
+    "at": 1793038179.2247748,
+    "cost_usd": 0.0,
+    "ultra_counterfactual_usd": 0.0,
+    "model_label": "nvidia/nemotron-3.5-lightning-30b-a3b"
+   },
+   {
+    "stage": "write",
+    "role": "fast",
+    "model": "nvidia/nemotron-3.5-lightning-30b-a3b",
+    "thinking": false,
+    "prompt_tokens": 557,
+    "cached_tokens": 0,
+    "completion_tokens": 8,
+    "reasoning_tokens": 0,
+    "latency_ms": 478,
+    "ok": true,
+    "error": "",
+    "request_id": "chatcmpl-a1110f60-699f-4b03-860c-b129a18adf56",
+    "at": 1793038178.8693702,
+    "cost_usd": 0.0,
+    "ultra_counterfactual_usd": 0.000581,
+    "model_label": "nvidia/nemotron-3.5-lightning-30b-a3b"
+   },
+   {
+    "stage": "write",
+    "role": "fast",
+    "model": "nvidia/nemotron-3.5-lightning-30b-a3b",
+    "thinking": false,
+    "prompt_tokens": 689,
+    "cached_tokens": 0,
+    "completion_tokens": 21,
+    "reasoning_tokens": 0,
+    "latency_ms": 518,
+    "ok": true,
+    "error": "",
+    "request_id": "chatcmpl-e9c74d86-623d-4046-951b-c1febe490f19",
+    "at": 1793038178.949989,
+    "cost_usd": 0.0,
+    "ultra_counterfactual_usd": 0.000752,
+    "model_label": "nvidia/nemotron-3.5-lightning-30b-a3b"
+   },
+   {
+    "stage": "write",
+    "role": "fast",
+    "model": "nvidia/nemotron-3.5-lightning-30b-a3b",
+    "thinking": false,
+    "prompt_tokens": 619,
+    "cached_tokens": 0,
+    "completion_tokens": 61,
+    "reasoning_tokens": 0,
+    "latency_ms": 1654,
+    "ok": true,
+    "error": "",
+    "request_id": "chatcmpl-93c80336-57d6-4195-9461-21caee7d5db6",
+    "at": 1793038178.2539678,
+    "cost_usd": 0.0,
+    "ultra_counterfactual_usd": 0.000802,
+    "model_label": "nvidia/nemotron-3.5-lightning-30b-a3b"
+   },
+   {
+    "stage": "write",
+    "role": "fast",
+    "model": "nvidia/nemotron-3.5-lightning-30b-a3b",
+    "thinking": false,
+    "prompt_tokens": 769,
+    "cached_tokens": 0,
+    "completion_tokens": 21,
+    "reasoning_tokens": 0,
+    "latency_ms": 451,
+    "ok": true,
+    "error": "",
+    "request_id": "chatcmpl-c38348c5-0a19-4071-8c30-389985613b3b",
+    "at": 1793038179.468457,
+    "cost_usd": 0.0,
+    "ultra_counterfactual_usd": 0.000832,
+    "model_label": "nvidia/nemotron-3.5-lightning-30b-a3b"
+   },
+   {
+    "stage": "write",
+    "role": "fast",
+    "model": "nvidia/nemotron-3.5-lightning-30b-a3b",
+    "thinking": false,
+    "prompt_tokens": 745,
+    "cached_tokens": 0,
+    "completion_tokens": 50,
+    "reasoning_tokens": 0,
+    "latency_ms": 1081,
+    "ok": true,
+    "error": "",
+    "request_id": "chatcmpl-2716bcbd-2d06-4eec-b75d-ae13696ccebf",
+    "at": 1793038179.908534,
+    "cost_usd": 0.0,
+    "ultra_counterfactual_usd": 0.000895,
+    "model_label": "nvidia/nemotron-3.5-lightning-30b-a3b"
+   },
+   {
+    "stage": "write",
+    "role": "fast",
+    "model": "nvidia/nemotron-3.5-lightning-30b-a3b",
+    "thinking": false,
+    "prompt_tokens": 571,
+    "cached_tokens": 0,
+    "completion_tokens": 14,
+    "reasoning_tokens": 0,
+    "latency_ms": 2313,
+    "ok": true,
+    "error": "",
+    "request_id": "chatcmpl-5997a063-33ed-4cd6-a228-d77ffc836ca5",
+    "at": 1793038179.001641,
+    "cost_usd": 0.0,
+    "ultra_counterfactual_usd": 0.000613,
+    "model_label": "nvidia/nemotron-3.5-lightning-30b-a3b"
+   },
+   {
+    "stage": "write",
+    "role": "fast",
+    "model": "nvidia/nemotron-3.5-lightning-30b-a3b",
+    "thinking": false,
+    "prompt_tokens": 860,
+    "cached_tokens": 0,
+    "completion_tokens": 50,
+    "reasoning_tokens": 0,
+    "latency_ms": 699,
+    "ok": true,
+    "error": "",
+    "request_id": "chatcmpl-7675731e-c527-4c51-9c58-4edbecb5f85a",
+    "at": 1793038180.9917629,
+    "cost_usd": 0.0,
+    "ultra_counterfactual_usd": 0.00101,
+    "model_label": "nvidia/nemotron-3.5-lightning-30b-a3b"
+   },
+   {
+    "stage": "write",
+    "role": "fast",
+    "model": "nvidia/nemotron-3.5-lightning-30b-a3b",
+    "thinking": false,
+    "prompt_tokens": 644,
+    "cached_tokens": 0,
+    "completion_tokens": 12,
+    "reasoning_tokens": 0,
+    "latency_ms": 941,
+    "ok": true,
+    "error": "",
+    "request_id": "chatcmpl-6ec61da3-eeba-4811-ae58-04a4bdfc15f8",
+    "at": 1793038181.3157492,
+    "cost_usd": 0.0,
+    "ultra_counterfactual_usd": 0.00068,
+    "model_label": "nvidia/nemotron-3.5-lightning-30b-a3b"
+   },
+   {
+    "stage": "write",
+    "role": "fast",
+    "model": "nvidia/nemotron-3.5-lightning-30b-a3b",
+    "thinking": false,
+    "prompt_tokens": 575,
+    "cached_tokens": 0,
+    "completion_tokens": 13,
+    "reasoning_tokens": 0,
+    "latency_ms": 349,
+    "ok": true,
+    "error": "",
+    "request_id": "chatcmpl-5acf14c8-c474-43f3-8519-b54f86844afa",
+    "at": 1793038184.011014,
+    "cost_usd": 0.0,
+    "ultra_counterfactual_usd": 0.000614,
+    "model_label": "nvidia/nemotron-3.5-lightning-30b-a3b"
+   },
+   {
+    "stage": "write",
+    "role": "fast",
+    "model": "nvidia/nemotron-3.5-lightning-30b-a3b",
+    "thinking": false,
+    "prompt_tokens": 659,
+    "cached_tokens": 0,
+    "completion_tokens": 22,
+    "reasoning_tokens": 0,
+    "latency_ms": 531,
+    "ok": true,
+    "error": "",
+    "request_id": "chatcmpl-288851a6-d35c-4d00-ba81-eed28fd34b45",
+    "at": 1793038184.298065,
+    "cost_usd": 0.0,
+    "ultra_counterfactual_usd": 0.000725,
+    "model_label": "nvidia/nemotron-3.5-lightning-30b-a3b"
+   },
+   {
+    "stage": "check",
+    "role": "vision",
+    "model": "nvidia/nemotron-3.5-super-vl-120b-a12b",
+    "thinking": false,
+    "prompt_tokens": 2150,
+    "cached_tokens": 0,
+    "completion_tokens": 82,
+    "reasoning_tokens": 0,
+    "latency_ms": 1499,
+    "ok": true,
+    "error": "",
+    "request_id": "chatcmpl-29db7f0f-933d-4881-a8a7-0e81da626c68",
+    "at": 1793038185.5481222,
+    "cost_usd": 0.0,
+    "ultra_counterfactual_usd": 0.002396,
+    "model_label": "nvidia/nemotron-3.5-super-vl-120b-a12b"
+   },
+   {
+    "stage": "check",
+    "role": "vision",
+    "model": "nvidia/nemotron-3.5-super-vl-120b-a12b",
+    "thinking": false,
+    "prompt_tokens": 2139,
+    "cached_tokens": 0,
+    "completion_tokens": 99,
+    "reasoning_tokens": 0,
+    "latency_ms": 2961,
+    "ok": true,
+    "error": "",
+    "request_id": "chatcmpl-36797e0a-f4c9-493f-bbb2-0d4dc4b2357c",
+    "at": 1793038185.6508548,
+    "cost_usd": 0.0,
+    "ultra_counterfactual_usd": 0.002436,
+    "model_label": "nvidia/nemotron-3.5-super-vl-120b-a12b"
+   },
+   {
+    "stage": "check",
+    "role": "vision",
+    "model": "nvidia/nemotron-3.5-super-vl-120b-a12b",
+    "thinking": false,
+    "prompt_tokens": 2129,
+    "cached_tokens": 0,
+    "completion_tokens": 31,
+    "reasoning_tokens": 0,
+    "latency_ms": 1808,
+    "ok": true,
+    "error": "",
+    "request_id": "chatcmpl-febf3336-ccba-417e-9ea8-ced440eb6b49",
+    "at": 1793038187.0483341,
+    "cost_usd": 0.0,
+    "ultra_counterfactual_usd": 0.002222,
+    "model_label": "nvidia/nemotron-3.5-super-vl-120b-a12b"
+   },
+   {
+    "stage": "check",
+    "role": "vision",
+    "model": "nvidia/nemotron-3.5-super-vl-120b-a12b",
+    "thinking": false,
+    "prompt_tokens": 2140,
+    "cached_tokens": 0,
+    "completion_tokens": 50,
+    "reasoning_tokens": 0,
+    "latency_ms": 3589,
+    "ok": true,
+    "error": "",
+    "request_id": "chatcmpl-9bf5a111-f775-4673-a067-58da806ff0ba",
+    "at": 1793038185.553427,
+    "cost_usd": 0.0,
+    "ultra_counterfactual_usd": 0.00229,
+    "model_label": "nvidia/nemotron-3.5-super-vl-120b-a12b"
+   },
+   {
+    "stage": "check",
+    "role": "vision",
+    "model": "nvidia/nemotron-3.5-super-vl-120b-a12b",
+    "thinking": false,
+    "prompt_tokens": 3104,
+    "cached_tokens": 0,
+    "completion_tokens": 93,
+    "reasoning_tokens": 0,
+    "latency_ms": 1510,
+    "ok": true,
+    "error": "",
+    "request_id": "chatcmpl-593e6f60-ba49-4a00-8a23-408f807ed071",
+    "at": 1793038188.6134489,
+    "cost_usd": 0.0,
+    "ultra_counterfactual_usd": 0.003383,
+    "model_label": "nvidia/nemotron-3.5-super-vl-120b-a12b"
+   },
+   {
+    "stage": "check",
+    "role": "vision",
+    "model": "nvidia/nemotron-3.5-super-vl-120b-a12b",
+    "thinking": false,
+    "prompt_tokens": 3075,
+    "cached_tokens": 0,
+    "completion_tokens": 51,
+    "reasoning_tokens": 0,
+    "latency_ms": 1930,
+    "ok": true,
+    "error": "",
+    "request_id": "chatcmpl-1072d6ed-3f50-403f-ada9-07c400f65a88",
+    "at": 1793038189.144201,
+    "cost_usd": 0.0,
+    "ultra_counterfactual_usd": 0.003228,
+    "model_label": "nvidia/nemotron-3.5-super-vl-120b-a12b"
+   },
+   {
+    "stage": "check",
+    "role": "vision",
+    "model": "nvidia/nemotron-3.5-super-vl-120b-a12b",
+    "thinking": false,
+    "prompt_tokens": 2133,
+    "cached_tokens": 0,
+    "completion_tokens": 55,
+    "reasoning_tokens": 0,
+    "latency_ms": 3109,
+    "ok": true,
+    "error": "",
+    "request_id": "chatcmpl-0dfede85-8b7a-4b05-8457-3f0bcd5c4f75",
+    "at": 1793038188.857297,
+    "cost_usd": 0.0,
+    "ultra_counterfactual_usd": 0.002298,
+    "model_label": "nvidia/nemotron-3.5-super-vl-120b-a12b"
+   },
+   {
+    "stage": "check",
+    "role": "vision",
+    "model": "nvidia/nemotron-3.5-super-vl-120b-a12b",
+    "thinking": false,
+    "prompt_tokens": 0,
+    "cached_tokens": 0,
+    "completion_tokens": 0,
+    "reasoning_tokens": 0,
+    "latency_ms": 180013,
+    "ok": false,
+    "error": "APITimeoutError",
+    "request_id": "",
+    "at": 1793038185.5341609,
+    "cost_usd": 0.0,
+    "ultra_counterfactual_usd": 0.0,
+    "model_label": "nvidia/nemotron-3.5-super-vl-120b-a12b"
+   },
+   {
+    "stage": "check",
+    "role": "vision",
+    "model": "nvidia/nemotron-3.5-super-vl-120b-a12b",
+    "thinking": false,
+    "prompt_tokens": 2132,
+    "cached_tokens": 0,
+    "completion_tokens": 49,
+    "reasoning_tokens": 0,
+    "latency_ms": 2998,
+    "ok": true,
+    "error": "",
+    "request_id": "chatcmpl-559891cf-1d90-492b-9efc-671893f645a8",
+    "at": 1793038367.555876,
+    "cost_usd": 0.0,
+    "ultra_counterfactual_usd": 0.002279,
+    "model_label": "nvidia/nemotron-3.5-super-vl-120b-a12b"
+   },
+   {
+    "stage": "tips",
+    "role": "fast",
+    "model": "nvidia/nemotron-3.5-lightning-30b-a3b",
+    "thinking": false,
+    "prompt_tokens": 576,
+    "cached_tokens": 0,
+    "completion_tokens": 275,
+    "reasoning_tokens": 0,
+    "latency_ms": 2409,
+    "ok": true,
+    "error": "",
+    "request_id": "chatcmpl-11415e68-2788-4efd-a592-1c520181b7c8",
+    "at": 1793038370.558934,
+    "cost_usd": 0.0,
+    "ultra_counterfactual_usd": 0.001401,
+    "model_label": "nvidia/nemotron-3.5-lightning-30b-a3b"
+   }
+  ]
+ },
+ "timings": {
+  "listen": 7.09,
+  "segment": 1.94,
+  "watch": 27.06,
+  "resolve": 4.6,
+  "context": 0.0,
+  "understand": 386.86,
+  "write": 6.6,
+  "check": 185.72,
+  "deliver": 2.43,
+  "total": 622.37
+ },
+ "failures": [],
+ "provider": "nvidia_build"
+}

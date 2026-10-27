@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE fcpxml>
+<fcpxml version="1.10">
+  <resources>
+    <format id="r1" name="FFVideoFormat1080p30" frameDuration="1/30s" width="1920" height="1080"/>
+  </resources>
+  <library>
+    <event name="Unsaid">
+      <project name="Explaining Fourier analysis with a machine (engineerguy) (audio description)">
+        <sequence format="r1" duration="100s" tcStart="0s" tcFormat="NDF">
+          <spine>
+            <gap name="Descriptions" offset="0s" start="0s" duration="100s">
+          <marker start="2/15s" duration="1/30s" value="[EXTENDED] Slide: tall green frame with rods, pulleys, gears, chains."/>
+          <marker start="18s" duration="1/30s" value="[EXTENDED] Line chart: White rectangular plate on machine front displays a faint waveform."/>
+          <marker start="226/5s" duration="1/30s" value="[EXTENDED] Square wave: 0 to 10. Bracket marks period."/>
+          <marker start="1481/30s" duration="1/30s" value="[EXTENDED] Line chart: vertical line."/>
+          <marker start="1669/30s" duration="1/30s" value="Yellow box"/>
+          <marker start="1993/30s" duration="1/30s" value="[EXTENDED] Line chart: 11 dots at value 10 for bars 0-10 and 10 dots at value 0 for bars 11-20. Hand adjusts rocker bar."/>
+          <marker start="847/10s" duration="1/30s" value="Crank, bars, gears."/>
+          <marker start="263/3s" duration="1/30s" value="[EXTENDED] Line chart: numbered tabs on rocker arm tips count down from 20 on left to 1 on right."/>
+            </gap>
+          </spine>
+        </sequence>
+      </project>
+    </event>
+  </library>
+</fcpxml>
