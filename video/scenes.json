@@ -195,6 +195,9 @@
       "Audio description for everything a lecture shows but never says.",
       "Built with NVIDIA Nemotron on Nebius Token Factory."
     ],
-    "seconds": 5
+    "seconds": 6,
+    "links": [
+      "github.com/enesteve0/unsaid"
+    ]
   }
 }

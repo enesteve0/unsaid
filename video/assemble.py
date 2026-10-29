@@ -9,6 +9,7 @@ Every segment is encoded identically (1920x1080, 30 fps, H.264, AAC 48 kHz stere
 from __future__ import annotations
 
 import json
+import os
 import subprocess
 from pathlib import Path
 
@@ -141,11 +142,13 @@ def main() -> None:
         parts.append(out)
 
     end = script["end_card"]
+    demo = os.environ.get("DEMO_URL", "").removeprefix("https://").removeprefix("http://").rstrip("/")
+    links = [*end.get("links", []), *([demo] if demo and "127.0.0.1" not in demo else [])]
     card(SEG / "99_end.mp4", end["seconds"], [
         (end["title"], "InstrumentSerif-Regular.ttf", 170, PAPER, -90),
         (end["lines"][0], "AtkinsonHyperlegibleNext.ttf", 40, DIM, 60),
         (end["lines"][1], "AtkinsonHyperlegibleNext.ttf", 40, AMBER, 125),
-        *[(line, "IBMPlexMono-Regular.ttf", 30, DIM, 200 + 50 * n) for n, line in enumerate(end.get("links", []))],
+        *[(line, "IBMPlexMono-Regular.ttf", 30, DIM, 200 + 50 * n) for n, line in enumerate(links)],
     ])
     parts.append(SEG / "99_end.mp4")
 
