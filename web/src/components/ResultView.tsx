@@ -38,7 +38,7 @@ export function ResultView({ result: initial, media, runId }: { result: RunResul
   const minutes = result.video.duration / 60
 
   return (
-    <div style={{ display: 'grid', gap: 28 }}>
+    <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1fr)', gap: 28 }}>
       <div className="two-col">
         <Player result={result} media={media} mode={mode} onModeChange={setMode} onTime={setTime} onCue={setCue} handle={player} />
         <div style={{ display: 'grid', gap: 18 }}>
