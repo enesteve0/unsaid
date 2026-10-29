@@ -147,15 +147,20 @@ react, typescript, vite, playwright, axe-core, docker
   - Ultra is used once per video, for whole-lecture judgement over a 1M-token context.
   - Lightning handles cheap parallel repairs.
   - Nano handles strict-JSON classification.
-  - Measured split of cost: {{cost_split}}.
-- **Nemotron output quality:** {{rating}}/10.
+  - Split of cost on the home-page example, at Token Factory list prices: {{cost_split}}.
+- **Nemotron output quality:** 7/10.
   - Strongest: Ultra’s whole-lecture planning and Super VL’s reading of slides and charts.
   - Weakest: free-writing to a word budget, and occasional truncated or malformed JSON.
 - **Approach:** prompt engineering, structured outputs and routing; no fine-tuning (Token Factory doesn’t offer
   self-service Nemotron fine-tuning).
-- **Compared with other models:** {{comparison}}.
-- **Most valuable Nebius capabilities:** {{nebius_capabilities}}.
-- **Recommend Nemotron on Nebius:** {{recommend}}/10. **Experience vs other clouds:** {{experience}}/10.
+- **Compared with other models:** we did not benchmark other vendors' models. Within Nemotron, moving drafting from
+  Lightning (free writing) into Ultra's whole-lecture plan cut paused descriptions from 6 of 8 to 2 of 7 on our first
+  test lecture, and Super VL is the only model here that sees.
+- **Most valuable Nebius capabilities:** one OpenAI-compatible endpoint for four Nemotron sizes, so routing each
+  step to the right model is configuration; strict `json_schema` decoding; reasoning controls through
+  `chat_template_kwargs`; and per-call usage, which feeds the cost ledger.
+- **Recommend Nemotron on Nebius:** 8/10. **Experience vs other clouds:** 6/10 (onboarding: a card before any key,
+  no visible trial credit, and an activation code that the console's promo field rejects; see FEEDBACK.md).
 - **Improvements we’d like:** see FEEDBACK.md.
 - **Hopes for the Nemotron team:** see FEEDBACK.md.
 - **Tavily:** Yes. Runtime `extract` on the video’s source page and `search` for citations on slides; request ids are

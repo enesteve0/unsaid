@@ -232,10 +232,8 @@ def main() -> int:
         problems.append(f"no evaluation report at {args.report}")
 
     sample = json.loads(args.sample.read_text())
-    if sample.get("provider", "tokenfactory") != "tokenfactory" and not args.allow_prototype:
-        problems.append(
-            f"the home-page sample was not made on Token Factory (provider {sample.get('provider')!r})"
-        )
+    if sample.get("provider", "tokenfactory") not in EVAL_PROVIDERS and not args.allow_prototype:
+        problems.append(f"the home-page sample comes from an unknown provider ({sample.get('provider')!r})")
     else:
         values |= sample_values(sample)
 
