@@ -14,7 +14,7 @@ PRESET="${PRESET:-4vcpu-16gb}"
 TAG="${TAG:-demo}"   # a moving tag, so `restart` picks up new builds and the URL stays the same
 
 nebius config set parent-id "$PROJECT_ID" >/dev/null
-REGISTRY_ID="$(nebius registry list --format json | jq -r '.items[] | select(.metadata.name=="unsaid") | .metadata.id' | head -1)"
+REGISTRY_ID="$(nebius registry list --format json | jq -r '(.items // [])[] | select(.metadata.name=="unsaid") | .metadata.id' | head -1)"
 if [ -z "$REGISTRY_ID" ]; then
   REGISTRY_ID="$(nebius registry create --name unsaid --format json | jq -r '.metadata.id')"
   nebius registry configure-helper
