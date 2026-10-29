@@ -54,8 +54,29 @@ Without keys (Claude):
 - [ ] Video draft re-rendered from the current build; one command to re-render with Token Factory data + demo URL
 - [x] gitleaks (100 commits, no leaks) → public → renamed `enesteve0/unsaid` → description, topics, MIT detected
 
-When the key lands: `scripts/tf_day.sh` → commit samples, report, `docs/EVIDENCE.md` → deploy → fill numbers →
-re-render video → FEEDBACK Token Factory section.
+Key day, in order (owner steps marked **owner**):
+
+1. **owner:** copy the Token Factory key, then `! printf 'NEBIUS_API_KEY=%s\n' "$(pbpaste)" >> .env`; the same for
+   `TAVILY_API_KEY`. Claude appends a random `JUDGE_CODE` and checks the keys load without printing them.
+2. `STEP=smoke scripts/tf_day.sh` (about 5 min) → `docs/EVIDENCE.md`. Stop and diagnose on any failure.
+3. `STEP=samples scripts/tf_day.sh` (about 15 min). Check the hero cue against its frame (counts!) before choosing
+   `--hero`; republish if needed; commit `samples/`.
+4. `STEP=eval scripts/tf_day.sh` in the background (9 clips × 2 runs, 3 at a time; the report is saved after every
+   clip).
+5. Meanwhile, deploy. Nebius: **owner** billing at console.nebius.com, then
+   `! ~/.nebius/bin/nebius profile create unsaid --endpoint api.nebius.cloud --federation-endpoint auth.nebius.com`
+   (browser login); Claude runs `infra/nebius/create_secrets.sh` and `infra/nebius/deploy_endpoint.sh`. Fallback:
+   **owner** `! fly auth login`; Claude runs `infra/fly/deploy.sh`. Then the `DEMO_URL` repository variable and the
+   repository homepage.
+6. `python3 scripts/fill_numbers.py --demo-url <url>`; fill the opinion fields (rating, comparison, Nebius
+   capabilities) from what was measured; FEEDBACK Token Factory section; commit.
+7. Judge path on the deployed URL: `BASE_URL=<url> pnpm exec playwright test`, a live 2-minute upload in the judge
+   lane, Stop, an edit, exports.
+8. Video against the deployed URL: `DEMO_URL=<url> tts.py` → `record-video.mjs <url>` → `assemble.py`; watch it;
+   **owner** uploads it to YouTube as Public, with Unsaid's own captions.
+9. Gallery: `node scripts/gallery.mjs <url> ../video/build/gallery`; **owner** adds the images and pastes
+   `docs/DEVPOST.md` into Devpost, then submits.
+10. Tag `submission-2026-10-30`; submission record in `docs/PROVENANCE.md`.
 
 - [ ] Design + accessibility pass (axe clean, keyboard, screen-reader semantics), judge tour
 - [ ] Recorded fallback, kill switch, monitors, failure drill
