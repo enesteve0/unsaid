@@ -41,7 +41,12 @@ export function About() {
           <li>Planned at 2.5 words per second, slower than normal speech, as describers recommend.</li>
           <li>No number that is not printed on screen; no name that is not on screen, in the speech or on the video’s own page.</li>
           <li>No “we see”, “the image shows” or “in this video”; present tense; hedges are flagged for review.</li>
-          <li>If nothing fits, the description becomes extended: the player pauses the video (WCAG 1.2.7).</li>
+          <li>
+            If nothing fits, the description becomes extended: the player pauses the video (WCAG 1.2.7), but only for essential
+            facts or what the speaker points at. Anything else is left out rather than squeezed into a fragment.
+          </li>
+          <li>A description says what the picture shows, not only what kind of picture it is: “Title card shows title.” fails.</li>
+          <li>A description that still breaks a rule after two repairs is held back, unspoken, until a person fixes it in the editor.</li>
           <li>People are never identified from their faces. A description that names someone without a source is withheld.</li>
           <li>If the frame check finds a claim the picture contradicts, the description is corrected and checked again; if that fails, it waits for a person.</li>
         </ul>
