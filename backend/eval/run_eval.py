@@ -9,8 +9,8 @@ Metrics (per system, over all clips)
   talk_over      seconds of description spoken over the lecturer, per minute of video
   in_silence     share of descriptions that start and finish inside a silence
   pauses         extended descriptions (video pauses) per minute
-  coverage       share of labelled pointing moments whose referent a description conveys (judged by Nemotron 3 Ultra
-                 against builder-written labels; partial = 0.5)
+  coverage       share of labelled pointing moments whose referent a description conveys, pooled over every label
+                 (judged by Nemotron 3 Ultra against builder-written labels; partial = 0.5)
   unsupported    share of descriptions with a claim the frames do not support (Super VL verifier, same for both)
   ungrounded     share of descriptions with a number or name found nowhere on screen or in the speech
   usd_per_min    model cost per minute of video
@@ -242,7 +242,9 @@ async def evaluate_clip(tf: TokenFactory, asr: SpeechRecognizer, clip: dict, out
             "talk_over": talk_over,
             "in_silence": inside,
             "pauses": sum(c.extended for c in cues),
-            "coverage": covered,
+            "coverage": covered if per_label else None,  # NaN would make the report invalid JSON
+            "labels": len(per_label),
+            "covered": sum(per_label),
             "checked": sum(1 for c in cues if c.verification is not None),
             "unsupported": sum(
                 1 for c in cues if c.verification is not None and not c.verification.supported
@@ -291,7 +293,7 @@ def summarize(clips: list[dict]) -> list[dict]:
     for key in ("oneshot", "unsaid"):
         rows = [c[key] for c in clips]
         cues = sum(r["cues"] for r in rows) or 1
-        covered = [r["coverage"] for r in rows if r["coverage"] == r["coverage"]]
+        labelled = sum(r["labels"] for r in rows)
         systems.append(
             {
                 "key": key,
@@ -300,7 +302,7 @@ def summarize(clips: list[dict]) -> list[dict]:
                     "talk_over": sum(r["talk_over"] for r in rows) / minutes,
                     "in_silence": sum(r["in_silence"] for r in rows) / cues,
                     "pauses": sum(r["pauses"] for r in rows) / minutes,
-                    "coverage": sum(covered) / len(covered) if covered else 0.0,
+                    "coverage": sum(r["covered"] for r in rows) / labelled if labelled else 0.0,
                     "unsupported": sum(r["unsupported"] for r in rows)
                     / max(sum(r["checked"] for r in rows), 1),
                     "ungrounded": sum(r["ungrounded"] for r in rows) / cues,

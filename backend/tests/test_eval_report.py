@@ -1,13 +1,15 @@
 from eval.run_eval import aggregate
 
 
-def clip(clip_id: str, split: str, coverage: float) -> dict:
+def clip(clip_id: str, split: str, coverage: float, labels: int = 4) -> dict:
     row = {
         "cues": 4,
         "talk_over": 0.0,
         "in_silence": 4,
         "pauses": 0,
         "coverage": coverage,
+        "labels": labels,
+        "covered": coverage * labels,
         "checked": 4,
         "unsupported": 1,
         "ungrounded": 0,
@@ -50,3 +52,8 @@ def test_repeated_runs_pool_metrics_but_count_each_clip_once():
     report = aggregate([first, second])
     assert (report["clips"], report["minutes"]) == (1, 2.0)
     assert unsaid_metrics(report["systems"])["coverage"] == 0.75
+
+
+def test_coverage_is_the_share_of_all_labelled_moments_not_a_mean_of_clips():
+    report = aggregate([clip("a", "dev", 1.0, labels=1), clip("b", "dev", 0.0, labels=7)])
+    assert unsaid_metrics(report["systems"])["coverage"] == 1 / 8
