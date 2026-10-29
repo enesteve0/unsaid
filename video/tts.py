@@ -89,9 +89,21 @@ def fill(text: str, report: dict, sample: dict, deployed: dict | None = None) ->
                 f" Unsaid also covered more of the pointing moments: {percent_words(u['coverage'])} against "
                 f"{percent_words(o['coverage'])}."
             )
+        grounded = (
+            f" It invented no numbers or names; the one-shot did in {percent_words(o['ungrounded'])} of its descriptions."
+            if u["ungrounded"] == 0 and o["ungrounded"] > 0
+            else ""
+        )
+        heldout = next((sp for sp in report.get("splits", []) if sp["key"] == "heldout"), None)
+        if heldout:
+            h = {sys_["key"]: sys_["metrics"] for sys_ in heldout["systems"]}
+            grounded += (
+                f" On the held-out clips, Unsaid covered {percent_words(h['unsaid']['coverage'])}, against "
+                f"{percent_words(h['oneshot']['coverage'])}."
+            )
         values["evaluation_sentence"] = (
             f"On {report['clips']} lectures, {spoke}. The one-shot approach did, for {o['talk_over']:.0f} seconds of "
-            f"every minute, and {fit} of its descriptions fit a pause.{coverage}"
+            f"every minute, and {fit} of its descriptions fit a pause.{coverage}{grounded}"
         )
         values["usd_per_min_words"] = money_words(u["usd_per_min"])
     else:
