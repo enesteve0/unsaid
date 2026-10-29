@@ -22,12 +22,13 @@ jobs:
           set -euo pipefail
           body=$(curl -fsS --max-time 30 "$DEMO_URL/api/health")
           echo "$body" | python3 -c '
-          import json, sys
+          import json, sys, time
           d = json.load(sys.stdin)
           need = ["nvidia/Nemotron-3.5-Super-VL", "nvidia/Nemotron-3-Ultra-550b-a55b", "nvidia/Nemotron-3_5-Lightning", "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B"]
           missing = [m for m in need if d["models"].get(m) not in ("active", None) or m not in d["models"]]
           print("demo_mode:", d["demo_mode"], "| models checked:", len(d["models"]))
           if d["demo_mode"] != "live": sys.exit("demo is in recorded mode")
+          if time.time() - d.get("models_checked", 0) > 3 * 3600: sys.exit("model list not refreshed for 3 hours")
           if missing: sys.exit("models not active: " + ", ".join(missing))
           '
           curl -fsS --max-time 30 -o /dev/null "$DEMO_URL/media/samples/fourier-machine/result.json"

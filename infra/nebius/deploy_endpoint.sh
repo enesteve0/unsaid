@@ -31,7 +31,11 @@ else
         --container-port 8080 --auth none
         --env-secret NEBIUS_API_KEY=unsaid-secrets --env-secret TAVILY_API_KEY=unsaid-secrets
         --env-secret JUDGE_CODE=unsaid-secrets)
-  if [ -n "${FILESYSTEM_ID:-}" ]; then ARGS+=(--volume "${FILESYSTEM_ID}:/data:rw"); fi
+  if [ -n "${FILESYSTEM_ID:-}" ]; then
+    ARGS+=(--volume "${FILESYSTEM_ID}:/data:rw")
+  else
+    echo "warning: no FILESYSTEM_ID: runs, spend caps and rate limits reset whenever the container restarts" >&2
+  fi
   nebius ai endpoint create "${ARGS[@]}" --dry-run
   nebius ai endpoint create "${ARGS[@]}"
 fi
