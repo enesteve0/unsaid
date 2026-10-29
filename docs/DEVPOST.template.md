@@ -113,7 +113,7 @@ sets separately and lists where Unsaid still fails. No phrase from any clip appe
 
 - Descriptions never talk over the lecturer: timing is enforced in code, not hoped for.
 - Every description carries its evidence, and the interface itself passes automated WCAG 2.1 AA checks (axe) on
-  every page.
+  every page, works by keyboard, and reflows on a 320-pixel screen.
 - A complete product: try it live, review, edit with the same checks, export, and run overnight.
 
 ## What we learned
