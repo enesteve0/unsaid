@@ -79,8 +79,9 @@ Key day, in order (owner steps marked **owner**):
    lane, Stop, an edit, exports.
 8. Video against the deployed URL: `DEMO_URL=<url> tts.py` → `record-video.mjs <url>` → `assemble.py`; watch it;
    **owner** uploads it to YouTube as Public, with Unsaid's own captions.
-9. Gallery: `node scripts/gallery.mjs <url> ../video/build/gallery`; **owner** adds the images and pastes
-   `docs/DEVPOST.md` into Devpost, then submits.
+9. Gallery: `node scripts/gallery.mjs <url> ../video/build/gallery`. Thumbnail: put the Token Factory hero
+   description verbatim into `video/cards/thumbnail.html` (it now quotes text no run produced) and re-render
+   `thumbnail.png`. **owner** adds the images and pastes `docs/DEVPOST.md` into Devpost, then submits.
 10. Tag `submission-2026-10-30`; submission record in `docs/PROVENANCE.md`.
 
 - [ ] Design + accessibility pass (axe clean, keyboard, screen-reader semantics), judge tour
