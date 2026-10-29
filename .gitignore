@@ -20,3 +20,6 @@ credentials/
 samples/raw/
 backend/data/
 backend/models/
+
+# Python bytecode (scripts/ is imported by the backend tests)
+__pycache__/
