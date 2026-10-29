@@ -27,6 +27,14 @@ PRICES: dict[str, Price] = {
     "nvidia/Nemotron-3.5-Super-VL": Price(0.30, 0.06, 0.90),
     "nvidia/Nemotron-3-Ultra-550b-a55b": Price(1.00, 0.12, 3.00),
 }
+# The same models on NVIDIA's API catalog (build.nvidia.com), used for prototyping and the evaluation: priced and
+# labelled as their Token Factory equivalents, so costs mean what they would cost on Token Factory.
+CATALOG_EQUIVALENT: dict[str, str] = {
+    "nvidia/nemotron-3.5-super-vl-120b-a12b": "nvidia/Nemotron-3.5-Super-VL",
+    "nvidia/nemotron-3-ultra-550b-a55b": "nvidia/Nemotron-3-Ultra-550b-a55b",
+    "nvidia/nemotron-3.5-lightning-30b-a3b": "nvidia/Nemotron-3_5-Lightning",
+    "nvidia/nemotron-nano-3-30b-a3b": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B",
+}
 ULTRA = "nvidia/Nemotron-3-Ultra-550b-a55b"
 VISION_MODELS = {"nvidia/Nemotron-3.5-Super-VL"}
 
@@ -39,8 +47,12 @@ MODEL_LABELS: dict[str, str] = {
 }
 
 
+def token_factory_id(model: str) -> str:
+    return CATALOG_EQUIVALENT.get(model, model)
+
+
 def cost_usd(model: str, prompt_tokens: int, cached_tokens: int, completion_tokens: int) -> float:
-    price = PRICES.get(model)
+    price = PRICES.get(token_factory_id(model))
     if price is None:
         return 0.0
     uncached = max(prompt_tokens - cached_tokens, 0)
@@ -71,7 +83,7 @@ class LedgerEntry:
 
     @property
     def ultra_counterfactual(self) -> float:
-        if self.model in VISION_MODELS:
+        if token_factory_id(self.model) in VISION_MODELS:
             return self.cost
         return cost_usd(ULTRA, self.prompt_tokens, 0, self.completion_tokens)
 
@@ -79,7 +91,7 @@ class LedgerEntry:
         data = asdict(self)
         data["cost_usd"] = round(self.cost, 6)
         data["ultra_counterfactual_usd"] = round(self.ultra_counterfactual, 6)
-        data["model_label"] = MODEL_LABELS.get(self.model, self.model)
+        data["model_label"] = MODEL_LABELS.get(token_factory_id(self.model), self.model)
         return data
 
 
@@ -117,7 +129,7 @@ class Ledger:
             "total_usd": round(total, 6),
             "ultra_only_usd": round(self.total_counterfactual, 6),
             "by_model": {
-                MODEL_LABELS.get(m, m): {
+                MODEL_LABELS.get(token_factory_id(m), m): {
                     k: round(v, 6) if isinstance(v, float) else v for k, v in row.items()
                 }
                 for m, row in by_model.items()

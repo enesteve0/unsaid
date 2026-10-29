@@ -112,3 +112,20 @@ def test_cue_text_is_escaped_for_webvtt_and_held_back_cues_are_left_out():
 def test_fcpxml_survives_a_frame_rate_below_one():
     xml = fcpxml_markers([], name="t", duration=10, fps=0.4, width=640, height=360)
     ET.fromstring(xml.split("\n", 2)[2])
+
+
+def test_catalog_models_are_priced_as_their_token_factory_equivalents():
+    assert cost_usd("nvidia/nemotron-3-ultra-550b-a55b", 1_000_000, 0, 0) == cost_usd(
+        "nvidia/Nemotron-3-Ultra-550b-a55b", 1_000_000, 0, 0
+    )
+    ledger = Ledger()
+    ledger.add(
+        LedgerEntry(
+            stage="watch",
+            role="vision",
+            model="nvidia/nemotron-3.5-super-vl-120b-a12b",
+            thinking=False,
+            prompt_tokens=1000,
+        )
+    )
+    assert "Nemotron 3.5 Super VL" in ledger.summary()["by_model"]

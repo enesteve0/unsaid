@@ -65,7 +65,7 @@ work on Ultra alone would cost {{ultra_only_phrase}}.
 ## Results
 
 On {{clips}} openly licensed lecture clips ({{minutes}} minutes, {{labels}} labelled pointing moments), each described
-{{runs}}, compared with the obvious one-shot approach (Super VL given the whole clip and the timed transcript,
+{{runs}}, measured {{eval_where}}, compared with the obvious one-shot approach (Super VL given the whole clip and the timed transcript,
 asked to place descriptions in pauses):
 
 - **Spoken over the lecturer:** Unsaid {{unsaid.talk_over}} per minute of video; one-shot {{oneshot.talk_over}}.

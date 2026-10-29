@@ -438,6 +438,13 @@ def build_report(results: list[dict], repeat: int, provider: str) -> dict:
     report = aggregate(done)
     report["runs"] = repeat
     report["provider"] = provider
+    if provider == "nvidia_build":
+        report["notes"].insert(
+            0,
+            "These runs used the same Nemotron models through NVIDIA's API catalog (build.nvidia.com), keeping the "
+            "Token Factory credit for the live demo. There our account had no Nemotron 3 Nano, so pointing-phrase "
+            "classification ran on Nemotron 3.5 Lightning. Costs are priced at Token Factory list prices.",
+        )
     if repeat > 1:
         report["per_run"] = [
             {"run": run, "systems": summarize(subset)}

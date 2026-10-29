@@ -26,6 +26,12 @@ DEVPOST = REPO / "docs" / "DEVPOST.md"
 README = REPO / "README.md"
 START, END = "<!-- results:start -->", "<!-- results:end -->"
 VISION = "Nemotron 3.5 Super VL"
+# Where the evaluation may have run, and how the texts say so.
+EVAL_PROVIDERS = {
+    "tokenfactory": "on Nebius Token Factory",
+    "nvidia_build": "with the same Nemotron models through NVIDIA's API catalog (build.nvidia.com), keeping our "
+    "Token Factory credit for the live demo; costs are priced at Token Factory list prices",
+}
 WORDS = {1: "One", 2: "Two", 3: "Three", 4: "Four", 5: "Five", 6: "Six", 7: "Seven", 8: "Eight", 9: "Nine"}
 
 
@@ -74,6 +80,7 @@ def report_values(report: dict) -> dict[str, str]:
     clip_ids = {c["id"] for c in report.get("per_clip", [])}
     labels = sum(len(c.get("labels", [])) for c in json.loads(CLIPS.read_text()) if c["id"] in clip_ids)
     values |= {
+        "eval_where": EVAL_PROVIDERS.get(report.get("provider", ""), "on a prototype endpoint"),
         "clips": str(report["clips"]),
         "minutes": f"{report['minutes']:.1f}",
         "labels": str(labels),
@@ -150,8 +157,8 @@ def readme_block(report: dict, values: dict[str, str]) -> str:
     m = metrics(report["systems"])
     lines = [
         f"On {values['clips']} openly licensed lecture clips ({values['minutes']} minutes, {values['labels']} labelled "
-        f"pointing moments), each described {values['runs']}, scored by the same code for both systems "
-        f"(evaluated {report['generated_at']}):",
+        f"pointing moments), each described {values['runs']}, measured {values['eval_where']}, scored by the same "
+        f"code for both systems (evaluated {report['generated_at']}):",
         "",
         "| | One-shot (Super VL, whole clip) | Unsaid |",
         "| --- | --- | --- |",
@@ -208,10 +215,8 @@ def main() -> int:
     if report.get("available"):
         if report.get("complete") is False:
             problems.append(f"{args.report.name} is partial: the evaluation did not finish every clip")
-        if report.get("provider") != "tokenfactory" and not args.allow_prototype:
-            problems.append(
-                f"{args.report.name} was not made on Token Factory (provider {report.get('provider')!r})"
-            )
+        if report.get("provider") not in EVAL_PROVIDERS and not args.allow_prototype:
+            problems.append(f"{args.report.name} comes from an unknown provider ({report.get('provider')!r})")
         else:
             values |= report_values(report)
     else:
