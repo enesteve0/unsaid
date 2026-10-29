@@ -68,7 +68,8 @@ Key day, in order (owner steps marked **owner**):
    clip).
 5. Meanwhile, deploy. Nebius: **owner** billing at console.nebius.com, then
    `! ~/.nebius/bin/nebius profile create unsaid --endpoint api.nebius.cloud --federation-endpoint auth.nebius.com`
-   (browser login); Claude runs `infra/nebius/create_secrets.sh` and `infra/nebius/deploy_endpoint.sh`. Fallback:
+   (browser login); Claude runs `infra/nebius/create_secrets.sh` and `infra/nebius/deploy_endpoint.sh` with
+   `PATH="$HOME/.nebius/bin:$PATH"` (the CLI is not on the shell's PATH, on purpose). Fallback:
    **owner** `! fly auth login`; Claude runs `infra/fly/deploy.sh`. Then the `DEMO_URL` repository variable and the
    repository homepage.
 6. `python3 scripts/fill_numbers.py --demo-url <url>`; fill the opinion fields (rating, comparison, Nebius
