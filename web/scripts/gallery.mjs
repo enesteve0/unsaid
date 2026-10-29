@@ -6,7 +6,7 @@ import { mkdirSync, readFileSync } from 'node:fs'
 const [base = 'http://127.0.0.1:8080', out = '../video/build/gallery'] = process.argv.slice(2)
 const sample = JSON.parse(readFileSync(new URL('../../video/scenes.json', import.meta.url))).sample
 mkdirSync(out, { recursive: true })
-const browser = await chromium.launch({ channel: 'chrome' })
+const browser = await chromium.launch() // Playwright's own Chromium plays the H.264 sample
 const page = await browser.newPage({ viewport: { width: 1500, height: 1000 }, deviceScaleFactor: 2 })
 const shots = [
   ['01-home', '/', null],

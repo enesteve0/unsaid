@@ -10,7 +10,9 @@ const [width, height] = script.size
 mkdirSync(out, { recursive: true })
 
 const only = process.env.SCENES ? process.env.SCENES.split(',') : null
-const browser = await chromium.launch({ channel: 'chrome' }) // real Chrome: H.264/AAC playback
+// Playwright's own Chromium: it plays the H.264/AAC sample, and Playwright 1.64 loses the system Chrome 156
+// after about 30 seconds.
+const browser = await chromium.launch()
 const timingPath = join(out, 'timing.json')
 const timing = existsSync(timingPath) ? JSON.parse(readFileSync(timingPath)) : {}
 // Cold open: the full-screen player, first as a blind student hears it, then with Unsaid.
