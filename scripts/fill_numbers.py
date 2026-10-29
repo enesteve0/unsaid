@@ -153,7 +153,13 @@ def readme_block(report: dict, values: dict[str, str]) -> str:
     ]
     for key, label in ROWS:
         lines.append(f"| {label} | {FORMATS[key](m['oneshot'][key])} | {FORMATS[key](m['unsaid'][key])} |")
-    lines += ["", values["coverage_sentence"]]
+    lines += [
+        "",
+        values["coverage_sentence"],
+        "",
+        "Unsupported claims are scored by the same Super VL verifier that Unsaid's own check step answers to, so that "
+        "row favours Unsaid; invented numbers and names are counted by code.",
+    ]
     if "heldout_sentence" in values:
         lines += ["", values["heldout_sentence"]]
     lines += [
