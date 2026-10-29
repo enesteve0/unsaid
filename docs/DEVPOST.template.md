@@ -98,16 +98,14 @@ sets separately and lists where Unsaid still fails. No phrase from any clip appe
   explicit budget, and stream it.
 - **Structured output that sometimes isn’t.** We send the schema in the prompt as well as through constrained
   decoding, validate it with pydantic, and repair or retry. Truncated JSON gets more room instead of a “repair”.
-- **A checker is only as good as its corrector.** Super VL caught a wrong count (“11 at 10, 9 at zero”, where the
-  chart shows ten and ten), but the corrector was never shown what the checker saw, so all it could do was delete.
-  The description became “rock bars adjusted”. Passing the observation through fixed it, and a correction may no
-  longer shrink a description to a fragment.
+- **Counting, and a checker that could only delete.** Super VL can read twenty sampled points as “bars 0 through 10
+  and 11 through 20”, and Ultra turns that into “11 at 10, 9 at zero” (the frame shows ten and ten). On one run the
+  frame check caught it, but the corrector was never shown what the checker saw, so all it could do was delete: the
+  description became “rock bars adjusted”. Passing the observation through fixed that, and a correction may no
+  longer shrink a description to a fragment. On another run the check passed the wrong count. Code cannot catch a
+  plausible count, so the Evaluation page lists such failures and tiers mark what a person should check.
 - **Requests that never answer.** A few requests hung until the client gave up. Every call now streams, so a stall
   is cut off after a minute without a chunk instead of after a three-minute budget.
-- **Counting is hard for every model in the loop.** On one run, Super VL read twenty sampled points as “bars 0
-  through 10 and 11 through 20”, Ultra turned that into “11 at 10, 9 at zero” (the frame shows ten and ten), and
-  the frame check passed it. Code cannot catch a plausible count; the Evaluation page lists such failures, and
-  tiers mark what a person should check.
 - **“This” is not always pointing.** “In the right polarity”, “at this point” and “students could look at the graph
   later” all match a naive lexicon; Nano filters them.
 
