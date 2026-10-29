@@ -33,3 +33,30 @@ clearly different voice so viewers can tell narration and description apart.
    at the real cue time.
 5. Run the finished video through Unsaid itself: upload its captions (SRT) to YouTube, so the demo is captioned by the
    product.
+
+## YouTube upload (owner)
+
+Upload `video/build/unsaid-demo.mp4` as **Public**, not made for kids. Then add `video/build/captions.srt` as English
+subtitles, if it exists (Unsaid's own captions of the video).
+
+**Title:** Unsaid: audio description for what lectures show but never say (NVIDIA Nemotron on Nebius)
+
+**Description:**
+
+> Lecturers point instead of speaking: "as you can see, this curve". Unsaid finds those moments and describes what
+> they show in the pauses, never over the lecturer. It uses four NVIDIA Nemotron models on Nebius Token Factory
+> (3.5 Super VL, 3 Ultra, 3.5 Lightning, 3 Nano) and NVIDIA Parakeet speech recognition, and enforces timing and
+> grounding rules in code.
+>
+> Demo: https://enesteve0.github.io/unsaid/
+> Code: https://github.com/enesteve0/unsaid
+>
+> Built for the Nebius x NVIDIA Global AI Hackathon 2026 (Best Apps and Agents).
+> Narration is text-to-speech (Kokoro-82M); the description voice is a second TTS voice.
+> Lecture excerpts: "(3/4) Analysis: Explaining Fourier analysis with a machine" by Bill Hammack, Steve Kranz and
+> Bruce Carpenter (engineerguy), CC BY 3.0, via Wikimedia Commons. Descriptions added by Unsaid.
+
+## Devpost gallery
+
+`video/build/gallery/*.jpg` (3:2, under 1 MB each), in order: home, cinema, timeline, checks, cost, tips,
+evaluation, describe. Thumbnail: `video/cards/thumbnail.png`.
