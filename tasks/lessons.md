@@ -13,3 +13,10 @@ Rules learned from corrections during this project. Review at session start.
   Self-caught on Oct 27 after pushing a failing assertion.
 - **Held-out data:** never change the system because of what held-out results showed. If a held-out run was seen
   before a change, say so in the report.
+- **Fixes need their own review:** a batch of security and queue fixes looked complete, and its tests passed. A fresh
+  review of that diff still found 12 problems: a cleanup glob (`s*.mp4`) that deleted the uploaded `source.mp4`, a
+  proxy header trusted on every host, a service-wide pause that any visitor could trigger with broken uploads, and
+  a reserve that concurrent requests could all pass. After fixing review findings, have the diff reviewed again,
+  and write a test for each fix that fails on the old code. Self-caught on Oct 29.
+- **Claims follow the deployment:** text about where the app runs (footer, Devpost, video narration) is derived
+  from what the deployed app reports, never written ahead of it.
