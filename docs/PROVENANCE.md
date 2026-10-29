@@ -56,6 +56,29 @@ by a Token Factory run before submission.
   to the fixes in the commits of 2026-10-29. The most serious was that the web route could serve files outside
   the built app. The app had never been deployed publicly.
 
+### 2026-10-29: no spend, a static demo, and the evaluation on the API catalog
+
+- **Owner constraint:** no money may be spent on model inference or hosting.
+- **Credentials:** with the owner signed in to each site in their browser, Claude created a Token Factory API key
+  (`unsaid-hackathon`), a Hugging Face write token (`unsaid-deploy`) and used the existing Tavily key. Each went from
+  the page into the gitignored `.env` by clipboard or script, without being displayed. The owner entered the
+  Token Factory billing details and card. Claude entered no personal or payment data, and accepted no terms.
+- **Token Factory credit:** after billing setup, the account showed a balance of $0.00 and no October
+  transactions, so no trial credit was visible. The hackathon's code `NEBIUS-DEVPOST-GLOBAL26` is an
+  activation code for the form at nebius.com/promo-code. Entered as a promo code in the console, it is rejected.
+  That form needs the owner's personal details, so it is the owner's step. Until promo credit exists, no Token
+  Factory inference call is made. Listing models, which is free, confirmed the key and all five NVIDIA models.
+- **Tavily:** free plan, plus the `BBDEVPOST` coupon (8,000 credits). No card.
+- **Evaluation:** run on NVIDIA's API catalog (build.nvidia.com) with the same Nemotron models, at no cost, as the
+  owner chose. Calls are priced at Token Factory list prices. The report, README and Devpost text say where it
+  ran, and that classification used Lightning there, because the catalog account has no Nano.
+- **Hosting:** Hugging Face now requires a paid plan for Docker Spaces (`402: ... requires a PRO subscription`);
+  nothing was created. The demo is a static site on GitHub Pages (recorded runs, no server, no spend), deployed
+  from `master` by a workflow, with no extra branch. Live describing runs from the repository with one's own key.
+  Scripts for a live host (Nebius endpoint, Fly.io) stay in `infra/` for anyone willing to pay.
+- **Judging period:** recorded examples only, as the owner chose. A live host, if one is ever used, can open live
+  runs to judges only (`PUBLIC_LIVE=false`) and stop on a date (`LIVE_UNTIL`).
+
 ## Recording future work
 
 For every imported component, record its upstream URL, immutable commit/version, license, purpose and changes. For every material project decision, record date, rationale and source. If a baseline project is reused, identify its pre-event commit and explain the event-period work separately.

@@ -68,7 +68,20 @@ not Token Factory.
 
 ## Nebius Token Factory
 
-*(Added after testing with our Token Factory key; only reproduced items are listed.)*
+1. **Trial credit we could not see.** The billing docs say a first sign-up receives $1 of trial credit for 30
+   days. On an account created and set up for billing on Oct 29, 2026, the console showed an account balance of
+   $0.00, and the transaction list for October was empty. A participant who must not spend money cannot tell
+   whether a first call will be free. *Suggestion:* show the trial credit and its expiry next to the balance.
+2. **The hackathon activation code looks like a promo code, but is not one.** The Devpost resources page lists
+   `NEBIUS-DEVPOST-GLOBAL26` for "$25 Token Factory credits". Entered in the console under Top up balance → With
+   promo code, it returns "Invalid promo code. Please check the promo code symbols". It belongs to a separate form
+   (nebius.com/promo-code) that emails a promo code. *Suggestion:* say "activation code, not a promo code" next to
+   the console field, or accept event activation codes there directly.
+3. **No hard spending limit.** Billing requires a card, and once the balance is negative the card is charged
+   automatically, at the start of the month or at a threshold. For students and hackathon participants, a hard
+   cap ("stop serving at $X") would make trying the API risk-free. Until then, our app enforces its own caps.
+4. **What worked at once:** `GET /v1/models` with a new key listed all five NVIDIA models Unsaid uses, with the IDs
+   our fallback chains expect.
 
 ## Nebius AI Cloud (Serverless Endpoints and Jobs)
 
