@@ -26,7 +26,8 @@ Unsaid takes a lecture video and returns an audio-description track for what the
 says:
 
 - It finds **pointing moments**: “as you can see”, “these points”, “over here”.
-- It describes what they point at **inside the pauses**, and never over the lecturer.
+- It describes what they point at **in the lecturer's pauses**, pauses the video when no pause is long enough, and
+  never speaks over the lecturer.
 - Every description is **checked by code and re-checked against the frames**, and shows the evidence.
 - It exports a WebVTT description track, captions, a transcript with descriptions inline, and Final Cut Pro markers.
 - It suggests **the sentence the lecturer could say next time**, so the fix happens at the source.
