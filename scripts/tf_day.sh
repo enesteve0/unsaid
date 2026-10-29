@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
-# Everything that needs the Token Factory key, in order. Run from the repo root once .env has NEBIUS_API_KEY.
-#   scripts/tf_day.sh            # smoke test, samples, evaluation
-#   STEP=eval scripts/tf_day.sh  # just one step
+# Everything that needs Token Factory credit, in order. Run from the repo root once the account has promo credit.
+#   scripts/tf_day.sh            # smoke test and the two home-page examples (about $0.20 at list prices)
+#   STEP=eval scripts/tf_day.sh  # the evaluation on Token Factory (several dollars); by default it runs on the
+#                                # free API catalog instead: PROVIDER=nvidia_build NEBIUS_API_KEY= ... run_eval
 set -euo pipefail
 cd "$(dirname "$0")/../backend"
 STEP="${STEP:-all}"
@@ -30,7 +31,7 @@ if [[ "$STEP" == all || "$STEP" == samples ]]; then
     --source-url "https://commons.wikimedia.org/wiki/File:A-level_Physics_Core_Practical-_Capacitor_Discharge.webm"
 fi
 
-if [[ "$STEP" == all || "$STEP" == eval ]]; then
+if [[ "$STEP" == eval ]]; then
   # Fetch the clips if any listed in clips.json (development or held-out) is missing.
   uv run python -c "import json, os, sys; sys.exit(any(not os.path.exists(c['path']) for c in json.load(open('eval/clips.json'))))" \
     || eval/fetch_clips.sh
