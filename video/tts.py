@@ -2,14 +2,17 @@
 
     cd video && uv run --project ../backend --with kokoro-onnx --with soundfile python tts.py
 
-Numbers in the narration come from backend/eval/report.json and the sample's result.json, never typed by hand.
+Numbers in the narration come from backend/eval/report.json and the sample's result.json, never typed by hand, and
+what it says about hosting comes from the deployed app itself (DEMO_URL), so the video claims only what runs there.
 """
 
 from __future__ import annotations
 
 import json
+import os
 import re
 import sys
+import urllib.request
 from difflib import SequenceMatcher
 from pathlib import Path
 
@@ -36,15 +39,46 @@ def percent_words(x: float) -> str:
     return f"{round(x * 100)} percent"
 
 
-def fill(text: str, report: dict, sample: dict) -> str:
-    values: dict[str, str] = {}
+def deployment(base: str) -> dict:
+    """Where the app runs and whether the backlog job has run, as the deployed app reports them."""
+
+    def get(path: str) -> dict:
+        with urllib.request.urlopen(base.rstrip("/") + path, timeout=20) as response:
+            return json.load(response)
+
+    return {
+        "host": get("/api/health").get("host", ""),
+        "backlog": get("/api/backlog").get("available", False),
+    }
+
+
+def fill(text: str, report: dict, sample: dict, deployed: dict | None = None) -> str:
+    deployed = deployed or {"host": "", "backlog": False}
+    values: dict[str, str] = {
+        "asr_host": ", running on Nebius AI Cloud," if "Nebius" in deployed["host"] else "",
+        "backlog_sentence": "Long lectures run overnight as a Nebius Serverless job, with a dollar cap."
+        if deployed["backlog"]
+        else "Long lectures go to an overnight batch job, with a dollar cap.",
+    }
     if report.get("available"):
         sys_ = {s["key"]: s["metrics"] for s in report["systems"]}
         u, o = sys_["unsaid"], sys_["oneshot"]
+        spoke = (
+            "Unsaid never spoke over the lecturer"
+            if u["talk_over"] < 0.05
+            else f"Unsaid spoke over the lecturer for {u['talk_over']:.1f} seconds a minute"
+        )
+        fit = "none" if o["in_silence"] == 0 else f"only {percent_words(o['in_silence'])}"
+        coverage = (
+            f" It covered more of the pointing moments, {percent_words(o['coverage'])} against "
+            f"{percent_words(u['coverage'])}, but mostly over the lecturer's voice."
+            if o["coverage"] > u["coverage"]
+            else f" Unsaid also covered more of the pointing moments: {percent_words(u['coverage'])} against "
+            f"{percent_words(o['coverage'])}."
+        )
         values["evaluation_sentence"] = (
-            f"On {report['clips']} lectures, Unsaid spoke over the lecturer for {u['talk_over']:.1f} seconds a minute, "
-            f"against {o['talk_over']:.1f} for the one-shot approach, and covered {percent_words(u['coverage'])} of the "
-            f"pointing moments, against {percent_words(o['coverage'])}."
+            f"On {report['clips']} lectures, {spoke}. The one-shot approach did, for {o['talk_over']:.0f} seconds of "
+            f"every minute, and {fit} of its descriptions fit a pause.{coverage}"
         )
         values["usd_per_min_words"] = money_words(u["usd_per_min"])
     else:
@@ -66,12 +100,14 @@ def main() -> None:
     report_path = REPO / "backend" / "eval" / "report.json"
     report = json.loads(report_path.read_text()) if report_path.exists() else {"available": False}
     sample = json.loads((REPO / "samples" / script["sample"] / "result.json").read_text())
+    deployed = deployment(os.environ.get("DEMO_URL", "http://127.0.0.1:8080"))
+    print("deployment:", deployed)
     BUILD.mkdir(parents=True, exist_ok=True)
     kokoro = Kokoro(str(ROOT / "models" / "kokoro-v1.0.onnx"), str(ROOT / "models" / "voices-v1.0.bin"))
 
     lines: dict[str, dict] = {}
     for scene in script["scenes"]:
-        text = fill(scene["narration"], report, sample)
+        text = fill(scene["narration"], report, sample, deployed)
         audio, rate = kokoro.create(text, voice=script["narrator_voice"], speed=1.0, lang="en-us")
         path = BUILD / f"{scene['id']}.wav"
         sf.write(path, audio, rate)
@@ -82,7 +118,12 @@ def main() -> None:
     audio, rate = kokoro.create(cue["text"], voice=script["describer_voice"], speed=1.0, lang="en-us")
     path = BUILD / "describer.wav"
     sf.write(path, audio, rate)
-    lines["describer"] = {"text": cue["text"], "seconds": round(len(audio) / rate, 3), "path": str(path), "cue_start": cue["start"]}
+    lines["describer"] = {
+        "text": cue["text"],
+        "seconds": round(len(audio) / rate, 3),
+        "path": str(path),
+        "cue_start": cue["start"],
+    }
 
     # Round trip: does speech recognition hear what we meant? Catches mispronounced names before the edit.
     from unsaid.asr import SpeechRecognizer
