@@ -62,8 +62,9 @@ Night of Oct 29 (owner asleep; no money may be spent):
       trial credit visible) in `.env`, never displayed; Hugging Face write token in `.env` for deployment
 - [x] No Token Factory inference until promo credit exists (only the free model listing was called)
 - [x] Hugging Face Docker Spaces need PRO now → static demo on GitHub Pages: https://enesteve0.github.io/unsaid/
-- [ ] Official evaluation on the free API catalog (9 clips × 2), then numbers into README/Devpost, report committed
-- [ ] Examples refreshed on the catalog as a labelled fallback; video draft against the local app
+- [x] Official evaluation on the free API catalog (9 clips × 2, nothing skipped), numbers in README/Devpost/demo
+- [x] Fourier example refreshed on the catalog (labelled); featured description checked against its frame
+- [ ] Video draft against the local app (catalog) with the static demo's URL
 
 Morning (owner): fill nebius.com/promo-code (activation code `NEBIUS-DEVPOST-GLOBAL26`) → the emailed promo code goes
 into Token Factory → Balance + → With promo code (Claude can enter it). Then `scripts/tf_day.sh` (smoke test and
