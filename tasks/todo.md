@@ -56,6 +56,21 @@ Without keys (Claude):
       JPEGs under 1 MB. Recording uses Playwright's own Chromium (Playwright 1.64 loses the system Chrome 156).
 - [x] gitleaks (100 commits, no leaks) → public → renamed `enesteve0/unsaid` → description, topics, MIT detected
 
+Night of Oct 29 (owner asleep; no money may be spent):
+
+- [x] Keys: Tavily (free plan + `BBDEVPOST`, 9,000 credits) and Token Factory (owner added billing; balance $0.00, no
+      trial credit visible) in `.env`, never displayed; Hugging Face write token in `.env` for deployment
+- [x] No Token Factory inference until promo credit exists (only the free model listing was called)
+- [x] Hugging Face Docker Spaces need PRO now → static demo on GitHub Pages: https://enesteve0.github.io/unsaid/
+- [ ] Official evaluation on the free API catalog (9 clips × 2), then numbers into README/Devpost, report committed
+- [ ] Examples refreshed on the catalog as a labelled fallback; video draft against the local app
+
+Morning (owner): fill nebius.com/promo-code (activation code `NEBIUS-DEVPOST-GLOBAL26`) → the emailed promo code goes
+into Token Factory → Balance + → With promo code (Claude can enter it). Then `scripts/tf_day.sh` (smoke test and
+the two examples on Token Factory, about $0.20 of credit) → `scripts/make_video.sh` → YouTube and Devpost.
+If no credit arrives in time, the owner decides whether about $0.25 of Token Factory spend is acceptable: without
+any Token Factory call, the entry does not meet the platform rule.
+
 Key day, in order (owner steps marked **owner**):
 
 1. **owner:** copy the Token Factory key, then `! printf 'NEBIUS_API_KEY=%s\n' "$(pbpaste)" >> .env`; the same for
