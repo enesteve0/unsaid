@@ -37,3 +37,6 @@ if [[ "$STEP" == all || "$STEP" == eval ]]; then
   # Two runs per clip: model outputs vary from run to run, so one run is too noisy to publish.
   uv run python -m eval.run_eval --clips eval/clips.json --out data/eval/out --report eval/report.json --repeat 2
 fi
+
+# Devpost text and the README results table, from the report and the home-page run (lists anything still unfilled).
+python3 ../scripts/fill_numbers.py ${DEMO_URL:+--demo-url "$DEMO_URL"} || true

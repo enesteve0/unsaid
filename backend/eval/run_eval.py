@@ -401,6 +401,7 @@ def main(argv: list[str] | None = None) -> None:
     done = [r for r in results if "skipped" not in r]
     report = aggregate(done)
     report["runs"] = args.repeat
+    report["provider"] = settings.provider
     if args.repeat > 1:
         report["per_run"] = [
             {"run": run, "systems": summarize(subset)}

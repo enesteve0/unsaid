@@ -79,6 +79,13 @@ Models write; code decides. A description is used only if:
   rather than squeezed into a fragment;
 - a description that identifies a person without a source is withheld.
 
+## Results
+
+<!-- results:start -->
+Measured on Nebius Token Factory before submission (`scripts/tf_day.sh`); the app's Evaluation page shows the
+method, both clip sets and the failure list.
+<!-- results:end -->
+
 ## Where Nebius Token Factory accelerated the work
 
 - **One API, four model sizes.** Routing each step to the right Nemotron size was a configuration change, not four

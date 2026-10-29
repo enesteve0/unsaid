@@ -1,7 +1,8 @@
-# Devpost submission text (draft)
+# Devpost submission text
 
-Fields marked `{{…}}` are filled from `backend/eval/report.json` and the deployed run before submitting. Nothing
-else in this file may contain a number that is not measured.
+Template for `docs/DEVPOST.md`. `scripts/fill_numbers.py` fills every `{{…}}` from `backend/eval/report.json` (the
+evaluation) and `samples/fourier-machine/result.json` (the home-page run). Nothing else in this file may contain a
+number that is not measured. Edit this template, not the generated file.
 
 ## Project overview
 
@@ -58,25 +59,29 @@ Nine stages, four Nemotron models on Nebius Token Factory, each doing the one jo
 8. **Deliver:** tracks, transcript, markers and lecturer tips.
 
 Every Token Factory call goes into a ledger with tokens, cached tokens, reasoning tokens, latency and cost. That
-gives each video a price ({{usd_per_min}} per minute) and a counterfactual: the same text work on Ultra alone would
-cost {{ultra_only_ratio}}× more.
+gives each video a price ({{usd_per_min}} per minute of video in the evaluation) and a counterfactual: the same text
+work on Ultra alone would cost {{ultra_only_phrase}}.
 
 ## Results
 
-On {{clips}} openly licensed lecture clips ({{minutes}} minutes, {{labels}} labelled pointing moments), compared with the
-obvious one-shot approach (Super VL given the whole clip and the transcript):
+On {{clips}} openly licensed lecture clips ({{minutes}} minutes, {{labels}} labelled pointing moments), each described
+{{runs}}, compared with the obvious one-shot approach (Super VL given the whole clip and the timed transcript,
+asked to place descriptions in pauses):
 
-| | One-shot | Unsaid |
-| --- | --- | --- |
-| Seconds spoken over the lecturer, per minute | {{oneshot.talk_over}} | {{unsaid.talk_over}} |
-| Pointing moments covered | {{oneshot.coverage}} | {{unsaid.coverage}} |
-| Descriptions with an invented number or name | {{oneshot.ungrounded}} | {{unsaid.ungrounded}} |
-| Claims the frames do not support | {{oneshot.unsupported}} | {{unsaid.unsupported}} |
-| Cost per video minute | {{oneshot.usd_per_min}} | {{unsaid.usd_per_min}} |
+- **Spoken over the lecturer:** Unsaid {{unsaid.talk_over}} per minute of video; one-shot {{oneshot.talk_over}}.
+- **Descriptions that fit in a pause:** Unsaid {{unsaid.in_silence}}; one-shot {{oneshot.in_silence}}.
+- **Pointing moments covered:** Unsaid {{unsaid.coverage}}; one-shot {{oneshot.coverage}}.
+- **Descriptions with an invented number or name:** Unsaid {{unsaid.ungrounded}}; one-shot {{oneshot.ungrounded}}.
+- **Claims the frames do not support:** Unsaid {{unsaid.unsupported}}; one-shot {{oneshot.unsupported}}.
+- **Video pauses for extended descriptions:** Unsaid {{unsaid.pauses}} per minute; one-shot {{oneshot.pauses}}.
+- **Model cost per minute of video:** Unsaid {{unsaid.usd_per_min}}; one-shot {{oneshot.usd_per_min}}.
 
-Six of the clips were also used to develop Unsaid's prompts. The other {{heldout_clips}} were labelled blind and never
-used during development; their labels include pointing moments our phrase detector misses. The Evaluation page reports
-both sets separately and lists where Unsaid still fails. No phrase from any clip appears in a prompt.
+{{coverage_sentence}}
+
+{{dev_clips_word}} of the clips were also used to develop Unsaid's prompts. The other {{heldout_clips}} were labelled blind
+and never used to tune them (Unsaid ran on them once, before one later change to where paused descriptions start), and
+their labels include pointing moments our phrase detector misses. {{heldout_sentence}} The Evaluation page reports both
+sets separately and lists where Unsaid still fails. No phrase from any clip appears in a prompt.
 
 ## Challenges we ran into
 
@@ -130,8 +135,8 @@ react, typescript, vite, playwright, axe-core, docker
 - **Track:** Best Apps and Agents
 - **New or existing:** New. Started 2026-10-26.
 - **Repository:** {{repo_url}} (MIT, LICENSE in About)
-- **Demo:** {{demo_url}}. Testing instructions: open {{demo_url}}/?judge=1&code={{judge_code}} for the 30-second tour;
-  the link also unlocks a reserved judging lane, so live runs never wait behind public traffic.
+- **Demo:** {{demo_url}}. Testing instructions: open {{demo_url}}/?judge=1 for the 30-second tour. The access code in
+  the private testing instructions unlocks a reserved judging lane, so live runs never wait behind public traffic.
 - **Models and why:** see “How we built it”.
   - Super VL is the only vision model.
   - Ultra is used once per video, for whole-lecture judgement over a 1M-token context.
