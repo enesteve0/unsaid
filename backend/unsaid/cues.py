@@ -240,6 +240,11 @@ async def write_cue(
                 )
             elif failure.startswith("unknown_name"):
                 notes.append(f"{failure}. Describe it instead of naming it.")
+            elif failure == "says_nothing":
+                notes.append(
+                    "It names the kind of picture but not what it shows. Say what the facts say: the words, values "
+                    "or objects themselves."
+                )
             else:
                 notes.append(failure)
         messages = [

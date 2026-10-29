@@ -3,6 +3,7 @@ from unsaid.gates import (
     estimate_seconds,
     numbers_in,
     numbers_seen,
+    says_nothing,
     spoken_word_count,
     unknown_names,
     vocabulary,
@@ -97,3 +98,10 @@ def test_numbers_seen_include_values_read_off_charts():
         "events": [{"description": "Pointer at 20 s"}],
     }
     assert {"13.4", "14.89", "20"} <= numbers_seen([facts], "about two volts")
+
+
+def test_a_description_must_say_what_it_shows():
+    assert run("Title card shows title.").failures == ["says_nothing"]
+    assert says_nothing("Slide displays text.") and says_nothing("The screen shows a new image.")
+    assert not says_nothing("Title: Harmonic Analyzer, Analysis.")
+    assert not says_nothing("Yellow box around the left half.")

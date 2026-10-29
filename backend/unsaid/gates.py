@@ -5,7 +5,8 @@ Models write the descriptions; code decides whether a description may be used. A
 * starts inside a silence and finishes before speech resumes (with a guard band),
 * uses none of the phrasings describers avoid ("we see", "the image shows", ...),
 * states no number that is not printed in the segment it describes,
-* names nothing that is not on screen, in the speech, or in the verified registry.
+* names nothing that is not on screen, in the speech, or in the verified registry,
+* says something: it is not made only of words for the medium ("Title card shows title.").
 
 Tense and speculation are reported as warnings rather than failures.
 """
@@ -32,6 +33,16 @@ BANNED = {
     ),
     "in this video": re.compile(r"\bin this (?:image|video|frame|clip|picture)\b", re.I),
 }
+# Words for the medium rather than its content, and function words. A description made only of these names the kind
+# of picture without saying what it shows.
+MEDIUM_WORDS = {
+    "title", "titles", "card", "cards", "slide", "slides", "screen", "image", "picture", "frame", "video", "clip",
+    "scene", "shot", "view", "text", "caption", "label", "labels", "graphic", "graphics", "content", "contents",
+    "shows", "show", "showing", "displays", "display", "displayed", "appears", "visible", "something", "thing",
+    "things", "is", "are", "be", "has", "have", "some", "new", "again", "also",
+    "a", "an", "the", "this", "that", "these", "those", "it", "its", "their", "on", "in", "at", "to", "from", "with",
+    "and", "or", "of", "for", "by", "as",
+}  # fmt: skip
 SPECULATION = re.compile(r"\b(?:seems?|appears?|probably|maybe|perhaps|might be|likely)\b", re.I)
 PAST_TENSE = re.compile(r"\b(?:was|were|had|did)\b", re.I)
 
@@ -259,6 +270,11 @@ def vocabulary(*texts: Iterable[str]) -> set[str]:
     return vocab
 
 
+def says_nothing(text: str) -> bool:
+    words = [w.lower() for w in WORD.findall(text)]
+    return bool(words) and all(w in MEDIUM_WORDS for w in words)
+
+
 def check_cue(
     text: str,
     start: float,
@@ -276,6 +292,8 @@ def check_cue(
     end = start + report.estimated_seconds
     if not text.strip():
         report.failures.append("empty")
+    elif says_nothing(text):
+        report.failures.append("says_nothing")
     if not extended:
         if end > window_end - guard:
             report.failures.append(
