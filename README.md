@@ -85,8 +85,25 @@ Models write; code decides. A description is used only if:
 ## Results
 
 <!-- results:start -->
-Filled in from the evaluation report before submission (`backend/eval/run_eval.py`, `scripts/fill_numbers.py`); the
-demo's Evaluation page shows the method, both clip sets and the failure list.
+On 9 openly licensed lecture clips (16.6 minutes, 38 labelled pointing moments), each described twice, measured on NVIDIA's API catalog (build.nvidia.com) with the same Nemotron models, at no cost to us, with costs priced at Token Factory list prices, scored by the same code for both systems (evaluated 2026-10-29 21:23 UTC):
+
+| | One-shot (Super VL, whole clip) | Unsaid |
+| --- | --- | --- |
+| Spoken over the lecturer, per minute of video | 28.6 s | 0.0 s |
+| Descriptions that fit in a pause | 0% | 100% |
+| Pointing moments covered | 40% | 46% |
+| Descriptions with an invented number or name | 12% | 0% |
+| Claims the frames do not support | 22% | 26% |
+| Video pauses for extended descriptions, per minute | 0.00 | 1.99 |
+| Model cost per minute of video | $0.0075 | $0.021 |
+
+Unsaid covered more of the pointing moments (46% against 40%) without speaking over the lecturer.
+
+Unsaid has more claims the frames do not support (26% against 22%), although that row favours it: the same Super VL verifier scores both, and Unsaid's own check step answers to it. 19 of its 20 unsupported claims are ones the checker could not see in its frames rather than contradictions.
+
+On the held-out clips alone, Unsaid covered 38% of the pointing moments (one-shot 41%) and spoke over the lecturer for 0.0 s per minute (one-shot 22.7 s).
+
+Method, both splits and the failure list: the app's Evaluation page and `backend/eval/run_eval.py`.
 <!-- results:end -->
 
 ## Where Nebius Token Factory accelerated the work

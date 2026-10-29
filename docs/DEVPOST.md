@@ -59,29 +59,28 @@ Nine stages, four Nemotron models on Nebius Token Factory, each doing the one jo
 9. **Deliver:** tracks, transcript, markers and lecturer tips.
 
 Every Token Factory call goes into a ledger with tokens, cached tokens, reasoning tokens, latency and cost. That
-gives each video a price ({{usd_per_min}} per minute of video in the evaluation) and a counterfactual: the same text
+gives each video a price ($0.021 per minute of video in the evaluation) and a counterfactual: the same text
 work on Ultra alone would cost {{ultra_only_phrase}}.
 
 ## Results
 
-On {{clips}} openly licensed lecture clips ({{minutes}} minutes, {{labels}} labelled pointing moments), each described
-{{runs}}, measured {{eval_where}}, compared with the obvious one-shot approach (Super VL given the whole clip and the timed transcript,
+On 9 openly licensed lecture clips (16.6 minutes, 38 labelled pointing moments), each described
+twice, measured on NVIDIA's API catalog (build.nvidia.com) with the same Nemotron models, at no cost to us, with costs priced at Token Factory list prices, compared with the obvious one-shot approach (Super VL given the whole clip and the timed transcript,
 asked to place descriptions in pauses):
 
-- **Spoken over the lecturer:** Unsaid {{unsaid.talk_over}} per minute of video; one-shot {{oneshot.talk_over}}.
-- **Descriptions that fit in a pause:** Unsaid {{unsaid.in_silence}}; one-shot {{oneshot.in_silence}}.
-- **Pointing moments covered:** Unsaid {{unsaid.coverage}}; one-shot {{oneshot.coverage}}.
-- **Descriptions with an invented number or name:** Unsaid {{unsaid.ungrounded}}; one-shot {{oneshot.ungrounded}}.
-- **Claims the frames do not support:** Unsaid {{unsaid.unsupported}}; one-shot {{oneshot.unsupported}}.
-- **Video pauses for extended descriptions:** Unsaid {{unsaid.pauses}} per minute; one-shot {{oneshot.pauses}}.
-- **Model cost per minute of video:** Unsaid {{unsaid.usd_per_min}}; one-shot {{oneshot.usd_per_min}}.
+- **Spoken over the lecturer:** Unsaid 0.0 s per minute of video; one-shot 28.6 s.
+- **Descriptions that fit in a pause:** Unsaid 100%; one-shot 0%.
+- **Pointing moments covered:** Unsaid 46%; one-shot 40%.
+- **Descriptions with an invented number or name:** Unsaid 0%; one-shot 12%.
+- **Claims the frames do not support:** Unsaid 26%; one-shot 22%.
+- **Video pauses for extended descriptions:** Unsaid 1.99 per minute; one-shot 0.00.
+- **Model cost per minute of video:** Unsaid $0.021; one-shot $0.0075.
 
-{{coverage_sentence}} One caveat: unsupported claims are scored by the same Super VL verifier that Unsaid's own
-check step answers to, so that row favours Unsaid; invented numbers and names are counted by code.
+Unsaid covered more of the pointing moments (46% against 40%) without speaking over the lecturer. Unsaid has more claims the frames do not support (26% against 22%), although that row favours it: the same Super VL verifier scores both, and Unsaid's own check step answers to it. 19 of its 20 unsupported claims are ones the checker could not see in its frames rather than contradictions.
 
-{{dev_clips_word}} of the clips were also used to develop Unsaid's prompts. The other {{heldout_clips}} were labelled blind
+Six of the clips were also used to develop Unsaid's prompts. The other three were labelled blind
 and never used to tune them (Unsaid ran on them once, before one later change to where paused descriptions start), and
-their labels include pointing moments our phrase detector misses. {{heldout_sentence}} The Evaluation page reports both
+their labels include pointing moments our phrase detector misses. On the held-out clips alone, Unsaid covered 38% of the pointing moments (one-shot 41%) and spoke over the lecturer for 0.0 s per minute (one-shot 22.7 s). The Evaluation page reports both
 sets separately and lists where Unsaid still fails. No phrase from any clip appears in a prompt.
 
 ## Challenges we ran into

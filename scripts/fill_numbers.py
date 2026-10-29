@@ -29,8 +29,8 @@ VISION = "Nemotron 3.5 Super VL"
 # Where the evaluation may have run, and how the texts say so.
 EVAL_PROVIDERS = {
     "tokenfactory": "on Nebius Token Factory",
-    "nvidia_build": "with the same Nemotron models through NVIDIA's API catalog (build.nvidia.com), keeping our "
-    "Token Factory credit for the live demo; costs are priced at Token Factory list prices",
+    "nvidia_build": "on NVIDIA's API catalog (build.nvidia.com) with the same Nemotron models, at no cost to us, with "
+    "costs priced at Token Factory list prices",
 }
 WORDS = {1: "One", 2: "Two", 3: "Three", 4: "Four", 5: "Five", 6: "Six", 7: "Seven", 8: "Eight", 9: "Nine"}
 
@@ -109,6 +109,27 @@ def report_values(report: dict) -> dict[str, str]:
             f"{'them' if o['in_silence'] == 0 else 'the rest'} on top of the explanation. Unsaid describes less, and "
             "every description it speaks is heard."
         )
+    unsupported = [
+        f["problem"] for f in report.get("failures", []) if f["problem"].startswith("claim not supported")
+    ]
+    unseen = sum(
+        "(not visible)" in p and "(contradicted)" not in p for p in unsupported
+    )  # nothing contradicted
+    if u["unsupported"] > o["unsupported"]:
+        values["unsupported_sentence"] = (
+            f"Unsaid has more claims the frames do not support ({pct(u['unsupported'])} against "
+            f"{pct(o['unsupported'])}), although that row favours it: the same Super VL verifier scores both, and "
+            f"Unsaid's own check step answers to it. {unseen} of its {len(unsupported)} unsupported claims are "
+            "ones the checker could not see in its frames rather than contradictions."
+        )
+    else:
+        values["unsupported_sentence"] = (
+            "Unsupported claims are scored by the same Super VL verifier that Unsaid's own check step answers to, so "
+            "that row favours Unsaid; invented numbers and names are counted by code."
+        )
+    values["heldout_clips_word"] = (
+        WORDS.get(splits["heldout"]["clips"], "").lower() if "heldout" in splits else ""
+    )
     if "heldout" in splits:
         h = metrics(splits["heldout"]["systems"])
         values["heldout_sentence"] = (
@@ -171,13 +192,7 @@ def readme_block(report: dict, values: dict[str, str]) -> str:
     ]
     for key, label in ROWS:
         lines.append(f"| {label} | {FORMATS[key](m['oneshot'][key])} | {FORMATS[key](m['unsaid'][key])} |")
-    lines += [
-        "",
-        values["coverage_sentence"],
-        "",
-        "Unsupported claims are scored by the same Super VL verifier that Unsaid's own check step answers to, so that "
-        "row favours Unsaid; invented numbers and names are counted by code.",
-    ]
+    lines += ["", values["coverage_sentence"], "", values["unsupported_sentence"]]
     if "heldout_sentence" in values:
         lines += ["", values["heldout_sentence"]]
     lines += [

@@ -1,0 +1,1583 @@
+{
+ "available": true,
+ "generated_at": "2026-10-29 21:23 UTC",
+ "clips": 9,
+ "minutes": 16.573969466666668,
+ "systems": [
+  {
+   "key": "oneshot",
+   "label": "One-shot (Super VL, whole clip + transcript)",
+   "metrics": {
+    "talk_over": 28.599606204978237,
+    "in_silence": 0.0,
+    "pauses": 0.0,
+    "coverage": 0.40131578947368424,
+    "unsupported": 0.21893491124260356,
+    "ungrounded": 0.11834319526627218,
+    "usd_per_min": 0.007523997208441821,
+    "sec_per_min": 4.93273316440223
+   }
+  },
+  {
+   "key": "unsaid",
+   "label": "Unsaid (routed pipeline + code gates)",
+   "metrics": {
+    "talk_over": 0.0,
+    "in_silence": 1.0,
+    "pauses": 1.9910740191943235,
+    "coverage": 0.4605263157894737,
+    "unsupported": 0.2597402597402597,
+    "ungrounded": 0.0,
+    "usd_per_min": 0.021351764929441044,
+    "sec_per_min": 129.8668278124542
+   }
+  }
+ ],
+ "splits": [
+  {
+   "key": "heldout",
+   "label": "Held-out clips: labelled blind, never used to tune Unsaid's prompts",
+   "clips": 3,
+   "minutes": 5.571557783333334,
+   "systems": [
+    {
+     "key": "oneshot",
+     "label": "One-shot (Super VL, whole clip + transcript)",
+     "metrics": {
+      "talk_over": 22.668705039335986,
+      "in_silence": 0.0,
+      "pauses": 0.0,
+      "coverage": 0.4117647058823529,
+      "unsupported": 0.21951219512195122,
+      "ungrounded": 0.12195121951219512,
+      "usd_per_min": 0.0054190320147656365,
+      "sec_per_min": 4.653029758219768
+     }
+    },
+    {
+     "key": "unsaid",
+     "label": "Unsaid (routed pipeline + code gates)",
+     "metrics": {
+      "talk_over": 0.0,
+      "in_silence": 1.0,
+      "pauses": 2.9614697794856997,
+      "coverage": 0.38235294117647056,
+      "unsupported": 0.21212121212121213,
+      "ungrounded": 0.0,
+      "usd_per_min": 0.021992951480562437,
+      "sec_per_min": 116.26951178938191
+     }
+    }
+   ]
+  },
+  {
+   "key": "dev",
+   "label": "Development clips: also used to develop Unsaid's prompts",
+   "clips": 6,
+   "minutes": 11.002411683333333,
+   "systems": [
+    {
+     "key": "oneshot",
+     "label": "One-shot (Super VL, whole clip + transcript)",
+     "metrics": {
+      "talk_over": 31.602980329005167,
+      "in_silence": 0.0,
+      "pauses": 0.0,
+      "coverage": 0.39285714285714285,
+      "unsupported": 0.21875,
+      "ungrounded": 0.1171875,
+      "usd_per_min": 0.008589939435111818,
+      "sec_per_min": 5.074373355170716
+     }
+    },
+    {
+     "key": "unsaid",
+     "label": "Unsaid (routed pipeline + code gates)",
+     "metrics": {
+      "talk_over": 0.0,
+      "in_silence": 1.0,
+      "pauses": 1.4996712061769621,
+      "coverage": 0.5238095238095238,
+      "unsupported": 0.29545454545454547,
+      "ungrounded": 0.0,
+      "usd_per_min": 0.02102707176013521,
+      "sec_per_min": 136.75243017866558
+     }
+    }
+   ]
+  }
+ ],
+ "metric_labels": {
+  "talk_over": {
+   "label": "Talks over lecturer",
+   "better": "lower",
+   "unit": "s"
+  },
+  "in_silence": {
+   "label": "Fits a silence",
+   "better": "higher",
+   "unit": "%"
+  },
+  "pauses": {
+   "label": "Video pauses / min",
+   "better": "lower"
+  },
+  "coverage": {
+   "label": "Pointing moments covered",
+   "better": "higher",
+   "unit": "%"
+  },
+  "unsupported": {
+   "label": "Claims not in frames",
+   "better": "lower",
+   "unit": "%"
+  },
+  "ungrounded": {
+   "label": "Invented numbers or names",
+   "better": "lower",
+   "unit": "%"
+  },
+  "usd_per_min": {
+   "label": "Cost per video minute",
+   "better": "lower",
+   "unit": "$"
+  },
+  "sec_per_min": {
+   "label": "Seconds per video minute",
+   "better": "lower"
+  }
+ },
+ "failures": [
+  {
+   "clip": "capacitor",
+   "t": 25.0,
+   "text": "Circuit board with red and black wires on desk; graph shows voltage falling from 16 V to 14 V in 6 s.",
+   "problem": "claim not supported by the frames: graph shows voltage falling from 16 V to 14 V in 6 s (not visible)"
+  },
+  {
+   "clip": "ccd",
+   "t": 45.9,
+   "text": "Missed: A grid of pixels drawn as coloured squares, orange on the left fading to green on the right, each with a zigzag connector.",
+   "problem": "pointing moment not described"
+  },
+  {
+   "clip": "fourier-a",
+   "t": 55.486,
+   "text": "Sampled square wave shows 11 points at value 10 (bars 0\u201110) and 10 points at value 0 (bars 11\u201120).",
+   "problem": "claim not supported by the frames: Sampled square wave shows 11 points at value 10 (bars 0\u201110) (not visible); Sampled square wave shows 10 points at value 0 (bars 11\u201120) (not visible)"
+  },
+  {
+   "clip": "fourier-a",
+   "t": 84.692,
+   "text": "Arms align at crank zero.",
+   "problem": "claim not supported by the frames: Arms align at crank zero. (not visible)"
+  },
+  {
+   "clip": "fourier-a",
+   "t": 11.4,
+   "text": "Missed: The presenter points at the tall machine's vertical rods; a title card reads Albert Michelson's Harmonic Analyzer, Synthesis, video 2 of 4.",
+   "problem": "pointing moment not described"
+  },
+  {
+   "clip": "fourier-a",
+   "t": 32.5,
+   "text": "Missed: On-screen text: adding sinusoids to form a function is synthesis; decomposing a function into sinusoids is analysis.",
+   "problem": "pointing moment only partly described"
+  },
+  {
+   "clip": "fourier-a",
+   "t": 52.6,
+   "text": "Missed: Graph titled square wave: f(x) alternates between 0 and 10, pulses centred on 0 and on plus and minus 2 pi.",
+   "problem": "pointing moment not described"
+  },
+  {
+   "clip": "fourier-a",
+   "t": 78.6,
+   "text": "Missed: Side of the machine: a hand turns a crank that drives a cone-shaped stack of gears below rows of vertical rods.",
+   "problem": "pointing moment only partly described"
+  },
+  {
+   "clip": "fourier-a",
+   "t": 90.0,
+   "text": "Missed: Rocker arm tips are numbered 20 at the far left down to 1 at the far right.",
+   "problem": "pointing moment not described"
+  },
+  {
+   "clip": "fourier-b",
+   "t": 16.066,
+   "text": "Grey machine-drawn curve with dots and pink computer sinc curve overlaid, both showing central peak and side lobes.",
+   "problem": "claim not supported by the frames: pink computer sinc curve overlaid (not visible)"
+  },
+  {
+   "clip": "fourier-b",
+   "t": 15.9,
+   "text": "Missed: A curve labelled drawn by the machine: one tall central peak with small ripples on both sides, matched by computed dots.",
+   "problem": "pointing moment only partly described"
+  },
+  {
+   "clip": "fourier-b",
+   "t": 28.2,
+   "text": "Missed: White markers set on the rocker arms trace a curve, highest in the middle.",
+   "problem": "pointing moment not described"
+  },
+  {
+   "clip": "fourier-b",
+   "t": 70.2,
+   "text": "Missed: Diagram: a square wave, analyzed, gives a sinc curve; the sinc, synthesized, gives back an approximate square wave.",
+   "problem": "pointing moment not described"
+  },
+  {
+   "clip": "fourier-b",
+   "t": 95.5,
+   "text": "Missed: End screen tiles: The Book + Posters, the entire book Page-by-Page, bonus video Rocker Arms, and the other videos in the series.",
+   "problem": "pointing moment not described"
+  },
+  {
+   "clip": "laser",
+   "t": 16.7,
+   "text": "Missed: Diagram: a flashtube coils around a ruby cylinder with a fully mirrored end and a partially mirrored end; a red beam leaves the partially mirrored end.",
+   "problem": "pointing moment not described"
+  },
+  {
+   "clip": "laser",
+   "t": 50.2,
+   "text": "Missed: Energy diagram: five red electrons on the excited state at the top, an empty lower energy state, three electrons on the ground state.",
+   "problem": "pointing moment only partly described"
+  },
+  {
+   "clip": "ozone",
+   "t": 29.214,
+   "text": "Polar projection shows ozone depletion colors green to blue; timeline slider 1979\u20112013",
+   "problem": "claim not supported by the frames: ozone depletion (not visible)"
+  },
+  {
+   "clip": "ozone",
+   "t": 54.622,
+   "text": "Arrow points to a seat in middle\u2011right section of the hall",
+   "problem": "claim not supported by the frames: Arrow points to a seat in middle\u2011right section of the hall (not visible)"
+  },
+  {
+   "clip": "ozone",
+   "t": 68.574,
+   "text": "Left globe Projected displays mostly green\u2011yellow ozone over southernmost polar region for year 2014",
+   "problem": "claim not supported by the frames: Left globe Projected displays mostly green\u2011yellow ozone over southernmost polar region for year 2014 (not visible)"
+  },
+  {
+   "clip": "ozone",
+   "t": 77.214,
+   "text": "Right globe World Avoided shows expanded blue region at south pole for year 2019",
+   "problem": "claim not supported by the frames: Right globe World Avoided shows expanded blue region at south pole for year 2019 (not visible)"
+  },
+  {
+   "clip": "ozone",
+   "t": 5.5,
+   "text": "Missed: Animated globe centred on Antarctica, dated Aug 1979 to Aug 2012 on a timeline bar marked 1979 and 2013: a pale blue patch over the continent, ringed by green, grows larger and deeper blue through the 1980s and 1990s.",
+   "problem": "pointing moment not described"
+  },
+  {
+   "clip": "ozone",
+   "t": 34.3,
+   "text": "Missed: Photo of a vast hall of delegates at long desks; stage banners read 8th Meeting of the Conference of the Parties to the Vienna Convention and the 20th Meeting of the Parties to the Montreal Protocol, Doha, Qatar.",
+   "problem": "pointing moment only partly described"
+  },
+  {
+   "clip": "ozone",
+   "t": 42.0,
+   "text": "Missed: A list builds over the photo: Vienna Convention for the Protection of the Ozone Layer, 1985; The Montreal Protocol on Substances that Deplete the Ozone Layer, 1987; then its London 1990, Copenhagen 1992, Montreal 1997 and Beijing 1999 Amendments.",
+   "problem": "pointing moment not described"
+  },
+  {
+   "clip": "ozone",
+   "t": 48.7,
+   "text": "Missed: The list clears and a large white arrow at the lower right of the hall photo points down at two people seated at laptops in the back row, nearest the camera.",
+   "problem": "pointing moment only partly described"
+  },
+  {
+   "clip": "ozone",
+   "t": 63.8,
+   "text": "Missed: Two globes centred on the Americas, labelled Projected (left) and World Avoided (right), with a year counter starting at 2014: Projected is green with yellow and red near the poles; World Avoided is pale cyan.",
+   "problem": "pointing moment not described"
+  },
+  {
+   "clip": "quadratic",
+   "t": 52.8,
+   "text": "Missed: His pen is on the plus between x\u00b2 and 5x in x\u00b2 + 5x + 4 = 0; the line below reads (x 4)(x 1) = 0, still without signs.",
+   "problem": "pointing moment only partly described"
+  },
+  {
+   "clip": "quadratic",
+   "t": 57.0,
+   "text": "Missed: The pen moves from the gaps in the brackets up to the plus before 5x, then he writes a plus before the 4: (x + 4)(x 1) = 0.",
+   "problem": "pointing moment not described"
+  },
+  {
+   "clip": "quadratic",
+   "t": 61.4,
+   "text": "Missed: He taps the 5x in x\u00b2 + 5x + 4 = 0, then writes a plus before the 1, completing (x + 4)(x + 1) = 0.",
+   "problem": "pointing moment not described"
+  },
+  {
+   "clip": "quadratic",
+   "t": 62.9,
+   "text": "Missed: He underlines (x + 4) and writes a beneath it, then underlines (x + 1) and writes b beneath it, and adds = 0 after them.",
+   "problem": "pointing moment only partly described"
+  },
+  {
+   "clip": "usgs",
+   "t": 42.782,
+   "text": "Perspective view of bay mouth showing shoreline landmarks cliff, house, Point Lobos, Mile Rock, Point Benita.",
+   "problem": "claim not supported by the frames: Perspective view of bay mouth showing shoreline landmarks cliff, house, Point Lobos, Mile Rock, Point Benita. (not visible)"
+  },
+  {
+   "clip": "usgs",
+   "t": 88.898,
+   "text": "Same map indicates 350 ft depth at pointed location in deep channel.",
+   "problem": "claim not supported by the frames: Same map indicates 350 ft depth at pointed location in deep channel. (not visible)"
+  },
+  {
+   "clip": "usgs",
+   "t": 10.9,
+   "text": "Missed: Map titled Mouth of SF Bay Tidal Currents: the fastest flow, in red, runs in a band through the Golden Gate channel and slows to yellow and green beyond it.",
+   "problem": "pointing moment only partly described"
+  },
+  {
+   "clip": "usgs",
+   "t": 20.4,
+   "text": "Missed: The current map at a later tide: slower flow in blue, with a swirl at the mouth of the bay.",
+   "problem": "pointing moment not described"
+  },
+  {
+   "clip": "usgs",
+   "t": 86.0,
+   "text": "Missed: The pointer rests on the orange shallow area next to the beach.",
+   "problem": "pointing moment not described"
+  },
+  {
+   "clip": "yellowstone",
+   "t": 42.5,
+   "text": "Missed: Chart labelled OFW2 Best Available Rank Up with a cursor line at Sep-2020: before it the daily circles scatter between about +0.04 and -0.04 meters; after it they form a tight band between about 0 and -0.02.",
+   "problem": "pointing moment only partly described"
+  },
+  {
+   "clip": "yellowstone",
+   "t": 101.3,
+   "text": "Missed: Chart titled Steamboat Geyser, Water eruptions: October 13, 25: Steamboat Temperature in degrees C through October 2021, a line rising and falling daily between about 0 and 20, with a thin spike to 40 near October 4.",
+   "problem": "pointing moment not described"
+  },
+  {
+   "clip": "yellowstone",
+   "t": 108.5,
+   "text": "Missed: Two dense, jagged stretches where the line climbs to roughly 20 to 48 degrees: about October 9 to 13 and October 21 to 25; another begins at the right edge, on October 31.",
+   "problem": "pointing moment only partly described"
+  },
+  {
+   "clip": "yellowstone",
+   "t": 111.6,
+   "text": "Missed: The cursor sits on a lone spike to about 57 degrees at October 13; right after it the line falls below 10 and returns to small daily waves.",
+   "problem": "pointing moment not described"
+  },
+  {
+   "clip": "ccd",
+   "t": 45.9,
+   "text": "Missed: A grid of pixels drawn as coloured squares, orange on the left fading to green on the right, each with a zigzag connector.",
+   "problem": "pointing moment only partly described"
+  },
+  {
+   "clip": "fourier-a",
+   "t": 66.42,
+   "text": "Hand turns crank on machine side; pen traces wavy line",
+   "problem": "claim not supported by the frames: pen traces wavy line (not visible)"
+  },
+  {
+   "clip": "fourier-a",
+   "t": 11.4,
+   "text": "Missed: The presenter points at the tall machine's vertical rods; a title card reads Albert Michelson's Harmonic Analyzer, Synthesis, video 2 of 4.",
+   "problem": "pointing moment only partly described"
+  },
+  {
+   "clip": "fourier-a",
+   "t": 32.5,
+   "text": "Missed: On-screen text: adding sinusoids to form a function is synthesis; decomposing a function into sinusoids is analysis.",
+   "problem": "pointing moment only partly described"
+  },
+  {
+   "clip": "fourier-a",
+   "t": 64.0,
+   "text": "Missed: Dot plot of value against rocker bar: bars 1 to 10 sit at 10, bars 11 to 20 at 0.",
+   "problem": "pointing moment only partly described"
+  },
+  {
+   "clip": "fourier-a",
+   "t": 78.6,
+   "text": "Missed: Side of the machine: a hand turns a crank that drives a cone-shaped stack of gears below rows of vertical rods.",
+   "problem": "pointing moment only partly described"
+  },
+  {
+   "clip": "fourier-b",
+   "t": 11.22,
+   "text": "cos(2 x) graph shows one oscillation with markers.",
+   "problem": "claim not supported by the frames: cos(2 x) graph shows one oscillation with markers (not visible)"
+  },
+  {
+   "clip": "fourier-b",
+   "t": 63.25,
+   "text": "First diagram shows square wave converting to sinc curve via analyze arrow.",
+   "problem": "claim not supported by the frames: First diagram shows square wave converting to sinc curve via analyze arrow. (not visible)"
+  },
+  {
+   "clip": "fourier-b",
+   "t": 66.462,
+   "text": "Second diagram shows sinc curve converting to square wave via synthesize arrow.",
+   "problem": "claim not supported by the frames: Second diagram shows sinc curve converting to square wave via synthesize arrow. (not visible)"
+  },
+  {
+   "clip": "fourier-b",
+   "t": 28.2,
+   "text": "Missed: White markers set on the rocker arms trace a curve, highest in the middle.",
+   "problem": "pointing moment only partly described"
+  },
+  {
+   "clip": "fourier-b",
+   "t": 70.2,
+   "text": "Missed: Diagram: a square wave, analyzed, gives a sinc curve; the sinc, synthesized, gives back an approximate square wave.",
+   "problem": "pointing moment only partly described"
+  },
+  {
+   "clip": "fourier-b",
+   "t": 95.5,
+   "text": "Missed: End screen tiles: The Book + Posters, the entire book Page-by-Page, bonus video Rocker Arms, and the other videos in the series.",
+   "problem": "pointing moment not described"
+  },
+  {
+   "clip": "laser",
+   "t": 50.2,
+   "text": "Missed: Energy diagram: five red electrons on the excited state at the top, an empty lower energy state, three electrons on the ground state.",
+   "problem": "pointing moment only partly described"
+  },
+  {
+   "clip": "ozone",
+   "t": 5.5,
+   "text": "Missed: Animated globe centred on Antarctica, dated Aug 1979 to Aug 2012 on a timeline bar marked 1979 and 2013: a pale blue patch over the continent, ringed by green, grows larger and deeper blue through the 1980s and 1990s.",
+   "problem": "pointing moment not described"
+  },
+  {
+   "clip": "ozone",
+   "t": 34.3,
+   "text": "Missed: Photo of a vast hall of delegates at long desks; stage banners read 8th Meeting of the Conference of the Parties to the Vienna Convention and the 20th Meeting of the Parties to the Montreal Protocol, Doha, Qatar.",
+   "problem": "pointing moment only partly described"
+  },
+  {
+   "clip": "ozone",
+   "t": 42.0,
+   "text": "Missed: A list builds over the photo: Vienna Convention for the Protection of the Ozone Layer, 1985; The Montreal Protocol on Substances that Deplete the Ozone Layer, 1987; then its London 1990, Copenhagen 1992, Montreal 1997 and Beijing 1999 Amendments.",
+   "problem": "pointing moment only partly described"
+  },
+  {
+   "clip": "ozone",
+   "t": 63.8,
+   "text": "Missed: Two globes centred on the Americas, labelled Projected (left) and World Avoided (right), with a year counter starting at 2014: Projected is green with yellow and red near the poles; World Avoided is pale cyan.",
+   "problem": "pointing moment not described"
+  },
+  {
+   "clip": "quadratic",
+   "t": 9.906,
+   "text": "Quadratic equation x^2+5x+4=0 shown with two empty brackets ready for factoring.",
+   "problem": "claim not supported by the frames: shown with two empty brackets ready for factoring (not visible)"
+  },
+  {
+   "clip": "quadratic",
+   "t": 53.5,
+   "text": "a=0 and b=0 written under fraction.",
+   "problem": "claim not supported by the frames: a=0 and b=0 written under fraction (not visible)"
+  },
+  {
+   "clip": "quadratic",
+   "t": 52.8,
+   "text": "Missed: His pen is on the plus between x\u00b2 and 5x in x\u00b2 + 5x + 4 = 0; the line below reads (x 4)(x 1) = 0, still without signs.",
+   "problem": "pointing moment not described"
+  },
+  {
+   "clip": "quadratic",
+   "t": 57.0,
+   "text": "Missed: The pen moves from the gaps in the brackets up to the plus before 5x, then he writes a plus before the 4: (x + 4)(x 1) = 0.",
+   "problem": "pointing moment not described"
+  },
+  {
+   "clip": "quadratic",
+   "t": 61.4,
+   "text": "Missed: He taps the 5x in x\u00b2 + 5x + 4 = 0, then writes a plus before the 1, completing (x + 4)(x + 1) = 0.",
+   "problem": "pointing moment not described"
+  },
+  {
+   "clip": "quadratic",
+   "t": 62.9,
+   "text": "Missed: He underlines (x + 4) and writes a beneath it, then underlines (x + 1) and writes b beneath it, and adds = 0 after them.",
+   "problem": "pointing moment not described"
+  },
+  {
+   "clip": "usgs",
+   "t": 13.726,
+   "text": "Heat map shows strong eddies spinning off Point Benito with velocities up to 2.5 meters per second.",
+   "problem": "claim not supported by the frames: Heat map shows strong eddies spinning off Point Benito (not visible)"
+  },
+  {
+   "clip": "usgs",
+   "t": 77.65,
+   "text": "Close\u2011up shows parallel yellow\u2011green sand ridges off Point Lobos, each about half a football field long, moving sand south.",
+   "problem": "claim not supported by the frames: Close-up shows parallel yellow-green sand ridges off Point Lobos (contradicted); each about half a football field long (not visible); moving sand south (not visible)"
+  },
+  {
+   "clip": "usgs",
+   "t": 88.898,
+   "text": "Map highlights deep channel near Baker Beach at 350 feet depth, shown in cool blue.",
+   "problem": "claim not supported by the frames: channel at 350 feet depth (not visible)"
+  },
+  {
+   "clip": "usgs",
+   "t": 10.9,
+   "text": "Missed: Map titled Mouth of SF Bay Tidal Currents: the fastest flow, in red, runs in a band through the Golden Gate channel and slows to yellow and green beyond it.",
+   "problem": "pointing moment only partly described"
+  },
+  {
+   "clip": "usgs",
+   "t": 20.4,
+   "text": "Missed: The current map at a later tide: slower flow in blue, with a swirl at the mouth of the bay.",
+   "problem": "pointing moment not described"
+  },
+  {
+   "clip": "usgs",
+   "t": 77.4,
+   "text": "Missed: Seafloor map titled Features off Baker Beach: ridged sand waves across the green area and a deep purple channel at the top.",
+   "problem": "pointing moment only partly described"
+  },
+  {
+   "clip": "usgs",
+   "t": 86.0,
+   "text": "Missed: The pointer rests on the orange shallow area next to the beach.",
+   "problem": "pointing moment only partly described"
+  },
+  {
+   "clip": "yellowstone",
+   "t": 20.402,
+   "text": "The chart indicates about two centimeters per year subsidence.",
+   "problem": "claim not supported by the frames: The chart indicates about two centimeters per year subsidence. (not visible)"
+  },
+  {
+   "clip": "yellowstone",
+   "t": 5.5,
+   "text": "Missed: Chart labelled WLWY Best Available Rank Up, in meters from Dec-2019 to Sep-2021: daily blue circles fall from about 0.02 to 0.03 to about 0.01, level off through summer 2020, then drop to about -0.02.",
+   "problem": "pointing moment only partly described"
+  },
+  {
+   "clip": "yellowstone",
+   "t": 42.5,
+   "text": "Missed: Chart labelled OFW2 Best Available Rank Up with a cursor line at Sep-2020: before it the daily circles scatter between about +0.04 and -0.04 meters; after it they form a tight band between about 0 and -0.02.",
+   "problem": "pointing moment only partly described"
+  },
+  {
+   "clip": "yellowstone",
+   "t": 67.6,
+   "text": "Missed: Chart labelled NRWY Best Available Rank Up: two years of daily circles scattered around 0 meters, mostly between -0.02 and +0.02; as the cursor sweeps summer 2021 the last points climb to about +0.01 to +0.02.",
+   "problem": "pointing moment only partly described"
+  },
+  {
+   "clip": "yellowstone",
+   "t": 101.3,
+   "text": "Missed: Chart titled Steamboat Geyser, Water eruptions: October 13, 25: Steamboat Temperature in degrees C through October 2021, a line rising and falling daily between about 0 and 20, with a thin spike to 40 near October 4.",
+   "problem": "pointing moment not described"
+  },
+  {
+   "clip": "yellowstone",
+   "t": 108.5,
+   "text": "Missed: Two dense, jagged stretches where the line climbs to roughly 20 to 48 degrees: about October 9 to 13 and October 21 to 25; another begins at the right edge, on October 31.",
+   "problem": "pointing moment not described"
+  },
+  {
+   "clip": "yellowstone",
+   "t": 111.6,
+   "text": "Missed: The cursor sits on a lone spike to about 57 degrees at October 13; right after it the line falls below 10 and returns to small daily waves.",
+   "problem": "pointing moment only partly described"
+  }
+ ],
+ "per_clip": [
+  {
+   "id": "capacitor",
+   "title": "A-level Physics Core Practical: Capacitor Discharge, 1:00-2:55 (NUSTEM)",
+   "split": "dev",
+   "failures": [
+    {
+     "clip": "capacitor",
+     "t": 25.0,
+     "text": "Circuit board with red and black wires on desk; graph shows voltage falling from 16 V to 14 V in 6 s.",
+     "problem": "claim not supported by the frames: graph shows voltage falling from 16 V to 14 V in 6 s (not visible)"
+    }
+   ],
+   "judge_usd": 0.004404,
+   "run": 1,
+   "oneshot": {
+    "cues": 13,
+    "talk_over": 79.47799999999998,
+    "in_silence": 0,
+    "coverage": 1.0,
+    "unsupported": 3,
+    "usd": 0.0196392
+   },
+   "unsaid": {
+    "cues": 1,
+    "talk_over": 0.0,
+    "in_silence": 1,
+    "coverage": 1.0,
+    "unsupported": 1,
+    "usd": 0.04594
+   }
+  },
+  {
+   "id": "ccd",
+   "title": "CCD: the heart of a digital camera, 0:40-2:35 (engineerguy)",
+   "split": "dev",
+   "failures": [
+    {
+     "clip": "ccd",
+     "t": 45.9,
+     "text": "Missed: A grid of pixels drawn as coloured squares, orange on the left fading to green on the right, each with a zigzag connector.",
+     "problem": "pointing moment not described"
+    }
+   ],
+   "judge_usd": 0.010003,
+   "run": 1,
+   "oneshot": {
+    "cues": 8,
+    "talk_over": 42.111999999999995,
+    "in_silence": 0,
+    "coverage": 0.0,
+    "unsupported": 2,
+    "usd": 0.011698199999999999
+   },
+   "unsaid": {
+    "cues": 1,
+    "talk_over": 0.0,
+    "in_silence": 1,
+    "coverage": 0.0,
+    "unsupported": 0,
+    "usd": 0.025557
+   }
+  },
+  {
+   "id": "fourier-a",
+   "title": "Explaining Fourier analysis with a machine, 0:00-1:40 (engineerguy)",
+   "split": "dev",
+   "failures": [
+    {
+     "clip": "fourier-a",
+     "t": 55.486,
+     "text": "Sampled square wave shows 11 points at value 10 (bars 0\u201110) and 10 points at value 0 (bars 11\u201120).",
+     "problem": "claim not supported by the frames: Sampled square wave shows 11 points at value 10 (bars 0\u201110) (not visible); Sampled square wave shows 10 points at value 0 (bars 11\u201120) (not visible)"
+    },
+    {
+     "clip": "fourier-a",
+     "t": 84.692,
+     "text": "Arms align at crank zero.",
+     "problem": "claim not supported by the frames: Arms align at crank zero. (not visible)"
+    },
+    {
+     "clip": "fourier-a",
+     "t": 11.4,
+     "text": "Missed: The presenter points at the tall machine's vertical rods; a title card reads Albert Michelson's Harmonic Analyzer, Synthesis, video 2 of 4.",
+     "problem": "pointing moment not described"
+    },
+    {
+     "clip": "fourier-a",
+     "t": 32.5,
+     "text": "Missed: On-screen text: adding sinusoids to form a function is synthesis; decomposing a function into sinusoids is analysis.",
+     "problem": "pointing moment only partly described"
+    },
+    {
+     "clip": "fourier-a",
+     "t": 52.6,
+     "text": "Missed: Graph titled square wave: f(x) alternates between 0 and 10, pulses centred on 0 and on plus and minus 2 pi.",
+     "problem": "pointing moment not described"
+    },
+    {
+     "clip": "fourier-a",
+     "t": 78.6,
+     "text": "Missed: Side of the machine: a hand turns a crank that drives a cone-shaped stack of gears below rows of vertical rods.",
+     "problem": "pointing moment only partly described"
+    },
+    {
+     "clip": "fourier-a",
+     "t": 90.0,
+     "text": "Missed: Rocker arm tips are numbered 20 at the far left down to 1 at the far right.",
+     "problem": "pointing moment not described"
+    }
+   ],
+   "judge_usd": 0.073409,
+   "run": 1,
+   "oneshot": {
+    "cues": 11,
+    "talk_over": 42.63199999999997,
+    "in_silence": 0,
+    "coverage": 0.5714285714285714,
+    "unsupported": 1,
+    "usd": 0.0155244
+   },
+   "unsaid": {
+    "cues": 7,
+    "talk_over": 0.0,
+    "in_silence": 7,
+    "coverage": 0.42857142857142855,
+    "unsupported": 2,
+    "usd": 0.04387
+   }
+  },
+  {
+   "id": "fourier-b",
+   "title": "Explaining Fourier analysis with a machine, 2:05-3:45 (engineerguy)",
+   "split": "dev",
+   "failures": [
+    {
+     "clip": "fourier-b",
+     "t": 16.066,
+     "text": "Grey machine-drawn curve with dots and pink computer sinc curve overlaid, both showing central peak and side lobes.",
+     "problem": "claim not supported by the frames: pink computer sinc curve overlaid (not visible)"
+    },
+    {
+     "clip": "fourier-b",
+     "t": 15.9,
+     "text": "Missed: A curve labelled drawn by the machine: one tall central peak with small ripples on both sides, matched by computed dots.",
+     "problem": "pointing moment only partly described"
+    },
+    {
+     "clip": "fourier-b",
+     "t": 28.2,
+     "text": "Missed: White markers set on the rocker arms trace a curve, highest in the middle.",
+     "problem": "pointing moment not described"
+    },
+    {
+     "clip": "fourier-b",
+     "t": 70.2,
+     "text": "Missed: Diagram: a square wave, analyzed, gives a sinc curve; the sinc, synthesized, gives back an approximate square wave.",
+     "problem": "pointing moment not described"
+    },
+    {
+     "clip": "fourier-b",
+     "t": 95.5,
+     "text": "Missed: End screen tiles: The Book + Posters, the entire book Page-by-Page, bonus video Rocker Arms, and the other videos in the series.",
+     "problem": "pointing moment not described"
+    }
+   ],
+   "judge_usd": 0.012038,
+   "run": 1,
+   "oneshot": {
+    "cues": 14,
+    "talk_over": 62.442,
+    "in_silence": 0,
+    "coverage": 0.375,
+    "unsupported": 7,
+    "usd": 0.0200652
+   },
+   "unsaid": {
+    "cues": 1,
+    "talk_over": 0.0,
+    "in_silence": 1,
+    "coverage": 0.125,
+    "unsupported": 1,
+    "usd": 0.032655
+   }
+  },
+  {
+   "id": "laser",
+   "title": "How a laser works, 2:00-3:50 (engineerguy)",
+   "split": "dev",
+   "failures": [
+    {
+     "clip": "laser",
+     "t": 16.7,
+     "text": "Missed: Diagram: a flashtube coils around a ruby cylinder with a fully mirrored end and a partially mirrored end; a red beam leaves the partially mirrored end.",
+     "problem": "pointing moment not described"
+    },
+    {
+     "clip": "laser",
+     "t": 50.2,
+     "text": "Missed: Energy diagram: five red electrons on the excited state at the top, an empty lower energy state, three electrons on the ground state.",
+     "problem": "pointing moment only partly described"
+    }
+   ],
+   "judge_usd": 0.018742,
+   "run": 1,
+   "oneshot": {
+    "cues": 6,
+    "talk_over": 46.12,
+    "in_silence": 0,
+    "coverage": 0.5,
+    "unsupported": 0,
+    "usd": 0.0096465
+   },
+   "unsaid": {
+    "cues": 3,
+    "talk_over": 0.0,
+    "in_silence": 3,
+    "coverage": 0.25,
+    "unsupported": 0,
+    "usd": 0.030493
+   }
+  },
+  {
+   "id": "ozone",
+   "title": "Vital Signs: Taking the Pulse of Our Planet, 37:21-38:59 (NASA Goddard, Piers Sellers)",
+   "split": "heldout",
+   "failures": [
+    {
+     "clip": "ozone",
+     "t": 29.214,
+     "text": "Polar projection shows ozone depletion colors green to blue; timeline slider 1979\u20112013",
+     "problem": "claim not supported by the frames: ozone depletion (not visible)"
+    },
+    {
+     "clip": "ozone",
+     "t": 54.622,
+     "text": "Arrow points to a seat in middle\u2011right section of the hall",
+     "problem": "claim not supported by the frames: Arrow points to a seat in middle\u2011right section of the hall (not visible)"
+    },
+    {
+     "clip": "ozone",
+     "t": 68.574,
+     "text": "Left globe Projected displays mostly green\u2011yellow ozone over southernmost polar region for year 2014",
+     "problem": "claim not supported by the frames: Left globe Projected displays mostly green\u2011yellow ozone over southernmost polar region for year 2014 (not visible)"
+    },
+    {
+     "clip": "ozone",
+     "t": 77.214,
+     "text": "Right globe World Avoided shows expanded blue region at south pole for year 2019",
+     "problem": "claim not supported by the frames: Right globe World Avoided shows expanded blue region at south pole for year 2019 (not visible)"
+    },
+    {
+     "clip": "ozone",
+     "t": 5.5,
+     "text": "Missed: Animated globe centred on Antarctica, dated Aug 1979 to Aug 2012 on a timeline bar marked 1979 and 2013: a pale blue patch over the continent, ringed by green, grows larger and deeper blue through the 1980s and 1990s.",
+     "problem": "pointing moment not described"
+    },
+    {
+     "clip": "ozone",
+     "t": 34.3,
+     "text": "Missed: Photo of a vast hall of delegates at long desks; stage banners read 8th Meeting of the Conference of the Parties to the Vienna Convention and the 20th Meeting of the Parties to the Montreal Protocol, Doha, Qatar.",
+     "problem": "pointing moment only partly described"
+    },
+    {
+     "clip": "ozone",
+     "t": 42.0,
+     "text": "Missed: A list builds over the photo: Vienna Convention for the Protection of the Ozone Layer, 1985; The Montreal Protocol on Substances that Deplete the Ozone Layer, 1987; then its London 1990, Copenhagen 1992, Montreal 1997 and Beijing 1999 Amendments.",
+     "problem": "pointing moment not described"
+    },
+    {
+     "clip": "ozone",
+     "t": 48.7,
+     "text": "Missed: The list clears and a large white arrow at the lower right of the hall photo points down at two people seated at laptops in the back row, nearest the camera.",
+     "problem": "pointing moment only partly described"
+    },
+    {
+     "clip": "ozone",
+     "t": 63.8,
+     "text": "Missed: Two globes centred on the Americas, labelled Projected (left) and World Avoided (right), with a year counter starting at 2014: Projected is green with yellow and red near the poles; World Avoided is pale cyan.",
+     "problem": "pointing moment not described"
+    }
+   ],
+   "judge_usd": 0.038826,
+   "run": 1,
+   "oneshot": {
+    "cues": 6,
+    "talk_over": 38.31799999999998,
+    "in_silence": 0,
+    "coverage": 0.6666666666666666,
+    "unsupported": 1,
+    "usd": 0.011287499999999999
+   },
+   "unsaid": {
+    "cues": 7,
+    "talk_over": 0.0,
+    "in_silence": 7,
+    "coverage": 0.3333333333333333,
+    "unsupported": 4,
+    "usd": 0.048644
+   }
+  },
+  {
+   "id": "quadratic",
+   "title": "Solving quadratic equations, 0:45-2:41 (Mosborne01)",
+   "split": "heldout",
+   "failures": [
+    {
+     "clip": "quadratic",
+     "t": 52.8,
+     "text": "Missed: His pen is on the plus between x\u00b2 and 5x in x\u00b2 + 5x + 4 = 0; the line below reads (x 4)(x 1) = 0, still without signs.",
+     "problem": "pointing moment only partly described"
+    },
+    {
+     "clip": "quadratic",
+     "t": 57.0,
+     "text": "Missed: The pen moves from the gaps in the brackets up to the plus before 5x, then he writes a plus before the 4: (x + 4)(x 1) = 0.",
+     "problem": "pointing moment not described"
+    },
+    {
+     "clip": "quadratic",
+     "t": 61.4,
+     "text": "Missed: He taps the 5x in x\u00b2 + 5x + 4 = 0, then writes a plus before the 1, completing (x + 4)(x + 1) = 0.",
+     "problem": "pointing moment not described"
+    },
+    {
+     "clip": "quadratic",
+     "t": 62.9,
+     "text": "Missed: He underlines (x + 4) and writes a beneath it, then underlines (x + 1) and writes b beneath it, and adds = 0 after them.",
+     "problem": "pointing moment only partly described"
+    }
+   ],
+   "judge_usd": 0.080085,
+   "run": 1,
+   "oneshot": {
+    "cues": 9,
+    "talk_over": 43.81600000000001,
+    "in_silence": 0,
+    "coverage": 0.3,
+    "unsupported": 3,
+    "usd": 0.010720799999999999
+   },
+   "unsaid": {
+    "cues": 4,
+    "talk_over": 0.0,
+    "in_silence": 4,
+    "coverage": 0.4,
+    "unsupported": 0,
+    "usd": 0.029743
+   }
+  },
+  {
+   "id": "usgs",
+   "title": "PubTalk 11/2011: USGS Science for a Changing Bay Area, excerpt (U.S. Geological Survey)",
+   "split": "dev",
+   "failures": [
+    {
+     "clip": "usgs",
+     "t": 42.782,
+     "text": "Perspective view of bay mouth showing shoreline landmarks cliff, house, Point Lobos, Mile Rock, Point Benita.",
+     "problem": "claim not supported by the frames: Perspective view of bay mouth showing shoreline landmarks cliff, house, Point Lobos, Mile Rock, Point Benita. (not visible)"
+    },
+    {
+     "clip": "usgs",
+     "t": 88.898,
+     "text": "Same map indicates 350 ft depth at pointed location in deep channel.",
+     "problem": "claim not supported by the frames: Same map indicates 350 ft depth at pointed location in deep channel. (not visible)"
+    },
+    {
+     "clip": "usgs",
+     "t": 10.9,
+     "text": "Missed: Map titled Mouth of SF Bay Tidal Currents: the fastest flow, in red, runs in a band through the Golden Gate channel and slows to yellow and green beyond it.",
+     "problem": "pointing moment only partly described"
+    },
+    {
+     "clip": "usgs",
+     "t": 20.4,
+     "text": "Missed: The current map at a later tide: slower flow in blue, with a swirl at the mouth of the bay.",
+     "problem": "pointing moment not described"
+    },
+    {
+     "clip": "usgs",
+     "t": 86.0,
+     "text": "Missed: The pointer rests on the orange shallow area next to the beach.",
+     "problem": "pointing moment not described"
+    }
+   ],
+   "judge_usd": 0.028739999999999998,
+   "run": 1,
+   "oneshot": {
+    "cues": 5,
+    "talk_over": 38.024,
+    "in_silence": 0,
+    "coverage": 0.25,
+    "unsupported": 1,
+    "usd": 0.0083301
+   },
+   "unsaid": {
+    "cues": 6,
+    "talk_over": 0.0,
+    "in_silence": 6,
+    "coverage": 0.5833333333333334,
+    "unsupported": 2,
+    "usd": 0.044423
+   }
+  },
+  {
+   "id": "yellowstone",
+   "title": "Yellowstone Volcano Observatory monthly update, November 2021, 3:05-5:05 (U.S. Geological Survey)",
+   "split": "heldout",
+   "failures": [
+    {
+     "clip": "yellowstone",
+     "t": 42.5,
+     "text": "Missed: Chart labelled OFW2 Best Available Rank Up with a cursor line at Sep-2020: before it the daily circles scatter between about +0.04 and -0.04 meters; after it they form a tight band between about 0 and -0.02.",
+     "problem": "pointing moment only partly described"
+    },
+    {
+     "clip": "yellowstone",
+     "t": 101.3,
+     "text": "Missed: Chart titled Steamboat Geyser, Water eruptions: October 13, 25: Steamboat Temperature in degrees C through October 2021, a line rising and falling daily between about 0 and 20, with a thin spike to 40 near October 4.",
+     "problem": "pointing moment not described"
+    },
+    {
+     "clip": "yellowstone",
+     "t": 108.5,
+     "text": "Missed: Two dense, jagged stretches where the line climbs to roughly 20 to 48 degrees: about October 9 to 13 and October 21 to 25; another begins at the right edge, on October 31.",
+     "problem": "pointing moment only partly described"
+    },
+    {
+     "clip": "yellowstone",
+     "t": 111.6,
+     "text": "Missed: The cursor sits on a lone spike to about 57 degrees at October 13; right after it the line falls below 10 and returns to small daily waves.",
+     "problem": "pointing moment not described"
+    }
+   ],
+   "judge_usd": 0.036349,
+   "run": 1,
+   "oneshot": {
+    "cues": 4,
+    "talk_over": 33.89,
+    "in_silence": 0,
+    "coverage": 0.25,
+    "unsupported": 0,
+    "usd": 0.0081798
+   },
+   "unsaid": {
+    "cues": 6,
+    "talk_over": 0.0,
+    "in_silence": 6,
+    "coverage": 0.5,
+    "unsupported": 0,
+    "usd": 0.043471
+   }
+  },
+  {
+   "id": "capacitor",
+   "title": "A-level Physics Core Practical: Capacitor Discharge, 1:00-2:55 (NUSTEM)",
+   "split": "dev",
+   "failures": [],
+   "judge_usd": 0.017117,
+   "run": 2,
+   "oneshot": {
+    "cues": 16,
+    "talk_over": 92.17199999999995,
+    "in_silence": 0,
+    "coverage": 0.5,
+    "unsupported": 3,
+    "usd": 0.0234558
+   },
+   "unsaid": {
+    "cues": 3,
+    "talk_over": 0.0,
+    "in_silence": 3,
+    "coverage": 1.0,
+    "unsupported": 0,
+    "usd": 0.047687
+   }
+  },
+  {
+   "id": "ccd",
+   "title": "CCD: the heart of a digital camera, 0:40-2:35 (engineerguy)",
+   "split": "dev",
+   "failures": [
+    {
+     "clip": "ccd",
+     "t": 45.9,
+     "text": "Missed: A grid of pixels drawn as coloured squares, orange on the left fading to green on the right, each with a zigzag connector.",
+     "problem": "pointing moment only partly described"
+    }
+   ],
+   "judge_usd": 0.0049,
+   "run": 2,
+   "oneshot": {
+    "cues": 12,
+    "talk_over": 53.418,
+    "in_silence": 0,
+    "coverage": 0.5,
+    "unsupported": 3,
+    "usd": 0.016363199999999998
+   },
+   "unsaid": {
+    "cues": 1,
+    "talk_over": 0.0,
+    "in_silence": 1,
+    "coverage": 0.5,
+    "unsupported": 0,
+    "usd": 0.024431
+   }
+  },
+  {
+   "id": "fourier-a",
+   "title": "Explaining Fourier analysis with a machine, 0:00-1:40 (engineerguy)",
+   "split": "dev",
+   "failures": [
+    {
+     "clip": "fourier-a",
+     "t": 66.42,
+     "text": "Hand turns crank on machine side; pen traces wavy line",
+     "problem": "claim not supported by the frames: pen traces wavy line (not visible)"
+    },
+    {
+     "clip": "fourier-a",
+     "t": 11.4,
+     "text": "Missed: The presenter points at the tall machine's vertical rods; a title card reads Albert Michelson's Harmonic Analyzer, Synthesis, video 2 of 4.",
+     "problem": "pointing moment only partly described"
+    },
+    {
+     "clip": "fourier-a",
+     "t": 32.5,
+     "text": "Missed: On-screen text: adding sinusoids to form a function is synthesis; decomposing a function into sinusoids is analysis.",
+     "problem": "pointing moment only partly described"
+    },
+    {
+     "clip": "fourier-a",
+     "t": 64.0,
+     "text": "Missed: Dot plot of value against rocker bar: bars 1 to 10 sit at 10, bars 11 to 20 at 0.",
+     "problem": "pointing moment only partly described"
+    },
+    {
+     "clip": "fourier-a",
+     "t": 78.6,
+     "text": "Missed: Side of the machine: a hand turns a crank that drives a cone-shaped stack of gears below rows of vertical rods.",
+     "problem": "pointing moment only partly described"
+    }
+   ],
+   "judge_usd": 0.073869,
+   "run": 2,
+   "oneshot": {
+    "cues": 18,
+    "talk_over": 97.88399999999999,
+    "in_silence": 0,
+    "coverage": 0.5714285714285714,
+    "unsupported": 2,
+    "usd": 0.0264597
+   },
+   "unsaid": {
+    "cues": 8,
+    "talk_over": 0.0,
+    "in_silence": 8,
+    "coverage": 0.7142857142857143,
+    "unsupported": 1,
+    "usd": 0.048644
+   }
+  },
+  {
+   "id": "fourier-b",
+   "title": "Explaining Fourier analysis with a machine, 2:05-3:45 (engineerguy)",
+   "split": "dev",
+   "failures": [
+    {
+     "clip": "fourier-b",
+     "t": 11.22,
+     "text": "cos(2 x) graph shows one oscillation with markers.",
+     "problem": "claim not supported by the frames: cos(2 x) graph shows one oscillation with markers (not visible)"
+    },
+    {
+     "clip": "fourier-b",
+     "t": 63.25,
+     "text": "First diagram shows square wave converting to sinc curve via analyze arrow.",
+     "problem": "claim not supported by the frames: First diagram shows square wave converting to sinc curve via analyze arrow. (not visible)"
+    },
+    {
+     "clip": "fourier-b",
+     "t": 66.462,
+     "text": "Second diagram shows sinc curve converting to square wave via synthesize arrow.",
+     "problem": "claim not supported by the frames: Second diagram shows sinc curve converting to square wave via synthesize arrow. (not visible)"
+    },
+    {
+     "clip": "fourier-b",
+     "t": 28.2,
+     "text": "Missed: White markers set on the rocker arms trace a curve, highest in the middle.",
+     "problem": "pointing moment only partly described"
+    },
+    {
+     "clip": "fourier-b",
+     "t": 70.2,
+     "text": "Missed: Diagram: a square wave, analyzed, gives a sinc curve; the sinc, synthesized, gives back an approximate square wave.",
+     "problem": "pointing moment only partly described"
+    },
+    {
+     "clip": "fourier-b",
+     "t": 95.5,
+     "text": "Missed: End screen tiles: The Book + Posters, the entire book Page-by-Page, bonus video Rocker Arms, and the other videos in the series.",
+     "problem": "pointing moment not described"
+    }
+   ],
+   "judge_usd": 0.034811999999999996,
+   "run": 2,
+   "oneshot": {
+    "cues": 14,
+    "talk_over": 61.061999999999976,
+    "in_silence": 0,
+    "coverage": 0.125,
+    "unsupported": 6,
+    "usd": 0.0202761
+   },
+   "unsaid": {
+    "cues": 5,
+    "talk_over": 0.0,
+    "in_silence": 5,
+    "coverage": 0.5,
+    "unsupported": 3,
+    "usd": 0.048073
+   }
+  },
+  {
+   "id": "laser",
+   "title": "How a laser works, 2:00-3:50 (engineerguy)",
+   "split": "dev",
+   "failures": [
+    {
+     "clip": "laser",
+     "t": 50.2,
+     "text": "Missed: Energy diagram: five red electrons on the excited state at the top, an empty lower energy state, three electrons on the ground state.",
+     "problem": "pointing moment only partly described"
+    }
+   ],
+   "judge_usd": 0.017577,
+   "run": 2,
+   "oneshot": {
+    "cues": 6,
+    "talk_over": 39.13599999999999,
+    "in_silence": 0,
+    "coverage": 0.25,
+    "unsupported": 0,
+    "usd": 0.009399600000000001
+   },
+   "unsaid": {
+    "cues": 3,
+    "talk_over": 0.0,
+    "in_silence": 3,
+    "coverage": 0.75,
+    "unsupported": 0,
+    "usd": 0.029687
+   }
+  },
+  {
+   "id": "ozone",
+   "title": "Vital Signs: Taking the Pulse of Our Planet, 37:21-38:59 (NASA Goddard, Piers Sellers)",
+   "split": "heldout",
+   "failures": [
+    {
+     "clip": "ozone",
+     "t": 5.5,
+     "text": "Missed: Animated globe centred on Antarctica, dated Aug 1979 to Aug 2012 on a timeline bar marked 1979 and 2013: a pale blue patch over the continent, ringed by green, grows larger and deeper blue through the 1980s and 1990s.",
+     "problem": "pointing moment not described"
+    },
+    {
+     "clip": "ozone",
+     "t": 34.3,
+     "text": "Missed: Photo of a vast hall of delegates at long desks; stage banners read 8th Meeting of the Conference of the Parties to the Vienna Convention and the 20th Meeting of the Parties to the Montreal Protocol, Doha, Qatar.",
+     "problem": "pointing moment only partly described"
+    },
+    {
+     "clip": "ozone",
+     "t": 42.0,
+     "text": "Missed: A list builds over the photo: Vienna Convention for the Protection of the Ozone Layer, 1985; The Montreal Protocol on Substances that Deplete the Ozone Layer, 1987; then its London 1990, Copenhagen 1992, Montreal 1997 and Beijing 1999 Amendments.",
+     "problem": "pointing moment only partly described"
+    },
+    {
+     "clip": "ozone",
+     "t": 63.8,
+     "text": "Missed: Two globes centred on the Americas, labelled Projected (left) and World Avoided (right), with a year counter starting at 2014: Projected is green with yellow and red near the poles; World Avoided is pale cyan.",
+     "problem": "pointing moment not described"
+    }
+   ],
+   "judge_usd": 0.03816,
+   "run": 2,
+   "oneshot": {
+    "cues": 6,
+    "talk_over": 46.11599999999997,
+    "in_silence": 0,
+    "coverage": 0.6666666666666666,
+    "unsupported": 1,
+    "usd": 0.0100467
+   },
+   "unsaid": {
+    "cues": 6,
+    "talk_over": 0.0,
+    "in_silence": 6,
+    "coverage": 0.5,
+    "unsupported": 0,
+    "usd": 0.043258
+   }
+  },
+  {
+   "id": "quadratic",
+   "title": "Solving quadratic equations, 0:45-2:41 (Mosborne01)",
+   "split": "heldout",
+   "failures": [
+    {
+     "clip": "quadratic",
+     "t": 9.906,
+     "text": "Quadratic equation x^2+5x+4=0 shown with two empty brackets ready for factoring.",
+     "problem": "claim not supported by the frames: shown with two empty brackets ready for factoring (not visible)"
+    },
+    {
+     "clip": "quadratic",
+     "t": 53.5,
+     "text": "a=0 and b=0 written under fraction.",
+     "problem": "claim not supported by the frames: a=0 and b=0 written under fraction (not visible)"
+    },
+    {
+     "clip": "quadratic",
+     "t": 52.8,
+     "text": "Missed: His pen is on the plus between x\u00b2 and 5x in x\u00b2 + 5x + 4 = 0; the line below reads (x 4)(x 1) = 0, still without signs.",
+     "problem": "pointing moment not described"
+    },
+    {
+     "clip": "quadratic",
+     "t": 57.0,
+     "text": "Missed: The pen moves from the gaps in the brackets up to the plus before 5x, then he writes a plus before the 4: (x + 4)(x 1) = 0.",
+     "problem": "pointing moment not described"
+    },
+    {
+     "clip": "quadratic",
+     "t": 61.4,
+     "text": "Missed: He taps the 5x in x\u00b2 + 5x + 4 = 0, then writes a plus before the 1, completing (x + 4)(x + 1) = 0.",
+     "problem": "pointing moment not described"
+    },
+    {
+     "clip": "quadratic",
+     "t": 62.9,
+     "text": "Missed: He underlines (x + 4) and writes a beneath it, then underlines (x + 1) and writes b beneath it, and adds = 0 after them.",
+     "problem": "pointing moment not described"
+    }
+   ],
+   "judge_usd": 0.105007,
+   "run": 2,
+   "oneshot": {
+    "cues": 12,
+    "talk_over": 54.55000000000001,
+    "in_silence": 0,
+    "coverage": 0.2,
+    "unsupported": 3,
+    "usd": 0.0132774
+   },
+   "unsaid": {
+    "cues": 3,
+    "talk_over": 0.0,
+    "in_silence": 3,
+    "coverage": 0.2,
+    "unsupported": 2,
+    "usd": 0.032602
+   }
+  },
+  {
+   "id": "usgs",
+   "title": "PubTalk 11/2011: USGS Science for a Changing Bay Area, excerpt (U.S. Geological Survey)",
+   "split": "dev",
+   "failures": [
+    {
+     "clip": "usgs",
+     "t": 13.726,
+     "text": "Heat map shows strong eddies spinning off Point Benito with velocities up to 2.5 meters per second.",
+     "problem": "claim not supported by the frames: Heat map shows strong eddies spinning off Point Benito (not visible)"
+    },
+    {
+     "clip": "usgs",
+     "t": 77.65,
+     "text": "Close\u2011up shows parallel yellow\u2011green sand ridges off Point Lobos, each about half a football field long, moving sand south.",
+     "problem": "claim not supported by the frames: Close-up shows parallel yellow-green sand ridges off Point Lobos (contradicted); each about half a football field long (not visible); moving sand south (not visible)"
+    },
+    {
+     "clip": "usgs",
+     "t": 88.898,
+     "text": "Map highlights deep channel near Baker Beach at 350 feet depth, shown in cool blue.",
+     "problem": "claim not supported by the frames: channel at 350 feet depth (not visible)"
+    },
+    {
+     "clip": "usgs",
+     "t": 10.9,
+     "text": "Missed: Map titled Mouth of SF Bay Tidal Currents: the fastest flow, in red, runs in a band through the Golden Gate channel and slows to yellow and green beyond it.",
+     "problem": "pointing moment only partly described"
+    },
+    {
+     "clip": "usgs",
+     "t": 20.4,
+     "text": "Missed: The current map at a later tide: slower flow in blue, with a swirl at the mouth of the bay.",
+     "problem": "pointing moment not described"
+    },
+    {
+     "clip": "usgs",
+     "t": 77.4,
+     "text": "Missed: Seafloor map titled Features off Baker Beach: ridged sand waves across the green area and a deep purple channel at the top.",
+     "problem": "pointing moment only partly described"
+    },
+    {
+     "clip": "usgs",
+     "t": 86.0,
+     "text": "Missed: The pointer rests on the orange shallow area next to the beach.",
+     "problem": "pointing moment only partly described"
+    }
+   ],
+   "judge_usd": 0.03567,
+   "run": 2,
+   "oneshot": {
+    "cues": 5,
+    "talk_over": 40.938,
+    "in_silence": 0,
+    "coverage": 0.25,
+    "unsupported": 0,
+    "usd": 0.0081621
+   },
+   "unsaid": {
+    "cues": 5,
+    "talk_over": 0.0,
+    "in_silence": 5,
+    "coverage": 0.5833333333333334,
+    "unsupported": 3,
+    "usd": 0.041237
+   }
+  },
+  {
+   "id": "yellowstone",
+   "title": "Yellowstone Volcano Observatory monthly update, November 2021, 3:05-5:05 (U.S. Geological Survey)",
+   "split": "heldout",
+   "failures": [
+    {
+     "clip": "yellowstone",
+     "t": 20.402,
+     "text": "The chart indicates about two centimeters per year subsidence.",
+     "problem": "claim not supported by the frames: The chart indicates about two centimeters per year subsidence. (not visible)"
+    },
+    {
+     "clip": "yellowstone",
+     "t": 5.5,
+     "text": "Missed: Chart labelled WLWY Best Available Rank Up, in meters from Dec-2019 to Sep-2021: daily blue circles fall from about 0.02 to 0.03 to about 0.01, level off through summer 2020, then drop to about -0.02.",
+     "problem": "pointing moment only partly described"
+    },
+    {
+     "clip": "yellowstone",
+     "t": 42.5,
+     "text": "Missed: Chart labelled OFW2 Best Available Rank Up with a cursor line at Sep-2020: before it the daily circles scatter between about +0.04 and -0.04 meters; after it they form a tight band between about 0 and -0.02.",
+     "problem": "pointing moment only partly described"
+    },
+    {
+     "clip": "yellowstone",
+     "t": 67.6,
+     "text": "Missed: Chart labelled NRWY Best Available Rank Up: two years of daily circles scattered around 0 meters, mostly between -0.02 and +0.02; as the cursor sweeps summer 2021 the last points climb to about +0.01 to +0.02.",
+     "problem": "pointing moment only partly described"
+    },
+    {
+     "clip": "yellowstone",
+     "t": 101.3,
+     "text": "Missed: Chart titled Steamboat Geyser, Water eruptions: October 13, 25: Steamboat Temperature in degrees C through October 2021, a line rising and falling daily between about 0 and 20, with a thin spike to 40 near October 4.",
+     "problem": "pointing moment not described"
+    },
+    {
+     "clip": "yellowstone",
+     "t": 108.5,
+     "text": "Missed: Two dense, jagged stretches where the line climbs to roughly 20 to 48 degrees: about October 9 to 13 and October 21 to 25; another begins at the right edge, on October 31.",
+     "problem": "pointing moment not described"
+    },
+    {
+     "clip": "yellowstone",
+     "t": 111.6,
+     "text": "Missed: The cursor sits on a lone spike to about 57 degrees at October 13; right after it the line falls below 10 and returns to small daily waves.",
+     "problem": "pointing moment only partly described"
+    }
+   ],
+   "judge_usd": 0.055791,
+   "run": 2,
+   "oneshot": {
+    "cues": 4,
+    "talk_over": 35.91000000000001,
+    "in_silence": 0,
+    "coverage": 0.3333333333333333,
+    "unsupported": 1,
+    "usd": 0.0068727
+   },
+   "unsaid": {
+    "cues": 7,
+    "talk_over": 0.0,
+    "in_silence": 7,
+    "coverage": 0.3333333333333333,
+    "unsupported": 1,
+    "usd": 0.047352
+   }
+  }
+ ],
+ "notes": [
+  "These runs used the same Nemotron models through NVIDIA's API catalog (build.nvidia.com), keeping the Token Factory credit for the live demo. There our account had no Nemotron 3 Nano, so pointing-phrase classification ran on Nemotron 3.5 Lightning. Costs are priced at Token Factory list prices.",
+  "Talk-over uses the speech intervals from NVIDIA Parakeet for both systems; descriptions are timed at 2.5 words per second.",
+  "Coverage labels were written by the builder after viewing the frames at each pointing moment; Nemotron 3 Ultra judges them.",
+  "Held-out clips were labelled blind and never used to tune Unsaid's prompts, and their labels include pointing moments the phrase detector misses. Unsaid ran on them once before a change to where paused descriptions start, a change that development failures also called for. Development clips were also used to develop the prompts. No phrase from any clip appears in a prompt.",
+  "The same Super VL verifier checks both systems' descriptions against the frames; descriptions it could not check are excluded from that rate and counted separately. Unsaid's own check-and-correct step answers to this verifier, so this rate favours Unsaid; invented numbers and names are counted by code instead.",
+  "Every clip was described 2 times, because model outputs vary from run to run; the metrics pool all runs, and per_run shows each run on its own."
+ ],
+ "runs": 2,
+ "provider": "nvidia_build",
+ "per_run": [
+  {
+   "run": 1,
+   "systems": [
+    {
+     "key": "oneshot",
+     "label": "One-shot (Super VL, whole clip + transcript)",
+     "metrics": {
+      "talk_over": 25.753154720022767,
+      "in_silence": 0.0,
+      "pauses": 0.0,
+      "coverage": 0.42105263157894735,
+      "unsupported": 0.23684210526315788,
+      "ungrounded": 0.10526315789473684,
+      "usd_per_min": 0.006944124051360827,
+      "sec_per_min": 5.439427826284337
+     }
+    },
+    {
+     "key": "unsaid",
+     "label": "Unsaid (routed pipeline + code gates)",
+     "metrics": {
+      "talk_over": 0.0,
+      "in_silence": 1.0,
+      "pauses": 1.9307384428551015,
+      "coverage": 0.40789473684210525,
+      "unsupported": 0.2777777777777778,
+      "ungrounded": 0.0,
+      "usd_per_min": 0.02080346537945836,
+      "sec_per_min": 118.53698575058873
+     }
+    }
+   ]
+  },
+  {
+   "run": 2,
+   "systems": [
+    {
+     "key": "oneshot",
+     "label": "One-shot (Super VL, whole clip + transcript)",
+     "metrics": {
+      "talk_over": 31.446057689933713,
+      "in_silence": 0.0,
+      "pauses": 0.0,
+      "coverage": 0.3815789473684211,
+      "unsupported": 0.20430107526881722,
+      "ungrounded": 0.12903225806451613,
+      "usd_per_min": 0.008103870365522816,
+      "sec_per_min": 4.426038502520124
+     }
+    },
+    {
+     "key": "unsaid",
+     "label": "Unsaid (routed pipeline + code gates)",
+     "metrics": {
+      "talk_over": 0.0,
+      "in_silence": 1.0,
+      "pauses": 2.051409595533545,
+      "coverage": 0.5131578947368421,
+      "unsupported": 0.24390243902439024,
+      "ungrounded": 0.0,
+      "usd_per_min": 0.02190006447942372,
+      "sec_per_min": 141.1966698743197
+     }
+    }
+   ]
+  }
+ ],
+ "skipped": [],
+ "complete": true
+}
