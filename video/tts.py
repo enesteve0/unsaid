@@ -43,8 +43,11 @@ def deployment(base: str) -> dict:
     """Where the app runs and whether the backlog job has run, as the deployed app reports them."""
 
     def get(path: str) -> dict:
-        with urllib.request.urlopen(base.rstrip("/") + path, timeout=20) as response:
-            return json.load(response)
+        try:
+            with urllib.request.urlopen(base.rstrip("/") + path, timeout=20) as response:
+                return json.load(response)
+        except (OSError, ValueError):  # the static demo has no API: nothing is hosted, no backlog has run
+            return {}
 
     return {
         "host": get("/api/health").get("host", ""),
