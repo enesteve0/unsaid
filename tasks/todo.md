@@ -69,7 +69,8 @@ Key day, in order (owner steps marked **owner**):
    **owner** `! fly auth login`; Claude runs `infra/fly/deploy.sh`. Then the `DEMO_URL` repository variable and the
    repository homepage.
 6. `python3 scripts/fill_numbers.py --demo-url <url>`; fill the opinion fields (rating, comparison, Nebius
-   capabilities) from what was measured; FEEDBACK Token Factory section; commit.
+   capabilities) from what was measured; FEEDBACK Token Factory section; commit; redeploy, so the image carries
+   `backend/eval/report.json` (the Evaluation page reads it from the image).
 7. Judge path on the deployed URL: `BASE_URL=<url> pnpm exec playwright test`, a live 2-minute upload in the judge
    lane, Stop, an edit, exports.
 8. Video against the deployed URL: `DEMO_URL=<url> tts.py` → `record-video.mjs <url>` → `assemble.py`; watch it;
