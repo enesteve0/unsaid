@@ -64,7 +64,9 @@ Night of Oct 29 (owner asleep; no money may be spent):
 - [x] Hugging Face Docker Spaces need PRO now → static demo on GitHub Pages: https://enesteve0.github.io/unsaid/
 - [x] Official evaluation on the free API catalog (9 clips × 2, nothing skipped), numbers in README/Devpost/demo
 - [x] Fourier example refreshed on the catalog (labelled); featured description checked against its frame
-- [ ] Video draft against the local app (catalog) with the static demo's URL
+- [x] Video rendered (2:46, `video/build/unsaid-demo.mp4`) with Unsaid's own captions (`video/build/captions.srt`);
+      gallery JPEGs and thumbnail ready. The pipeline scene's live run used the catalog; re-render after the Token
+      Factory examples if credit arrives (`scripts/make_video.sh http://127.0.0.1:8080 https://enesteve0.github.io/unsaid`).
 
 Morning (owner): fill nebius.com/promo-code (activation code `NEBIUS-DEVPOST-GLOBAL26`) → the emailed promo code goes
 into Token Factory → Balance + → With promo code (Claude can enter it). Then `scripts/tf_day.sh` (smoke test and
