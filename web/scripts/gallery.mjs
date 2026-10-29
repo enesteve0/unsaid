@@ -29,7 +29,8 @@ for (const [name, path, action] of shots) {
     await page.evaluate(action)
     await page.waitForTimeout(800)
   }
-  await page.screenshot({ path: `${out}/${name}.png` })
+  // JPEG keeps each image well under Devpost's 5 MB limit (the 2x PNGs reached 4.8 MB).
+  await page.screenshot({ path: `${out}/${name}.jpg`, type: 'jpeg', quality: 90 })
   console.log(name)
 }
 await browser.close()
