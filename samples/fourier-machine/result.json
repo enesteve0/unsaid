@@ -1375,10 +1375,12 @@
    "end": 33.333,
    "keyframes": [
     5.0,
-    12.19,
     16.67,
+    30.0
+   ],
+   "moment_frames": [
+    12.19,
     18.5,
-    30.0,
     33.28
    ]
   },
@@ -1389,8 +1391,10 @@
    "keyframes": [
     38.33,
     50.0,
+    63.33
+   ],
+   "moment_frames": [
     53.41,
-    63.33,
     64.75
    ]
   },
@@ -1400,10 +1404,12 @@
    "end": 100.0,
    "keyframes": [
     71.67,
-    79.39,
     83.33,
-    90.77,
     96.67
+   ],
+   "moment_frames": [
+    79.39,
+    90.77
    ]
   }
  ],
@@ -1476,43 +1482,43 @@
   "p2": {
    "moment_id": "p2",
    "refers_to_visual": true,
-   "target": "white rectangular plate",
-   "unsaid": "faint waveform printed on it",
+   "target": "white strip",
+   "unsaid": "waveform traced on the white strip",
    "confidence": 0.95
   },
   "p3": {
    "moment_id": "p3",
    "refers_to_visual": true,
-   "target": "Harmonic Analyzer machine",
-   "unsaid": "how the machine does analysis",
+   "target": "waveform strip",
+   "unsaid": "the particular function to plot",
    "confidence": 0.9
   },
   "p4": {
    "moment_id": "p4",
    "refers_to_visual": true,
    "target": "square wave",
-   "unsaid": "half period and even function symmetry",
+   "unsaid": "the function that function carries in half a period",
    "confidence": 0.95
   },
   "p5": {
    "moment_id": "p5",
    "refers_to_visual": true,
    "target": "sampled square wave",
-   "unsaid": "values of twenty equally spaced points",
+   "unsaid": "the values of these points as inputs for the machine",
    "confidence": 0.95
   },
   "p6": {
    "moment_id": "p6",
    "refers_to_visual": true,
-   "target": "rocker arm tips",
-   "unsaid": "sinusoid formed by tips as crank turns",
+   "target": "side of the machine",
+   "unsaid": "the sinusoid formed by the tips of the rocker arms as the crank turns",
    "confidence": 0.9
   },
   "p7": {
    "moment_id": "p7",
    "refers_to_visual": true,
-   "target": "rocker arm tips",
-   "unsaid": "indices from high on left to low on right",
+   "target": "rockers with indices",
+   "unsaid": "the indices on the rocker arms running from high on the left to low on the right",
    "confidence": 0.9
   }
  },
@@ -1529,47 +1535,53 @@
     {
      "kind": "demo",
      "label": "Harmonic Analyzer machine",
-     "description": "A tall green metal frame with vertical rods, pulleys, gears, chains, and a horizontal bar holding a white rectangular plate with a faint waveform printed on it.",
+     "description": "A tall vertical mechanical device with metal rods, pulleys, gears, and a pen tracing a waveform on a white strip.",
+     "values": []
+    },
+    {
+     "kind": "text",
+     "label": "Title card",
+     "description": "Black background with white and yellow text introducing the video topic.",
      "values": []
     }
    ],
    "events": [
     {
      "t": 0.0,
-     "description": "Title card appears on black background."
+     "description": "Title card displays 'Albert Michelson's Harmonic Analyzer Analysis video 3 of 4'."
     },
     {
      "t": 2.0,
-     "description": "Man in pink shirt stands next to the machine."
+     "description": "A person in a pink shirt stands beside the Harmonic Analyzer machine."
     },
     {
      "t": 5.0,
-     "description": "Text box for previous video appears on the right."
-    },
-    {
-     "t": 6.0,
-     "description": "Man turns a crank at the base of the machine."
+     "description": "An inset box appears showing 'Albert Michelson's Harmonic Analyzer Synthesis video 2 of 4 previous video'."
     },
     {
      "t": 14.0,
-     "description": "Man gestures upward along the machine frame."
+     "description": "The person gestures toward the upper part of the machine."
     },
     {
-     "t": 18.0,
-     "description": "Man points to the white plate on the machine."
+     "t": 19.0,
+     "description": "The person points to the white strip with a traced waveform."
     },
     {
      "t": 20.0,
-     "description": "Text about synthesis appears on the right."
+     "description": "Text appears: 'Adding sinusoids to form a function is synthesis.'"
     },
     {
      "t": 30.0,
-     "description": "Text about analysis appears below synthesis text."
+     "description": "Text appears: 'Decomposing a function into sinusoids is analysis.'"
+    },
+    {
+     "t": 33.3,
+     "description": "The person points at the waveform strip while text about analysis remains on screen."
     }
    ],
-   "setting": "Black background studio with a large mechanical device.",
+   "setting": "A studio with a black background featuring a large mechanical Harmonic Analyzer machine.",
    "people": [
-    "Man with blond hair wearing a pink button-down shirt standing beside the machine and gesturing toward its parts."
+    "A person with short blond hair wearing a pink button-down shirt stands next to the machine and gestures toward its parts."
    ]
   },
   "s2": {
@@ -1578,26 +1590,31 @@
     "Decomposing a function into sinusoids is analysis.",
     "square wave",
     "f(x)",
-    "0",
-    "10",
-    "-2\u03c0",
-    "-1\u03c0",
-    "0\u03c0",
-    "1\u03c0",
-    "2\u03c0",
     "x",
     "one period",
     "origin",
     "Even functions are mirrored about the origin.",
+    "Even mirrored.",
     "half period",
     "Value",
-    "Rocker bar"
+    "Rocker bar",
+    "0",
+    "5",
+    "10",
+    "15",
+    "20"
    ],
    "visuals": [
     {
+     "kind": "demo",
+     "label": "Fourier machine",
+     "description": "A tall vertical apparatus with many parallel rods and a crank mechanism at the bottom; a person in a pink shirt stands beside it and gestures toward it.",
+     "values": []
+    },
+    {
      "kind": "chart",
      "label": "square wave",
-     "description": "Green step function oscillating between 0 and 10 across x-axis labeled with multiples of pi.",
+     "description": "A green periodic square wave plotted on a black background, oscillating between 0 and 10 across x values from negative pi to positive pi.",
      "values": [
       "10",
       "0",
@@ -1611,10 +1628,8 @@
     {
      "kind": "chart",
      "label": "sampled square wave",
-     "description": "White dots at value 10 for rocker bars 0 through 10, then value 0 for bars 11 through 20.",
+     "description": "White dots on a black graph showing ten points at value 10 followed by ten points at value 0, representing twenty equally spaced samples.",
      "values": [
-      "10",
-      "0",
       "0",
       "5",
       "10",
@@ -1623,49 +1638,49 @@
      ]
     },
     {
-     "kind": "demo",
-     "label": "harmonic analyzer",
-     "description": "Tall green metal machine with vertical rocker bars and connecting rods; a hand adjusts a bar.",
+     "kind": "photo",
+     "label": "machine close-up",
+     "description": "A hand adjusts the sliders on the lower mechanism of the Fourier machine.",
      "values": []
     }
    ],
    "events": [
     {
      "t": 33.33,
-     "description": "Text on screen defines synthesis and analysis next to the machine."
-    },
-    {
-     "t": 35.33,
-     "description": "Person in pink shirt adjusts a rocker bar on the machine."
+     "description": "Person gestures toward the Fourier machine while text defines synthesis and analysis."
     },
     {
      "t": 40.33,
-     "description": "Square wave graph appears with green line."
+     "description": "Square wave graph appears with title and axis labels."
     },
     {
      "t": 44.33,
-     "description": "Yellow bracket labels one period on the graph."
+     "description": "Shaded regions highlight one period of the wave."
     },
     {
      "t": 48.33,
-     "description": "Vertical line marks origin and text notes even functions are mirrored."
+     "description": "Origin line and mirroring annotation appear on the wave."
     },
     {
      "t": 54.33,
-     "description": "Yellow box highlights half period of the wave."
+     "description": "Half period region is highlighted on the right side of the wave."
     },
     {
-     "t": 58.33,
-     "description": "Graph of sampled values appears with dots at 10 then 0."
+     "t": 57.33,
+     "description": "Sampled point graph appears showing twenty discrete values."
     },
     {
      "t": 64.33,
-     "description": "Close-up of machine rocker bars as a hand touches them."
+     "description": "Close-up of a hand adjusting sliders on the machine."
+    },
+    {
+     "t": 33.33,
+     "description": "Text defining synthesis and analysis reappears beside the machine."
     }
    ],
-   "setting": "Lecture studio with black background.",
+   "setting": "A studio with a black background featuring a large mechanical Fourier analyzer and projected graphs.",
    "people": [
-    "Person in pink shirt standing beside the machine."
+    "A person with short blond hair wearing a pink button-down shirt stands beside the machine and gestures with both hands."
    ]
   },
   "s3": {
@@ -1699,21 +1714,15 @@
    ],
    "visuals": [
     {
-     "kind": "photo",
-     "label": "side of machine",
-     "description": "A hand turns a crank on the left side of a green mechanical device with vertical metal bars and a conical gear assembly.",
+     "kind": "demo",
+     "label": "side of the machine",
+     "description": "A hand turns a crank on the left side of a green mechanical device with vertical rods and a conical gear assembly.",
      "values": []
     },
     {
      "kind": "photo",
-     "label": "sinusoid overlay",
-     "description": "A white sinusoidal curve is superimposed over the crank handle area.",
-     "values": []
-    },
-    {
-     "kind": "photo",
-     "label": "rocker arm tips",
-     "description": "Close-up of vertical metal bars with numbered tabs at their tips; numbers descend from 20 on the left to 1 on the right.",
+     "label": "rockers with indices",
+     "description": "Close-up of vertical rocker arms with small numbered tabs; numbers run 20 on the far left down to 1 on the far right, with a peak around 15-16.",
      "values": [
       "20",
       "19",
@@ -1739,8 +1748,8 @@
     },
     {
      "kind": "photo",
-     "label": "flipped view",
-     "description": "The same numbered bars are shown mirrored horizontally; text labels 'low' appear on both outer edges and 'high' near the center.",
+     "label": "flipped rockers",
+     "description": "Horizontally flipped view of the same rocker arms; numbers now run 1 on the left to 20 on the right, with labels 'low' at both ends and 'high' near the center.",
      "values": [
       "1",
       "2",
@@ -1767,39 +1776,45 @@
     {
      "kind": "photo",
      "label": "crank 0 alignment",
-     "description": "The tips of all rocker arms are aligned in a straight horizontal line.",
+     "description": "The tips of the rocker arms are aligned in a straight horizontal line; text 'crank 0' appears in the upper left.",
+     "values": []
+    },
+    {
+     "kind": "photo",
+     "label": "drawing trace",
+     "description": "A pen traces a wavy line on white paper attached to the machine; the line starts flat, develops two large peaks, then flattens again.",
      "values": []
     }
    ],
    "events": [
     {
-     "t": 78.67,
+     "t": 66.67,
      "description": "A hand turns the crank on the side of the machine."
     },
     {
-     "t": 83.67,
-     "description": "A white sinusoidal curve appears overlaid on the crank area."
+     "t": 71.67,
+     "description": "The camera shows a pen drawing a sinusoidal curve on paper."
     },
     {
-     "t": 87.67,
-     "description": "The camera zooms in on the numbered rocker arm tips."
+     "t": 78.67,
+     "description": "The view returns to the side of the machine as the crank continues turning."
     },
     {
-     "t": 90.67,
-     "description": "Text labels 'high' and 'low' appear over the rocker arm tips."
+     "t": 86.67,
+     "description": "A close-up shows numbered rocker arms with labels 'high' and 'low'."
     },
     {
-     "t": 92.67,
-     "description": "The video is flipped horizontally and text 'flipped video' appears."
+     "t": 91.67,
+     "description": "The video is flipped horizontally, reversing the order of the numbered rocker arms."
     },
     {
-     "t": 97.67,
-     "description": "The rocker arm tips align into a straight line and text 'crank 0' appears."
+     "t": 96.67,
+     "description": "The rocker arm tips align in a straight line, marked 'crank 0'."
     }
    ],
-   "setting": "A close-up view of a mechanical computing device against a black background.",
+   "setting": "A laboratory or workshop setting with a large green mechanical calculating machine against a black background.",
    "people": [
-    "A hand with light skin turns a crank."
+    "A person's hand and forearm turn the crank; no face is visible."
    ]
   }
  },
@@ -1808,7 +1823,7 @@
   "sources": []
  },
  "bible": {
-  "summary": "The lecture demonstrates how Albert Michelson's harmonic analyzer performs Fourier analysis by decomposing a square wave into sinusoidal coefficients using a mechanical computer.",
+  "summary": "The lecture demonstrates how Michelson's Harmonic Analyzer performs analysis by decomposing a square wave into its Fourier coefficients using mechanical sampling and rocker\u2011arm motion.",
   "registry": [
    {
     "name": "Albert Michelson",
@@ -1821,28 +1836,24 @@
    {
     "name": "University of Illinois",
     "source": "slide"
-   },
-   {
-    "name": "Harmonic Analyzer",
-    "source": "slide"
    }
   ],
   "notation": [
-   "\u03c0 \u2192 'pi'",
-   "f(x) \u2192 'f of x'",
-   "crank 0 \u2192 'crank zero'",
-   "high/low \u2192 'high' and 'low'",
-   "20, 19, \u2026, 1 \u2192 read as numbers",
-   "square wave \u2192 'square wave'",
-   "synthesis \u2192 'synthesis'",
-   "analysis \u2192 'analysis'"
+   "harmonics \u2013 read as \u201charmonics\u201d",
+   "synthesis \u2013 read as \u201csynthesis\u201d",
+   "analysis \u2013 read as \u201canalysis\u201d",
+   "square wave \u2013 read as \u201csquare wave\u201d",
+   "half period \u2013 read as \u201chalf period\u201d",
+   "crank 0 \u2013 read as \u201ccrank zero\u201d",
+   "rocker arms \u2013 read as \u201crocker arms\u201d",
+   "indices \u2013 read as \u201cindices\u201d"
   ],
   "visual_facts": [
    {
     "id": "f1",
     "t": 0.0,
     "segment_id": "s1",
-    "fact": "Title card reads 'Albert Michelson's Harmonic Analyzer Analysis video 3 of 4' and 'Bill Hammack University of Illinois'.",
+    "fact": "Title card reads \u201cAlbert Michelson's Harmonic Analyzer Analysis video 3 of 4\u201d with creator Bill Hammack, University of Illinois.",
     "importance": 1,
     "already_spoken": false,
     "moment_id": ""
@@ -1851,126 +1862,153 @@
     "id": "f2",
     "t": 2.0,
     "segment_id": "s1",
-    "fact": "Tall green metal frame with vertical rods, pulleys, gears, chains, and a horizontal bar holding a white rectangular plate.",
-    "importance": 3,
+    "fact": "Presenter in pink shirt stands beside tall Harmonic Analyzer machine.",
+    "importance": 1,
     "already_spoken": false,
-    "moment_id": "p3"
+    "moment_id": ""
    },
    {
     "id": "f3",
-    "t": 18.0,
+    "t": 19.0,
     "segment_id": "s1",
-    "fact": "White rectangular plate on machine front displays a faint waveform.",
+    "fact": "White strip on front of machine shows a pen\u2011traced waveform.",
     "importance": 3,
     "already_spoken": false,
     "moment_id": "p2"
    },
    {
     "id": "f4",
-    "t": 5.0,
+    "t": 20.0,
     "segment_id": "s1",
-    "fact": "Text box on right shows 'Albert Michelson's Harmonic Analyzer Synthesis video 2 of 4 previous video'.",
+    "fact": "On\u2011screen text: \u201cAdding sinusoids to form a function is synthesis.\u201d",
     "importance": 1,
-    "already_spoken": false,
+    "already_spoken": true,
     "moment_id": ""
    },
    {
     "id": "f5",
-    "t": 14.0,
+    "t": 30.0,
     "segment_id": "s1",
-    "fact": "Presenter gestures upward along the machine frame.",
-    "importance": 2,
-    "already_spoken": false,
+    "fact": "On\u2011screen text: \u201cDecomposing a function into sinusoids is analysis.\u201d",
+    "importance": 1,
+    "already_spoken": true,
     "moment_id": ""
    },
    {
     "id": "f6",
-    "t": 40.33,
-    "segment_id": "s2",
-    "fact": "Green square wave oscillates between 0 and 10 on x-axis labeled -2\u03c0, -\u03c0, 0, \u03c0, 2\u03c0.",
+    "t": 32.5,
+    "segment_id": "s1",
+    "fact": "Waveform strip on front displays the target function to be synthesized.",
     "importance": 3,
     "already_spoken": false,
-    "moment_id": ""
+    "moment_id": "p3"
    },
    {
     "id": "f7",
-    "t": 44.33,
+    "t": 40.33,
     "segment_id": "s2",
-    "fact": "Yellow bracket marks one period of the square wave.",
+    "fact": "Green square wave plotted from \u20132\u03c0 to 2\u03c0, amplitude 0 to 10.",
     "importance": 2,
     "already_spoken": false,
     "moment_id": ""
    },
    {
     "id": "f8",
-    "t": 48.33,
+    "t": 44.33,
     "segment_id": "s2",
-    "fact": "Vertical line at origin with text stating even functions are mirrored about the origin.",
+    "fact": "One full period of square wave shaded.",
     "importance": 2,
     "already_spoken": false,
     "moment_id": ""
    },
    {
     "id": "f9",
+    "t": 48.33,
+    "segment_id": "s2",
+    "fact": "Origin line drawn; annotation \u201cEven functions are mirrored about the origin.\u201d",
+    "importance": 2,
+    "already_spoken": false,
+    "moment_id": ""
+   },
+   {
+    "id": "f10",
     "t": 54.33,
     "segment_id": "s2",
-    "fact": "Yellow box highlights the left half period of the square wave.",
+    "fact": "Right half\u2011period of square wave highlighted.",
     "importance": 3,
     "already_spoken": false,
     "moment_id": "p4"
    },
    {
-    "id": "f10",
-    "t": 58.33,
+    "id": "f11",
+    "t": 57.33,
     "segment_id": "s2",
-    "fact": "Sampled square wave shows 11 dots at value 10 for bars 0-10 and 10 dots at value 0 for bars 11-20.",
+    "fact": "Sampled graph shows 20 equally spaced points: first 10 at value 10, next 10 at value 0.",
     "importance": 3,
     "already_spoken": false,
     "moment_id": "p5"
    },
    {
-    "id": "f11",
+    "id": "f12",
     "t": 64.33,
     "segment_id": "s2",
-    "fact": "Close-up shows vertical rocker bars with connecting rods; a hand adjusts a bar.",
-    "importance": 2,
+    "fact": "Close\u2011up of hand adjusting sliders on lower mechanism.",
+    "importance": 1,
     "already_spoken": false,
     "moment_id": ""
-   },
-   {
-    "id": "f12",
-    "t": 78.67,
-    "segment_id": "s3",
-    "fact": "Side view shows crank on left, vertical metal bars, and conical gear assembly.",
-    "importance": 3,
-    "already_spoken": false,
-    "moment_id": "p6"
    },
    {
     "id": "f13",
-    "t": 87.67,
+    "t": 66.67,
     "segment_id": "s3",
-    "fact": "Numbered tabs on rocker arm tips show 20 on left descending to 1 on right.",
-    "importance": 3,
+    "fact": "Hand turns crank on left side of green machine.",
+    "importance": 1,
     "already_spoken": false,
-    "moment_id": "p7"
+    "moment_id": ""
    },
    {
     "id": "f14",
-    "t": 92.67,
+    "t": 71.67,
     "segment_id": "s3",
-    "fact": "Flipped view shows numbers 1 to 20 left to right, with 'low' labels on outer edges and 'high' near center.",
+    "fact": "Pen traces a sinusoidal curve on paper; starts flat, two peaks, then flat.",
+    "importance": 2,
+    "already_spoken": true,
+    "moment_id": "p6"
+   },
+   {
+    "id": "f15",
+    "t": 78.67,
+    "segment_id": "s3",
+    "fact": "Side view of machine with rocker arms visible.",
+    "importance": 1,
+    "already_spoken": false,
+    "moment_id": ""
+   },
+   {
+    "id": "f16",
+    "t": 86.67,
+    "segment_id": "s3",
+    "fact": "Rocker arms numbered 20 (left) down to 1 (right); labels \u201chigh\u201d on left, \u201clow\u201d on right.",
+    "importance": 3,
+    "already_spoken": true,
+    "moment_id": "p7"
+   },
+   {
+    "id": "f17",
+    "t": 91.67,
+    "segment_id": "s3",
+    "fact": "Video flipped horizontally; numbers now run 1 left to 20 right, labels \u201clow\u201d at ends, \u201chigh\u201d near centre.",
     "importance": 2,
     "already_spoken": false,
     "moment_id": ""
    },
    {
-    "id": "f15",
-    "t": 97.67,
+    "id": "f18",
+    "t": 96.67,
     "segment_id": "s3",
-    "fact": "All rocker arm tips align in a straight horizontal line; text 'crank 0' appears.",
+    "fact": "Rocker arm tips align in straight horizontal line; label \u201ccrank 0\u201d appears.",
     "importance": 2,
-    "already_spoken": true,
+    "already_spoken": false,
     "moment_id": ""
    }
   ],
@@ -1978,108 +2016,77 @@
    {
     "gap_id": "g1",
     "fact_ids": [
-     "f2"
+     "f1"
     ],
-    "intent": "Describe the harmonic analyzer's front: green frame, vertical rods, white plate."
+    "draft": "Title card video 3"
    },
    {
     "gap_id": "g2",
     "fact_ids": [
-     "f6",
-     "f7"
-    ],
-    "intent": "Describe square wave graph and period bracket."
-   },
-   {
-    "gap_id": "g3",
-    "fact_ids": [
      "f8"
     ],
-    "intent": "Note vertical line at origin indicating even symmetry."
-   },
-   {
-    "gap_id": "g4",
-    "fact_ids": [
-     "f9"
-    ],
-    "intent": "Indicate yellow box highlighting half period."
+    "draft": "One period of square wave shaded."
    },
    {
     "gap_id": "g5",
     "fact_ids": [
-     "f10",
      "f11"
     ],
-    "intent": "Describe sampled points and rocker bar adjustment."
-   },
-   {
-    "gap_id": "g6",
-    "fact_ids": [
-     "f12"
-    ],
-    "intent": "Describe side view with crank and vertical bars."
+    "draft": "Sampled graph: ten points at 10, ten at 0."
    },
    {
     "gap_id": "extended",
     "fact_ids": [
      "f3"
     ],
-    "intent": "Describe faint waveform on white plate."
+    "draft": "Front waveform strip shows the function to be synthesized."
    },
    {
     "gap_id": "extended",
     "fact_ids": [
-     "f13"
+     "f6"
     ],
-    "intent": "Describe numbered rocker arm tips from 20 to 1."
+    "draft": "Right half of square wave period is highlighted."
+   },
+   {
+    "gap_id": "extended",
+    "fact_ids": [
+     "f10"
+    ],
+    "draft": "Right half\u2011period of the square wave is highlighted."
    }
   ],
   "style_notes": [
-   "Refer to the device as 'the harmonic analyzer' or 'the machine'.",
-   "Call the vertical rods 'amplitude bars' or 'rocker bars' when they are adjusted.",
-   "Describe the square wave as 'green step function from 0 to 10'.",
-   "Use 'crank zero' for the aligned position.",
-   "Keep descriptions concise and objective; do not interpret or explain."
+   "Call the device \u201cHarmonic Analyzer\u201d throughout.",
+   "Refer to the front paper strip as the \u201cwaveform strip\u201d.",
+   "Use \u201crocker arms\u201d for the vertical rods with numbered tabs.",
+   "Speak numbers as digits (e.g., \u201c10\u201d, \u201c20\u201d).",
+   "Present tense; avoid \u201cwe see\u201d or interpretive language."
   ]
  },
  "cues": [
   {
-   "id": "ext-001",
+   "id": "ad-001",
    "gap_id": "g1",
    "start": 0.15,
-   "end": 0.65,
-   "text": "Slide: tall green frame with rods, pulleys, gears, chains.",
-   "extended": true,
+   "end": 2.05,
+   "text": "Title card video 3",
+   "extended": false,
    "fact_ids": [
-    "f2"
+    "f1"
    ],
-   "moment_ids": [
-    "p3"
-   ],
+   "moment_ids": [],
    "gate_failures": [],
    "gate_warnings": [],
-   "repairs": 2,
+   "repairs": 0,
+   "origin": "Ultra draft",
+   "corrected_from": "",
    "verification": {
     "claims": [
      {
-      "claim": "The slide shows a tall green frame",
-      "verdict": "supported"
-     },
-     {
-      "claim": "The frame has rods",
-      "verdict": "supported"
-     },
-     {
-      "claim": "The frame has pulleys",
-      "verdict": "supported"
-     },
-     {
-      "claim": "The frame has gears",
-      "verdict": "supported"
-     },
-     {
-      "claim": "The frame has chains",
-      "verdict": "supported"
+      "claim": "Title card video 3",
+      "verdict": "supported",
+      "observed": ""
      }
     ],
     "identifies_person": false,
@@ -2090,11 +2097,11 @@
    "sources": []
   },
   {
-   "id": "ext-007",
+   "id": "ext-004",
    "gap_id": null,
-   "start": 18.0,
-   "end": 18.5,
-   "text": "Line chart: White rectangular plate on machine front displays a faint waveform.",
+   "start": 19.038,
+   "end": 19.538,
+   "text": "Front waveform strip shows the function to be synthesized.",
    "extended": true,
    "fact_ids": [
     "f3"
@@ -2105,110 +2112,14 @@
    "gate_failures": [],
    "gate_warnings": [],
    "repairs": 0,
+   "origin": "Ultra draft",
+   "corrected_from": "",
    "verification": {
     "claims": [
      {
-      "claim": "White rectangular plate on machine front displays a faint waveform",
-      "verdict": "supported"
-     },
-     {
-      "claim": "Line chart",
-      "verdict": "supported"
-     }
-    ],
-    "identifies_person": false,
-    "supported": true,
-    "unsupported_claims": []
-   },
-   "tier": "auto",
-   "sources": []
-  },
-  {
-   "id": "ext-002",
-   "gap_id": "g2",
-   "start": 45.204,
-   "end": 45.704,
-   "text": "Square wave: 0 to 10. Bracket marks period.",
-   "extended": true,
-   "fact_ids": [
-    "f6",
-    "f7"
-   ],
-   "moment_ids": [],
-   "gate_failures": [],
-   "gate_warnings": [],
-   "repairs": 2,
-   "verification": {
-    "claims": [
-     {
-      "claim": "Square wave: 0 to 10",
-      "verdict": "supported"
-     },
-     {
-      "claim": "Bracket marks period",
-      "verdict": "supported"
-     }
-    ],
-    "identifies_person": false,
-    "supported": true,
-    "unsupported_claims": []
-   },
-   "tier": "auto",
-   "sources": []
-  },
-  {
-   "id": "ext-003",
-   "gap_id": "g3",
-   "start": 49.364,
-   "end": 49.864,
-   "text": "Line chart: vertical line.",
-   "extended": true,
-   "fact_ids": [
-    "f8"
-   ],
-   "moment_ids": [],
-   "gate_failures": [],
-   "gate_warnings": [],
-   "repairs": 2,
-   "verification": {
-    "claims": [
-     {
-      "claim": "The chart is a line chart.",
-      "verdict": "supported"
-     },
-     {
-      "claim": "There is a vertical line.",
-      "verdict": "supported"
-     }
-    ],
-    "identifies_person": false,
-    "supported": true,
-    "unsupported_claims": []
-   },
-   "tier": "auto",
-   "sources": []
-  },
-  {
-   "id": "ad-004",
-   "gap_id": "g4",
-   "start": 55.636,
-   "end": 56.736,
-   "text": "Yellow box",
-   "extended": false,
-   "fact_ids": [
-    "f9"
-   ],
-   "moment_ids": [
-    "p4"
-   ],
-   "gate_failures": [],
-   "gate_warnings": [],
-   "repairs": 1,
-   "verification": {
-    "claims": [
-     {
-      "claim": "There is a yellow box",
-      "verdict": "supported"
+      "claim": "Front waveform strip shows the function to be synthesized.",
+      "verdict": "supported",
+      "observed": ""
      }
     ],
     "identifies_person": false,
@@ -2220,74 +2131,61 @@
   },
   {
    "id": "ext-005",
-   "gap_id": "g5",
-   "start": 66.42,
-   "end": 66.92,
-   "text": "Line chart: 11 dots at value 10 for bars 0-10 and 10 dots at value 0 for bars 11-20. Hand adjusts rocker bar.",
+   "gap_id": null,
+   "start": 36.158,
+   "end": 36.658,
+   "text": "Right half of square wave period is highlighted.",
    "extended": true,
    "fact_ids": [
-    "f10",
-    "f11"
+    "f6"
    ],
    "moment_ids": [
-    "p5"
+    "p3"
    ],
    "gate_failures": [],
    "gate_warnings": [],
-   "repairs": 2,
+   "repairs": 0,
+   "origin": "Ultra draft",
+   "corrected_from": "",
    "verification": {
     "claims": [
      {
-      "claim": "Line chart: 11 dots at value 10 for bars 0-10",
-      "verdict": "supported"
-     },
-     {
-      "claim": "and 10 dots at value 0 for bars 11-20",
-      "verdict": "supported"
-     },
-     {
-      "claim": "Hand adjusts rocker bar",
-      "verdict": "not_visible"
+      "claim": "Right half of square wave period is highlighted.",
+      "verdict": "not_visible",
+      "observed": ""
      }
     ],
     "identifies_person": false,
     "supported": false,
     "unsupported_claims": [
-     "Hand adjusts rocker bar (not visible)"
+     "Right half of square wave period is highlighted. (not visible)"
     ]
    },
    "tier": "review",
    "sources": []
   },
   {
-   "id": "ad-006",
-   "gap_id": "g6",
-   "start": 84.692,
-   "end": 86.432,
-   "text": "Crank, bars, gears.",
+   "id": "ad-002",
+   "gap_id": "g2",
+   "start": 45.204,
+   "end": 47.904,
+   "text": "One period of square wave shaded.",
    "extended": false,
    "fact_ids": [
-    "f12"
+    "f8"
    ],
-   "moment_ids": [
-    "p6"
-   ],
+   "moment_ids": [],
    "gate_failures": [],
    "gate_warnings": [],
-   "repairs": 1,
+   "repairs": 0,
+   "origin": "Ultra draft",
+   "corrected_from": "",
    "verification": {
     "claims": [
      {
-      "claim": "Crank",
-      "verdict": "supported"
-     },
-     {
-      "claim": "bars",
-      "verdict": "supported"
-     },
-     {
-      "claim": "gears",
-      "verdict": "supported"
+      "claim": "One period of square wave shaded.",
+      "verdict": "supported",
+      "observed": ""
      }
     ],
     "identifies_person": false,
@@ -2298,30 +2196,62 @@
    "sources": []
   },
   {
-   "id": "ext-008",
+   "id": "ext-006",
    "gap_id": null,
-   "start": 87.67,
-   "end": 88.17,
-   "text": "Line chart: numbered tabs on rocker arm tips count down from 20 on left to 1 on right.",
+   "start": 55.486,
+   "end": 55.986,
+   "text": "Right half\u2011period of the square wave is highlighted.",
    "extended": true,
    "fact_ids": [
-    "f13"
+    "f10"
    ],
    "moment_ids": [
-    "p7"
+    "p4"
    ],
    "gate_failures": [],
    "gate_warnings": [],
    "repairs": 0,
+   "origin": "Ultra draft",
+   "corrected_from": "",
    "verification": {
     "claims": [
      {
-      "claim": "Line chart: numbered tabs on rocker arm tips count down from 20 on left to 1 on right",
-      "verdict": "supported"
-     },
+      "claim": "Right half-period of the square wave is highlighted.",
+      "verdict": "supported",
+      "observed": ""
+     }
+    ],
+    "identifies_person": false,
+    "supported": true,
+    "unsupported_claims": []
+   },
+   "tier": "auto",
+   "sources": []
+  },
+  {
+   "id": "ad-003",
+   "gap_id": "g5",
+   "start": 66.42,
+   "end": 70.56,
+   "text": "Sampled graph: ten points at 10, ten at 0.",
+   "extended": false,
+   "fact_ids": [
+    "f11"
+   ],
+   "moment_ids": [
+    "p5"
+   ],
+   "gate_failures": [],
+   "gate_warnings": [],
+   "repairs": 0,
+   "origin": "Ultra draft",
+   "corrected_from": "",
+   "verification": {
+    "claims": [
      {
-      "claim": "numbered tabs on rocker arm tips count down from 20 on left to 1 on right",
-      "verdict": "supported"
+      "claim": "Sampled graph: ten points at 10, ten at 0.",
+      "verdict": "supported",
+      "observed": ""
      }
     ],
     "identifies_person": false,
@@ -2337,87 +2267,89 @@
    "moment_id": "p2",
    "t": 17.698,
    "said": "magnified and the resulting function plotted here on the front.",
-   "suggestion": "Magnified waveform plotted on front white rectangular plate displays faint waveform"
+   "suggestion": "The white strip on the front shows a pen\u2011traced waveform that is magnified and the resulting function plotted here."
   },
   {
    "moment_id": "p3",
    "t": 32.546,
    "said": "For example, if I want to plot a particular function here, how do I set the amplitude bars to produce it?",
-   "suggestion": "Tall green metal frame with vertical rods pulleys gears chains and horizontal bar holding white rectangular plate how machine does analysis"
+   "suggestion": "For example, if I want to plot a particular function here, I set the amplitude bars to produce the target function displayed on the waveform strip."
   },
   {
    "moment_id": "p4",
    "t": 52.61,
    "said": "All of the information that function carries is contained in half a period.",
-   "suggestion": "Yellow box highlights left half period of square wave half period and even function symmetry"
+   "suggestion": "All of the information that the function carries is contained in the highlighted right half\u2011period of the square wave."
   },
   {
    "moment_id": "p5",
    "t": 63.954,
    "said": "We use the values of these points as the inputs for the machine.",
-   "suggestion": "Sampled square wave shows 11 dots at value 10 for bars 0-10 and 10 dots at value 0 for bars 11-20 values of twenty equally spaced points"
+   "suggestion": "We use the values of these 20 equally spaced points as inputs for the machine: the first 10 points have value 10, and the next 10 points have value 0."
   },
   {
    "moment_id": "p6",
    "t": 78.594,
    "said": "To see how we get these coefficients, we'll look at the side of the machine.",
-   "suggestion": "Side view shows crank on left vertical metal bars and conical gear assembly sinusoid formed by tips as crank turns"
+   "suggestion": "To see how we get these coefficients, we look at the sinusoidal curve traced on paper, which starts flat, has two peaks, and ends flat, formed by the tips of the rocker arms as the crank turns."
   },
   {
    "moment_id": "p7",
    "t": 89.97,
    "said": "The indices on the rocker arms run from high on the left to low on the right.",
-   "suggestion": "Numbered tabs on rocker arm tips show 20 on left descending to 1 on right indices from high on left to low on right"
+   "suggestion": "The indices on the rocker arms run from 20 on the left down to 1 on the right, with \u201chigh\u201d labeled on the left and \u201clow\u201d on the right."
   }
  ],
  "metrics": {
   "duration_seconds": 100.0,
-  "cues": 8,
-  "inline_cues": 2,
-  "extended_cues": 6,
+  "cues": 6,
+  "inline_cues": 3,
+  "extended_cues": 3,
   "tiers": {
-   "auto": 7,
+   "auto": 5,
    "review": 1,
    "never": 0
   },
   "talk_over_seconds": 0.0,
-  "repairs": 10,
+  "repairs": 0,
   "gate_failures_after_repair": {},
   "pointing_moments": 7,
   "pointing_moments_visual": 6,
-  "pointing_moments_covered": 6
+  "pointing_moments_covered": 4,
+  "flagged_by_check": 1,
+  "corrected_after_check": 0
  },
  "ledger": {
   "summary": {
-   "calls": 35,
-   "failed_calls": 3,
-   "total_usd": 0.0,
-   "ultra_only_usd": 0.116957,
+   "calls": 15,
+   "failed_calls": 2,
+   "total_usd": 0.039632,
+   "ultra_only_usd": 0.054109,
    "by_model": {
-    "nvidia/nemotron-3.5-super-vl-120b-a12b": {
-     "calls": 12,
-     "prompt_tokens": 37178,
+    "Nemotron 3.5 Super VL": {
+     "calls": 9,
+     "prompt_tokens": 45979,
      "cached_tokens": 0,
-     "completion_tokens": 2059,
-     "cost_usd": 0.0
+     "completion_tokens": 2033,
+     "cost_usd": 0.015623
     },
-    "nvidia/nemotron-3.5-lightning-30b-a3b": {
-     "calls": 22,
-     "prompt_tokens": 14624,
+    "Nemotron 3.5 Lightning": {
+     "calls": 5,
+     "prompt_tokens": 12295,
      "cached_tokens": 0,
-     "completion_tokens": 1137,
-     "cost_usd": 0.0
+     "completion_tokens": 1058,
+     "cost_usd": 0.000992
     },
-    "nvidia/nemotron-3-ultra-550b-a55b": {
+    "Nemotron 3 Ultra": {
      "calls": 1,
-     "prompt_tokens": 3832,
+     "prompt_tokens": 4339,
      "cached_tokens": 0,
-     "completion_tokens": 17245,
-     "cost_usd": 0.0
+     "completion_tokens": 6226,
+     "cost_usd": 0.023017
     }
    },
-   "usd_per_video_minute": 0.0,
-   "usd_per_accepted_cue": 0.0
+   "usd_per_video_minute": 0.023779,
+   "usd_per_accepted_cue": 0.007926
   },
   "calls": [
    {
@@ -2425,18 +2357,36 @@
     "role": "vision",
     "model": "nvidia/nemotron-3.5-super-vl-120b-a12b",
     "thinking": false,
-    "prompt_tokens": 6067,
+    "prompt_tokens": 6050,
     "cached_tokens": 0,
-    "completion_tokens": 676,
+    "completion_tokens": 573,
     "reasoning_tokens": 0,
-    "latency_ms": 9624,
+    "latency_ms": 8492,
     "ok": true,
     "error": "",
-    "request_id": "chatcmpl-f60a19ec-f061-45b5-938f-91a2cca0741c",
-    "at": 1793037762.507995,
-    "cost_usd": 0.0,
-    "ultra_counterfactual_usd": 0.008095,
-    "model_label": "nvidia/nemotron-3.5-super-vl-120b-a12b"
+    "request_id": "ad63e46e-a0f8-4d07-88bd-39120a95841f",
+    "at": 1793309108.057715,
+    "cost_usd": 0.002331,
+    "ultra_counterfactual_usd": 0.002331,
+    "model_label": "Nemotron 3.5 Super VL"
+   },
+   {
+    "stage": "watch",
+    "role": "vision",
+    "model": "nvidia/nemotron-3.5-super-vl-120b-a12b",
+    "thinking": false,
+    "prompt_tokens": 6067,
+    "cached_tokens": 0,
+    "completion_tokens": 759,
+    "reasoning_tokens": 0,
+    "latency_ms": 11773,
+    "ok": true,
+    "error": "",
+    "request_id": "2f2a6f6c-ea9a-4a21-a34b-e60fe97c60d3",
+    "at": 1793309108.354317,
+    "cost_usd": 0.002503,
+    "ultra_counterfactual_usd": 0.002503,
+    "model_label": "Nemotron 3.5 Super VL"
    },
    {
     "stage": "watch",
@@ -2445,624 +2395,246 @@
     "thinking": false,
     "prompt_tokens": 6059,
     "cached_tokens": 0,
-    "completion_tokens": 364,
+    "completion_tokens": 456,
     "reasoning_tokens": 0,
-    "latency_ms": 10765,
+    "latency_ms": 14619,
     "ok": true,
     "error": "",
-    "request_id": "chatcmpl-708ade36-4807-4864-a1c6-65bbb9c1496f",
-    "at": 1793037762.0341709,
-    "cost_usd": 0.0,
-    "ultra_counterfactual_usd": 0.007151,
-    "model_label": "nvidia/nemotron-3.5-super-vl-120b-a12b"
-   },
-   {
-    "stage": "watch",
-    "role": "vision",
-    "model": "nvidia/nemotron-3.5-super-vl-120b-a12b",
-    "thinking": false,
-    "prompt_tokens": 6050,
-    "cached_tokens": 0,
-    "completion_tokens": 509,
-    "reasoning_tokens": 0,
-    "latency_ms": 24815,
-    "ok": true,
-    "error": "",
-    "request_id": "chatcmpl-3cc2b381-ec79-4bf5-80ed-bafd690c93a6",
-    "at": 1793037761.9506822,
-    "cost_usd": 0.0,
-    "ultra_counterfactual_usd": 0.007577,
-    "model_label": "nvidia/nemotron-3.5-super-vl-120b-a12b"
+    "request_id": "89164d42-2099-4cc5-9d2e-9a8afadef8b2",
+    "at": 1793309108.130013,
+    "cost_usd": 0.002228,
+    "ultra_counterfactual_usd": 0.002228,
+    "model_label": "Nemotron 3.5 Super VL"
    },
    {
     "stage": "resolve",
     "role": "classify",
     "model": "nvidia/nemotron-3.5-lightning-30b-a3b",
     "thinking": false,
-    "prompt_tokens": 3277,
+    "prompt_tokens": 3620,
     "cached_tokens": 0,
-    "completion_tokens": 397,
+    "completion_tokens": 417,
     "reasoning_tokens": 0,
-    "latency_ms": 4598,
+    "latency_ms": 3125,
     "ok": true,
     "error": "",
-    "request_id": "chatcmpl-cbaa8c72-0ffa-47d8-aa2f-88492defc5ff",
-    "at": 1793037786.769737,
-    "cost_usd": 0.0,
+    "request_id": "dcd8a2f6-7927-4561-b802-0cd50d41454b",
+    "at": 1793309122.751284,
+    "cost_usd": 0.000317,
+    "ultra_counterfactual_usd": 0.004871,
+    "model_label": "Nemotron 3.5 Lightning"
+   },
+   {
+    "stage": "context",
+    "role": "fast",
+    "model": "nvidia/nemotron-3.5-lightning-30b-a3b",
+    "thinking": false,
+    "prompt_tokens": 3676,
+    "cached_tokens": 0,
+    "completion_tokens": 159,
+    "reasoning_tokens": 0,
+    "latency_ms": 1332,
+    "ok": false,
+    "error": "schema validation failed",
+    "request_id": "9485f66e-704f-4db8-ae36-df2ef9bb937b",
+    "at": 1793309127.7545311,
+    "cost_usd": 0.000259,
+    "ultra_counterfactual_usd": 0.004153,
+    "model_label": "Nemotron 3.5 Lightning"
+   },
+   {
+    "stage": "context",
+    "role": "fast",
+    "model": "nvidia/nemotron-3.5-lightning-30b-a3b",
+    "thinking": false,
+    "prompt_tokens": 4015,
+    "cached_tokens": 0,
+    "completion_tokens": 151,
+    "reasoning_tokens": 0,
+    "latency_ms": 1322,
+    "ok": false,
+    "error": "schema validation failed",
+    "request_id": "e4516af7-95b2-4f62-bb7a-04a89690e586",
+    "at": 1793309129.0880032,
+    "cost_usd": 0.000277,
     "ultra_counterfactual_usd": 0.004468,
-    "model_label": "nvidia/nemotron-3.5-lightning-30b-a3b"
+    "model_label": "Nemotron 3.5 Lightning"
    },
    {
     "stage": "understand",
     "role": "reason",
     "model": "nvidia/nemotron-3-ultra-550b-a55b",
     "thinking": true,
-    "prompt_tokens": 3832,
+    "prompt_tokens": 4339,
     "cached_tokens": 0,
-    "completion_tokens": 17245,
+    "completion_tokens": 6226,
     "reasoning_tokens": 0,
-    "latency_ms": 386853,
+    "latency_ms": 106190,
     "ok": true,
     "error": "",
-    "request_id": "chatcmpl-c09d1cfc-6c75-4ba2-ad12-23d903b0320f",
-    "at": 1793037791.372635,
-    "cost_usd": 0.0,
-    "ultra_counterfactual_usd": 0.055567,
-    "model_label": "nvidia/nemotron-3-ultra-550b-a55b"
-   },
-   {
-    "stage": "write",
-    "role": "fast",
-    "model": "nvidia/nemotron-3.5-lightning-30b-a3b",
-    "thinking": false,
-    "prompt_tokens": 477,
-    "cached_tokens": 0,
-    "completion_tokens": 34,
-    "reasoning_tokens": 0,
-    "latency_ms": 547,
-    "ok": true,
-    "error": "",
-    "request_id": "chatcmpl-23ed6b1a-e376-459f-838f-ea719e15bc42",
-    "at": 1793038178.2410529,
-    "cost_usd": 0.0,
-    "ultra_counterfactual_usd": 0.000579,
-    "model_label": "nvidia/nemotron-3.5-lightning-30b-a3b"
-   },
-   {
-    "stage": "write",
-    "role": "fast",
-    "model": "nvidia/nemotron-3.5-lightning-30b-a3b",
-    "thinking": false,
-    "prompt_tokens": 483,
-    "cached_tokens": 0,
-    "completion_tokens": 15,
-    "reasoning_tokens": 0,
-    "latency_ms": 617,
-    "ok": true,
-    "error": "",
-    "request_id": "chatcmpl-ea5d2088-8a1e-4ded-8383-ea430c0e4d64",
-    "at": 1793038178.2515929,
-    "cost_usd": 0.0,
-    "ultra_counterfactual_usd": 0.000528,
-    "model_label": "nvidia/nemotron-3.5-lightning-30b-a3b"
-   },
-   {
-    "stage": "write",
-    "role": "fast",
-    "model": "nvidia/nemotron-3.5-lightning-30b-a3b",
-    "thinking": false,
-    "prompt_tokens": 497,
-    "cached_tokens": 0,
-    "completion_tokens": 19,
-    "reasoning_tokens": 0,
-    "latency_ms": 679,
-    "ok": true,
-    "error": "",
-    "request_id": "chatcmpl-d1c2b129-74c9-4194-bf76-5666629e74e8",
-    "at": 1793038178.255184,
-    "cost_usd": 0.0,
-    "ultra_counterfactual_usd": 0.000554,
-    "model_label": "nvidia/nemotron-3.5-lightning-30b-a3b"
-   },
-   {
-    "stage": "write",
-    "role": "fast",
-    "model": "nvidia/nemotron-3.5-lightning-30b-a3b",
-    "thinking": false,
-    "prompt_tokens": 603,
-    "cached_tokens": 0,
-    "completion_tokens": 25,
-    "reasoning_tokens": 0,
-    "latency_ms": 706,
-    "ok": true,
-    "error": "",
-    "request_id": "chatcmpl-a822797c-00fe-41af-a841-a2f22c9defd5",
-    "at": 1793038178.2436721,
-    "cost_usd": 0.0,
-    "ultra_counterfactual_usd": 0.000678,
-    "model_label": "nvidia/nemotron-3.5-lightning-30b-a3b"
-   },
-   {
-    "stage": "write",
-    "role": "fast",
-    "model": "nvidia/nemotron-3.5-lightning-30b-a3b",
-    "thinking": false,
-    "prompt_tokens": 462,
-    "cached_tokens": 0,
-    "completion_tokens": 20,
-    "reasoning_tokens": 0,
-    "latency_ms": 725,
-    "ok": true,
-    "error": "",
-    "request_id": "chatcmpl-309dc78e-efe5-420c-aa15-c679c8b8a088",
-    "at": 1793038178.256476,
-    "cost_usd": 0.0,
-    "ultra_counterfactual_usd": 0.000522,
-    "model_label": "nvidia/nemotron-3.5-lightning-30b-a3b"
-   },
-   {
-    "stage": "write",
-    "role": "fast",
-    "model": "nvidia/nemotron-3.5-lightning-30b-a3b",
-    "thinking": false,
-    "prompt_tokens": 486,
-    "cached_tokens": 0,
-    "completion_tokens": 24,
-    "reasoning_tokens": 0,
-    "latency_ms": 751,
-    "ok": true,
-    "error": "",
-    "request_id": "chatcmpl-57891cc5-329b-4289-8039-1a768e76094b",
-    "at": 1793038178.2494621,
-    "cost_usd": 0.0,
-    "ultra_counterfactual_usd": 0.000558,
-    "model_label": "nvidia/nemotron-3.5-lightning-30b-a3b"
-   },
-   {
-    "stage": "write",
-    "role": "fast",
-    "model": "nvidia/nemotron-3.5-lightning-30b-a3b",
-    "thinking": false,
-    "prompt_tokens": 0,
-    "cached_tokens": 0,
-    "completion_tokens": 0,
-    "reasoning_tokens": 0,
-    "latency_ms": 74,
-    "ok": false,
-    "error": "HTTP 429",
-    "request_id": "",
-    "at": 1793038178.935193,
-    "cost_usd": 0.0,
-    "ultra_counterfactual_usd": 0.0,
-    "model_label": "nvidia/nemotron-3.5-lightning-30b-a3b"
-   },
-   {
-    "stage": "write",
-    "role": "fast",
-    "model": "nvidia/nemotron-3.5-lightning-30b-a3b",
-    "thinking": false,
-    "prompt_tokens": 503,
-    "cached_tokens": 0,
-    "completion_tokens": 30,
-    "reasoning_tokens": 0,
-    "latency_ms": 898,
-    "ok": true,
-    "error": "",
-    "request_id": "chatcmpl-21d9bd12-18c7-4f2c-bb24-ebbfe0b9fd7f",
-    "at": 1793038178.257251,
-    "cost_usd": 0.0,
-    "ultra_counterfactual_usd": 0.000593,
-    "model_label": "nvidia/nemotron-3.5-lightning-30b-a3b"
-   },
-   {
-    "stage": "write",
-    "role": "fast",
-    "model": "nvidia/nemotron-3.5-lightning-30b-a3b",
-    "thinking": false,
-    "prompt_tokens": 572,
-    "cached_tokens": 0,
-    "completion_tokens": 26,
-    "reasoning_tokens": 0,
-    "latency_ms": 435,
-    "ok": true,
-    "error": "",
-    "request_id": "chatcmpl-57b76b13-9ba6-4128-b7cb-4b8fa8e65d58",
-    "at": 1793038178.789393,
-    "cost_usd": 0.0,
-    "ultra_counterfactual_usd": 0.00065,
-    "model_label": "nvidia/nemotron-3.5-lightning-30b-a3b"
-   },
-   {
-    "stage": "write",
-    "role": "fast",
-    "model": "nvidia/nemotron-3.5-lightning-30b-a3b",
-    "thinking": false,
-    "prompt_tokens": 0,
-    "cached_tokens": 0,
-    "completion_tokens": 0,
-    "reasoning_tokens": 0,
-    "latency_ms": 71,
-    "ok": false,
-    "error": "HTTP 429",
-    "request_id": "",
-    "at": 1793038179.2247748,
-    "cost_usd": 0.0,
-    "ultra_counterfactual_usd": 0.0,
-    "model_label": "nvidia/nemotron-3.5-lightning-30b-a3b"
-   },
-   {
-    "stage": "write",
-    "role": "fast",
-    "model": "nvidia/nemotron-3.5-lightning-30b-a3b",
-    "thinking": false,
-    "prompt_tokens": 557,
-    "cached_tokens": 0,
-    "completion_tokens": 8,
-    "reasoning_tokens": 0,
-    "latency_ms": 478,
-    "ok": true,
-    "error": "",
-    "request_id": "chatcmpl-a1110f60-699f-4b03-860c-b129a18adf56",
-    "at": 1793038178.8693702,
-    "cost_usd": 0.0,
-    "ultra_counterfactual_usd": 0.000581,
-    "model_label": "nvidia/nemotron-3.5-lightning-30b-a3b"
-   },
-   {
-    "stage": "write",
-    "role": "fast",
-    "model": "nvidia/nemotron-3.5-lightning-30b-a3b",
-    "thinking": false,
-    "prompt_tokens": 689,
-    "cached_tokens": 0,
-    "completion_tokens": 21,
-    "reasoning_tokens": 0,
-    "latency_ms": 518,
-    "ok": true,
-    "error": "",
-    "request_id": "chatcmpl-e9c74d86-623d-4046-951b-c1febe490f19",
-    "at": 1793038178.949989,
-    "cost_usd": 0.0,
-    "ultra_counterfactual_usd": 0.000752,
-    "model_label": "nvidia/nemotron-3.5-lightning-30b-a3b"
-   },
-   {
-    "stage": "write",
-    "role": "fast",
-    "model": "nvidia/nemotron-3.5-lightning-30b-a3b",
-    "thinking": false,
-    "prompt_tokens": 619,
-    "cached_tokens": 0,
-    "completion_tokens": 61,
-    "reasoning_tokens": 0,
-    "latency_ms": 1654,
-    "ok": true,
-    "error": "",
-    "request_id": "chatcmpl-93c80336-57d6-4195-9461-21caee7d5db6",
-    "at": 1793038178.2539678,
-    "cost_usd": 0.0,
-    "ultra_counterfactual_usd": 0.000802,
-    "model_label": "nvidia/nemotron-3.5-lightning-30b-a3b"
-   },
-   {
-    "stage": "write",
-    "role": "fast",
-    "model": "nvidia/nemotron-3.5-lightning-30b-a3b",
-    "thinking": false,
-    "prompt_tokens": 769,
-    "cached_tokens": 0,
-    "completion_tokens": 21,
-    "reasoning_tokens": 0,
-    "latency_ms": 451,
-    "ok": true,
-    "error": "",
-    "request_id": "chatcmpl-c38348c5-0a19-4071-8c30-389985613b3b",
-    "at": 1793038179.468457,
-    "cost_usd": 0.0,
-    "ultra_counterfactual_usd": 0.000832,
-    "model_label": "nvidia/nemotron-3.5-lightning-30b-a3b"
-   },
-   {
-    "stage": "write",
-    "role": "fast",
-    "model": "nvidia/nemotron-3.5-lightning-30b-a3b",
-    "thinking": false,
-    "prompt_tokens": 745,
-    "cached_tokens": 0,
-    "completion_tokens": 50,
-    "reasoning_tokens": 0,
-    "latency_ms": 1081,
-    "ok": true,
-    "error": "",
-    "request_id": "chatcmpl-2716bcbd-2d06-4eec-b75d-ae13696ccebf",
-    "at": 1793038179.908534,
-    "cost_usd": 0.0,
-    "ultra_counterfactual_usd": 0.000895,
-    "model_label": "nvidia/nemotron-3.5-lightning-30b-a3b"
-   },
-   {
-    "stage": "write",
-    "role": "fast",
-    "model": "nvidia/nemotron-3.5-lightning-30b-a3b",
-    "thinking": false,
-    "prompt_tokens": 571,
-    "cached_tokens": 0,
-    "completion_tokens": 14,
-    "reasoning_tokens": 0,
-    "latency_ms": 2313,
-    "ok": true,
-    "error": "",
-    "request_id": "chatcmpl-5997a063-33ed-4cd6-a228-d77ffc836ca5",
-    "at": 1793038179.001641,
-    "cost_usd": 0.0,
-    "ultra_counterfactual_usd": 0.000613,
-    "model_label": "nvidia/nemotron-3.5-lightning-30b-a3b"
-   },
-   {
-    "stage": "write",
-    "role": "fast",
-    "model": "nvidia/nemotron-3.5-lightning-30b-a3b",
-    "thinking": false,
-    "prompt_tokens": 860,
-    "cached_tokens": 0,
-    "completion_tokens": 50,
-    "reasoning_tokens": 0,
-    "latency_ms": 699,
-    "ok": true,
-    "error": "",
-    "request_id": "chatcmpl-7675731e-c527-4c51-9c58-4edbecb5f85a",
-    "at": 1793038180.9917629,
-    "cost_usd": 0.0,
-    "ultra_counterfactual_usd": 0.00101,
-    "model_label": "nvidia/nemotron-3.5-lightning-30b-a3b"
-   },
-   {
-    "stage": "write",
-    "role": "fast",
-    "model": "nvidia/nemotron-3.5-lightning-30b-a3b",
-    "thinking": false,
-    "prompt_tokens": 644,
-    "cached_tokens": 0,
-    "completion_tokens": 12,
-    "reasoning_tokens": 0,
-    "latency_ms": 941,
-    "ok": true,
-    "error": "",
-    "request_id": "chatcmpl-6ec61da3-eeba-4811-ae58-04a4bdfc15f8",
-    "at": 1793038181.3157492,
-    "cost_usd": 0.0,
-    "ultra_counterfactual_usd": 0.00068,
-    "model_label": "nvidia/nemotron-3.5-lightning-30b-a3b"
-   },
-   {
-    "stage": "write",
-    "role": "fast",
-    "model": "nvidia/nemotron-3.5-lightning-30b-a3b",
-    "thinking": false,
-    "prompt_tokens": 575,
-    "cached_tokens": 0,
-    "completion_tokens": 13,
-    "reasoning_tokens": 0,
-    "latency_ms": 349,
-    "ok": true,
-    "error": "",
-    "request_id": "chatcmpl-5acf14c8-c474-43f3-8519-b54f86844afa",
-    "at": 1793038184.011014,
-    "cost_usd": 0.0,
-    "ultra_counterfactual_usd": 0.000614,
-    "model_label": "nvidia/nemotron-3.5-lightning-30b-a3b"
-   },
-   {
-    "stage": "write",
-    "role": "fast",
-    "model": "nvidia/nemotron-3.5-lightning-30b-a3b",
-    "thinking": false,
-    "prompt_tokens": 659,
-    "cached_tokens": 0,
-    "completion_tokens": 22,
-    "reasoning_tokens": 0,
-    "latency_ms": 531,
-    "ok": true,
-    "error": "",
-    "request_id": "chatcmpl-288851a6-d35c-4d00-ba81-eed28fd34b45",
-    "at": 1793038184.298065,
-    "cost_usd": 0.0,
-    "ultra_counterfactual_usd": 0.000725,
-    "model_label": "nvidia/nemotron-3.5-lightning-30b-a3b"
+    "request_id": "778ae5ca-667c-458e-afda-e6d56909213f",
+    "at": 1793309130.415658,
+    "cost_usd": 0.023017,
+    "ultra_counterfactual_usd": 0.023017,
+    "model_label": "Nemotron 3 Ultra"
    },
    {
     "stage": "check",
     "role": "vision",
     "model": "nvidia/nemotron-3.5-super-vl-120b-a12b",
     "thinking": false,
-    "prompt_tokens": 2150,
+    "prompt_tokens": 3968,
     "cached_tokens": 0,
-    "completion_tokens": 82,
+    "completion_tokens": 37,
     "reasoning_tokens": 0,
-    "latency_ms": 1499,
+    "latency_ms": 1671,
     "ok": true,
     "error": "",
-    "request_id": "chatcmpl-29db7f0f-933d-4881-a8a7-0e81da626c68",
-    "at": 1793038185.5481222,
-    "cost_usd": 0.0,
-    "ultra_counterfactual_usd": 0.002396,
-    "model_label": "nvidia/nemotron-3.5-super-vl-120b-a12b"
+    "request_id": "7b46ded3-5727-4c66-bebf-19d828c81387",
+    "at": 1793309237.830635,
+    "cost_usd": 0.001224,
+    "ultra_counterfactual_usd": 0.001224,
+    "model_label": "Nemotron 3.5 Super VL"
    },
    {
     "stage": "check",
     "role": "vision",
     "model": "nvidia/nemotron-3.5-super-vl-120b-a12b",
     "thinking": false,
-    "prompt_tokens": 2139,
+    "prompt_tokens": 4137,
     "cached_tokens": 0,
-    "completion_tokens": 99,
+    "completion_tokens": 41,
     "reasoning_tokens": 0,
-    "latency_ms": 2961,
+    "latency_ms": 2158,
     "ok": true,
     "error": "",
-    "request_id": "chatcmpl-36797e0a-f4c9-493f-bbb2-0d4dc4b2357c",
-    "at": 1793038185.6508548,
-    "cost_usd": 0.0,
-    "ultra_counterfactual_usd": 0.002436,
-    "model_label": "nvidia/nemotron-3.5-super-vl-120b-a12b"
+    "request_id": "51a0d99f-7723-43d0-9bf4-23c000d10ddb",
+    "at": 1793309237.8344572,
+    "cost_usd": 0.001278,
+    "ultra_counterfactual_usd": 0.001278,
+    "model_label": "Nemotron 3.5 Super VL"
    },
    {
     "stage": "check",
     "role": "vision",
     "model": "nvidia/nemotron-3.5-super-vl-120b-a12b",
     "thinking": false,
-    "prompt_tokens": 2129,
+    "prompt_tokens": 4612,
     "cached_tokens": 0,
-    "completion_tokens": 31,
+    "completion_tokens": 41,
     "reasoning_tokens": 0,
-    "latency_ms": 1808,
+    "latency_ms": 2956,
     "ok": true,
     "error": "",
-    "request_id": "chatcmpl-febf3336-ccba-417e-9ea8-ced440eb6b49",
-    "at": 1793038187.0483341,
-    "cost_usd": 0.0,
-    "ultra_counterfactual_usd": 0.002222,
-    "model_label": "nvidia/nemotron-3.5-super-vl-120b-a12b"
+    "request_id": "891a8c9b-47a4-4e5c-876a-25865a92fdf3",
+    "at": 1793309238.1044219,
+    "cost_usd": 0.001421,
+    "ultra_counterfactual_usd": 0.001421,
+    "model_label": "Nemotron 3.5 Super VL"
    },
    {
     "stage": "check",
     "role": "vision",
     "model": "nvidia/nemotron-3.5-super-vl-120b-a12b",
     "thinking": false,
-    "prompt_tokens": 2140,
+    "prompt_tokens": 4753,
     "cached_tokens": 0,
-    "completion_tokens": 50,
+    "completion_tokens": 38,
     "reasoning_tokens": 0,
-    "latency_ms": 3589,
+    "latency_ms": 3181,
     "ok": true,
     "error": "",
-    "request_id": "chatcmpl-9bf5a111-f775-4673-a067-58da806ff0ba",
-    "at": 1793038185.553427,
-    "cost_usd": 0.0,
-    "ultra_counterfactual_usd": 0.00229,
-    "model_label": "nvidia/nemotron-3.5-super-vl-120b-a12b"
+    "request_id": "72dc9c56-b2be-4028-935f-13697517823c",
+    "at": 1793309238.077332,
+    "cost_usd": 0.00146,
+    "ultra_counterfactual_usd": 0.00146,
+    "model_label": "Nemotron 3.5 Super VL"
    },
    {
     "stage": "check",
     "role": "vision",
     "model": "nvidia/nemotron-3.5-super-vl-120b-a12b",
     "thinking": false,
-    "prompt_tokens": 3104,
+    "prompt_tokens": 5407,
     "cached_tokens": 0,
-    "completion_tokens": 93,
+    "completion_tokens": 47,
     "reasoning_tokens": 0,
-    "latency_ms": 1510,
+    "latency_ms": 2770,
     "ok": true,
     "error": "",
-    "request_id": "chatcmpl-593e6f60-ba49-4a00-8a23-408f807ed071",
-    "at": 1793038188.6134489,
-    "cost_usd": 0.0,
-    "ultra_counterfactual_usd": 0.003383,
-    "model_label": "nvidia/nemotron-3.5-super-vl-120b-a12b"
+    "request_id": "fbafc2ee-73ac-4023-b26c-50f39e358430",
+    "at": 1793309239.5037582,
+    "cost_usd": 0.001664,
+    "ultra_counterfactual_usd": 0.001664,
+    "model_label": "Nemotron 3.5 Super VL"
    },
    {
     "stage": "check",
     "role": "vision",
     "model": "nvidia/nemotron-3.5-super-vl-120b-a12b",
     "thinking": false,
-    "prompt_tokens": 3075,
+    "prompt_tokens": 4926,
     "cached_tokens": 0,
-    "completion_tokens": 51,
+    "completion_tokens": 41,
     "reasoning_tokens": 0,
-    "latency_ms": 1930,
+    "latency_ms": 2578,
     "ok": true,
     "error": "",
-    "request_id": "chatcmpl-1072d6ed-3f50-403f-ada9-07c400f65a88",
-    "at": 1793038189.144201,
-    "cost_usd": 0.0,
-    "ultra_counterfactual_usd": 0.003228,
-    "model_label": "nvidia/nemotron-3.5-super-vl-120b-a12b"
+    "request_id": "82e92724-4a8f-4e28-b1af-56eaf954933b",
+    "at": 1793309239.994316,
+    "cost_usd": 0.001515,
+    "ultra_counterfactual_usd": 0.001515,
+    "model_label": "Nemotron 3.5 Super VL"
    },
    {
-    "stage": "check",
-    "role": "vision",
-    "model": "nvidia/nemotron-3.5-super-vl-120b-a12b",
+    "stage": "correct",
+    "role": "fast",
+    "model": "nvidia/nemotron-3.5-lightning-30b-a3b",
     "thinking": false,
-    "prompt_tokens": 2133,
+    "prompt_tokens": 243,
     "cached_tokens": 0,
-    "completion_tokens": 55,
+    "completion_tokens": 6,
     "reasoning_tokens": 0,
-    "latency_ms": 3109,
+    "latency_ms": 281,
     "ok": true,
     "error": "",
-    "request_id": "chatcmpl-0dfede85-8b7a-4b05-8457-3f0bcd5c4f75",
-    "at": 1793038188.857297,
-    "cost_usd": 0.0,
-    "ultra_counterfactual_usd": 0.002298,
-    "model_label": "nvidia/nemotron-3.5-super-vl-120b-a12b"
-   },
-   {
-    "stage": "check",
-    "role": "vision",
-    "model": "nvidia/nemotron-3.5-super-vl-120b-a12b",
-    "thinking": false,
-    "prompt_tokens": 0,
-    "cached_tokens": 0,
-    "completion_tokens": 0,
-    "reasoning_tokens": 0,
-    "latency_ms": 180013,
-    "ok": false,
-    "error": "APITimeoutError",
-    "request_id": "",
-    "at": 1793038185.5341609,
-    "cost_usd": 0.0,
-    "ultra_counterfactual_usd": 0.0,
-    "model_label": "nvidia/nemotron-3.5-super-vl-120b-a12b"
-   },
-   {
-    "stage": "check",
-    "role": "vision",
-    "model": "nvidia/nemotron-3.5-super-vl-120b-a12b",
-    "thinking": false,
-    "prompt_tokens": 2132,
-    "cached_tokens": 0,
-    "completion_tokens": 49,
-    "reasoning_tokens": 0,
-    "latency_ms": 2998,
-    "ok": true,
-    "error": "",
-    "request_id": "chatcmpl-559891cf-1d90-492b-9efc-671893f645a8",
-    "at": 1793038367.555876,
-    "cost_usd": 0.0,
-    "ultra_counterfactual_usd": 0.002279,
-    "model_label": "nvidia/nemotron-3.5-super-vl-120b-a12b"
+    "request_id": "2708cd74-54f6-4216-b56b-d0a699756960",
+    "at": 1793309242.5749881,
+    "cost_usd": 1.6e-05,
+    "ultra_counterfactual_usd": 0.000261,
+    "model_label": "Nemotron 3.5 Lightning"
    },
    {
     "stage": "tips",
     "role": "fast",
     "model": "nvidia/nemotron-3.5-lightning-30b-a3b",
     "thinking": false,
-    "prompt_tokens": 576,
+    "prompt_tokens": 741,
     "cached_tokens": 0,
-    "completion_tokens": 275,
+    "completion_tokens": 325,
     "reasoning_tokens": 0,
-    "latency_ms": 2409,
+    "latency_ms": 2192,
     "ok": true,
     "error": "",
-    "request_id": "chatcmpl-11415e68-2788-4efd-a592-1c520181b7c8",
-    "at": 1793038370.558934,
-    "cost_usd": 0.0,
-    "ultra_counterfactual_usd": 0.001401,
-    "model_label": "nvidia/nemotron-3.5-lightning-30b-a3b"
+    "request_id": "c5bb8d79-e9ee-4127-af7c-1d7ba3f9f8bb",
+    "at": 1793309242.860896,
+    "cost_usd": 0.000122,
+    "ultra_counterfactual_usd": 0.001716,
+    "model_label": "Nemotron 3.5 Lightning"
    }
   ]
  },
  "timings": {
-  "listen": 7.09,
-  "segment": 1.94,
-  "watch": 27.06,
-  "resolve": 4.6,
-  "context": 0.0,
-  "understand": 386.86,
-  "write": 6.6,
-  "check": 185.72,
-  "deliver": 2.43,
-  "total": 622.37
+  "listen": 7.82,
+  "segment": 2.2,
+  "watch": 17.06,
+  "resolve": 3.13,
+  "context": 4.53,
+  "understand": 106.2,
+  "write": 0.0,
+  "check": 6.24,
+  "deliver": 2.2,
+  "total": 149.47
  },
  "failures": [],
  "provider": "nvidia_build"

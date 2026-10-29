@@ -60,7 +60,7 @@ Nine stages, four Nemotron models on Nebius Token Factory, each doing the one jo
 
 Every Token Factory call goes into a ledger with tokens, cached tokens, reasoning tokens, latency and cost. That
 gives each video a price ($0.021 per minute of video in the evaluation) and a counterfactual: the same text
-work on Ultra alone would cost {{ultra_only_phrase}}.
+work on Ultra alone would cost 60% more.
 
 ## Results
 
@@ -146,7 +146,7 @@ react, typescript, vite, playwright, axe-core, docker
   - Ultra is used once per video, for whole-lecture judgement over a 1M-token context.
   - Lightning handles cheap parallel repairs.
   - Nano handles strict-JSON classification.
-  - Split of cost on the home-page example, at Token Factory list prices: {{cost_split}}.
+  - Split of cost on the home-page example, at Token Factory list prices: Nemotron 3 Ultra 58%, Nemotron 3.5 Super VL 39%, Nemotron 3.5 Lightning 3%.
 - **Nemotron output quality:** 7/10.
   - Strongest: Ultra’s whole-lecture planning and Super VL’s reading of slides and charts.
   - Weakest: free-writing to a word budget, and occasional truncated or malformed JSON.
