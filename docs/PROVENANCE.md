@@ -33,6 +33,16 @@
 - **Publication (owner instruction, 2026-10-26):** the repository may be made public on 2026-10-29, after a clean scan for secrets across the working tree and the full history. Until then it stays private.
 - **AI assistance:** the application is being built with an AI coding assistant (Claude Code). The owner directs and reviews the work.
 
+### 2026-10-29: note on commit `a923416`
+
+`a923416` (2026-10-27 15:07) adds `samples/fourier-machine/` and `samples/manifest.json`. They are the home-page
+example from a prototype run on build.nvidia.com on 2026-10-26 (`"provider": "nvidia_build"` in `result.json`),
+made before the quality fixes of 2026-10-27. The commit changes no code. Its message describes a fix to pause
+behaviour informed by held-out failures, but the commit contains no such change. The real change to where paused
+descriptions start is `b10c380`. It was found on the laser development clip, and its message and the evaluation
+report both disclose the single prototype run on the held-out clips that came before it. The example is replaced
+by a Token Factory run before submission.
+
 ## Recording future work
 
 For every imported component, record its upstream URL, immutable commit/version, license, purpose and changes. For every material project decision, record date, rationale and source. If a baseline project is reused, identify its pre-event commit and explain the event-period work separately.

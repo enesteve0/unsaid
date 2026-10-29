@@ -38,6 +38,23 @@ Deadline: **Fri Oct 30, 2026 20:00 Istanbul** (submit by 16:00). Work directly o
 
 ## Thu Oct 29 — polish + publish
 
+Status at 06:00: no `.env` yet (no Token Factory or Tavily key), Nebius CLI not installed, Fly not logged in,
+Docker stopped. `a923416` (Oct 27, owner) committed the Oct 26 build-endpoint sample; its message describes a code
+change it does not contain. That sample predates every quality fix and must be replaced by the Token Factory run.
+
+Without keys (Claude):
+
+- [ ] PROVENANCE note on `a923416`; this plan
+- [ ] Nebius CLI installed (owner then runs `nebius profile create`); Fly.io fallback config; image builds
+- [ ] Independent review of the pipeline and of the public demo's robustness/security; fix confirmed issues
+- [ ] Local QA of the whole judge path on the current code (prototype provider), fix what breaks
+- [ ] `scripts/fill_numbers.py`: Devpost/README numbers from `eval/report.json` and the sample ledger, no hand typing
+- [ ] Video draft re-rendered from the current build; one command to re-render with Token Factory data + demo URL
+- [ ] gitleaks → repository public → renamed `enesteve0/unsaid` → description, homepage, topics, LICENSE in About
+
+When the key lands: `scripts/tf_day.sh` → commit samples, report, `docs/EVIDENCE.md` → deploy → fill numbers →
+re-render video → FEEDBACK Token Factory section.
+
 - [ ] Design + accessibility pass (axe clean, keyboard, screen-reader semantics), judge tour
 - [ ] Recorded fallback, kill switch, monitors, failure drill
 - [ ] README, FEEDBACK.md, NOTICE, ARCHITECTURE/EVAL/FAILURES/DEVPOST docs
