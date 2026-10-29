@@ -24,6 +24,9 @@ RUN uv sync --frozen --no-dev
 RUN uv run --no-sync python -c "import onnx_asr as o; o.load_vad('silero', 'models/silero'); o.load_model('nemo-parakeet-tdt-0.6b-v2', 'models/parakeet-v2', quantization='int8')"
 COPY samples/ /app/samples/
 COPY --from=web /web/dist /app/web/dist
+# Hosts that run the container as a non-root user (Hugging Face Spaces uses uid 1000) can still write runs here.
+RUN mkdir -p /data && chmod 777 /data
 EXPOSE 8080
 HEALTHCHECK --interval=60s --timeout=5s CMD python -c "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8080/api/health', timeout=4)"
-CMD ["uv", "run", "--no-sync", "python", "-c", "from unsaid.api import main; main()"]
+# The environment's own Python: nothing is resolved or cached at start, which also suits a non-root user.
+CMD ["/app/backend/.venv/bin/python", "-c", "from unsaid.api import main; main()"]
