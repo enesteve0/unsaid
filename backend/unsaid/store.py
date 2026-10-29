@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import contextlib
 import json
 import sqlite3
 import threading
@@ -31,6 +32,9 @@ CREATE TABLE IF NOT EXISTS spend (
     PRIMARY KEY (day, lane)
 );
 """
+
+
+MEDIA_SUFFIXES = {".mp4", ".mov", ".webm", ".m4v", ".mkv", ".wav", ".jpg", ".jpeg", ".png"}
 
 
 def today() -> str:
@@ -112,12 +116,28 @@ class Store:
         path = self.run_dir(run_id) / "result.json"
         return json.loads(path.read_text()) if path.exists() else None
 
-    def purge_uploads(self, older_than_seconds: float = 24 * 3600) -> int:
-        """Delete uploaded source videos after 24 h; keep derived tracks and results."""
+    def count_pending(self, *, session: str, ip: str) -> int:
+        """Runs still queued or running for this browser or this address."""
+        return self._q(
+            "SELECT COUNT(*) AS n FROM runs WHERE status IN ('queued', 'running') AND (session = ? OR (ip != '' AND ip = ?))",
+            (session, ip),
+        )[0]["n"]
+
+    def delete_run(self, run_id: str) -> None:
+        self._q("DELETE FROM runs WHERE id = ?", (run_id,))
+
+    def purge_media(self, older_than_seconds: float = 24 * 3600) -> int:
+        """Delete live runs' media (the upload, its audio, clips and frames) after the retention period.
+
+        Results and text tracks stay, so a result page still opens; its player says the video was deleted.
+        """
         removed = 0
         cutoff = time.time() - older_than_seconds
-        for video in self.runs_dir.glob("*/source.*"):
-            if video.stat().st_mtime < cutoff:
-                video.unlink(missing_ok=True)
-                removed += 1
+        for run in self.runs_dir.glob("*/"):
+            for path in run.iterdir():
+                if path.suffix.lower() in MEDIA_SUFFIXES:
+                    with contextlib.suppress(FileNotFoundError):
+                        if path.stat().st_mtime < cutoff:
+                            path.unlink()
+                            removed += 1
         return removed

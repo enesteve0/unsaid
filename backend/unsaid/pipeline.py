@@ -119,11 +119,13 @@ async def run_pipeline(
     options: RunOptions | None = None,
     progress: ProgressFn | None = None,
     cancel: asyncio.Event | None = None,
+    ledger: Ledger | None = None,
 ) -> dict[str, Any]:
+    """`ledger` may be passed in so a caller can charge the calls of a run that fails or is stopped."""
     options = options or RunOptions()
     cancel = cancel or asyncio.Event()
     workdir.mkdir(parents=True, exist_ok=True)
-    ledger = Ledger()
+    ledger = ledger if ledger is not None else Ledger()
     timings: dict[str, float] = {}
     started = time.perf_counter()
 

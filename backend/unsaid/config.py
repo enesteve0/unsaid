@@ -65,6 +65,7 @@ class Settings(BaseSettings):
 
     data_dir: Path = Path("data")
     samples_dir: Path = Path("../samples")
+    web_dist: Path | None = None  # the built web app; defaults to web/dist in the repository
     # The Serverless Job writes digest.json here (a mounted bucket in production).
     backlog_dir: Path = Path("data/backlog")
     eval_report: Path = Path("eval/report.json")
@@ -87,7 +88,13 @@ class Settings(BaseSettings):
     monthly_ceiling_usd: float = 30.0
     max_upload_seconds: float = 180.0
     max_upload_mb: int = 200
-    max_concurrent_runs: int = 2
+    # Public runs may use all slots but one, which stays free for judges.
+    max_concurrent_runs: int = 3
+    # Held against the daily caps for every queued or running run until its real cost is known.
+    run_reserve_usd: float = 0.15
+    run_timeout_seconds: float = 1800.0
+    # Media of live runs (uploads, audio, frames) is deleted after this long; results and text tracks stay.
+    keep_media_hours: float = 24.0
 
     @property
     def api_key(self) -> str:

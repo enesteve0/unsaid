@@ -12,13 +12,17 @@ kept as a `Source` with its request_id so the UI can show "Context via Tavily".
 from __future__ import annotations
 
 import asyncio
+import logging
 import re
 from dataclasses import dataclass, field
 
 from .config import Role
 from .ledger import Ledger
 from .schemas import ContextNames, Source
-from .tf_client import TokenFactory
+from .tf_client import AuthFailure, CreditExhausted, TokenFactory
+
+log = logging.getLogger(__name__)
+TAVILY_TIMEOUT = 30.0  # seconds; context is optional, so a slow lookup is dropped rather than waited for
 
 CITATION = re.compile(r"([A-Z][A-Za-z'’-]+(?: et al\.?| and [A-Z][A-Za-z'’-]+)?,? \(?(?:19|20)\d{2}\)?)")
 URL_TEXT = re.compile(r"\b(?:https?://|www\.)\S+|\b(?:doi\.org|arxiv\.org)/\S+", re.I)
@@ -62,6 +66,42 @@ async def gather_context(
 
     client = AsyncTavilyClient(api_key=tavily_api_key, project_id="unsaid", session_id=session_id)
 
+    # Context only adds names: if Tavily is down, out of credit or slow, the run goes on without it.
+    try:
+        await asyncio.wait_for(_source_page(tf, ledger, client, source_url, result), TAVILY_TIMEOUT * 2)
+    except (CreditExhausted, AuthFailure):
+        raise
+    except Exception as exc:
+        log.warning("context: source page skipped: %s", exc)
+
+    async def look_up(citation: str) -> None:
+        try:
+            found = await asyncio.wait_for(
+                client.search(citation[:380], search_depth="basic", max_results=3, include_usage=True),
+                TAVILY_TIMEOUT,
+            )
+        except Exception as exc:
+            log.warning("context: citation lookup skipped: %s", exc)
+            return
+        top = next((r for r in found.get("results", []) if r.get("score", 0) >= 0.5), None)
+        if top:
+            result.sources.append(
+                Source(
+                    url=top["url"],
+                    title=top.get("title", ""),
+                    request_id=found.get("request_id", ""),
+                    used_for=f"citation: {citation}",
+                )
+            )
+            result.names.extend(re.findall(r"[A-Z][A-Za-z'’-]+", citation))
+
+    await asyncio.gather(*(look_up(c) for c in citations_in(on_screen_texts)))
+    return result
+
+
+async def _source_page(
+    tf: TokenFactory, ledger: Ledger, client, source_url: str | None, result: ContextResult
+) -> None:
     if source_url:
         page = await client.extract(
             urls=[source_url], extract_depth="basic", format="markdown", include_usage=True
@@ -90,20 +130,3 @@ async def gather_context(
                     used_for="source page names",
                 )
             )
-
-    async def look_up(citation: str) -> None:
-        found = await client.search(citation[:380], search_depth="basic", max_results=3, include_usage=True)
-        top = next((r for r in found.get("results", []) if r.get("score", 0) >= 0.5), None)
-        if top:
-            result.sources.append(
-                Source(
-                    url=top["url"],
-                    title=top.get("title", ""),
-                    request_id=found.get("request_id", ""),
-                    used_for=f"citation: {citation}",
-                )
-            )
-            result.names.extend(re.findall(r"[A-Z][A-Za-z'’-]+", citation))
-
-    await asyncio.gather(*(look_up(c) for c in citations_in(on_screen_texts)))
-    return result

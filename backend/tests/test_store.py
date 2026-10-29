@@ -20,3 +20,29 @@ def test_spend_and_rate_counters(tmp_path):
     store.create_run("a", "s1", "public", "t", "9.9.9.9")
     assert store.count_recent(session="s1", seconds=60) == 1
     assert store.count_recent(ip="9.9.9.9", seconds=60) == 1
+
+
+def test_old_media_is_purged_but_results_stay(tmp_path):
+    import os
+    import time
+
+    store = Store(tmp_path)
+    run = store.run_dir("a")
+    run.mkdir(parents=True)
+    for name in ("source.mp4", "audio.wav", "s1_0.jpg", "result.json", "descriptions.vtt"):
+        (run / name).write_text("x")
+    old = time.time() - 25 * 3600
+    for name in ("source.mp4", "audio.wav", "s1_0.jpg", "result.json"):
+        os.utime(run / name, (old, old))
+    assert store.purge_media(24 * 3600) == 3
+    assert sorted(p.name for p in run.iterdir()) == ["descriptions.vtt", "result.json"]
+
+
+def test_pending_runs_are_counted_per_browser_or_address(tmp_path):
+    store = Store(tmp_path)
+    store.create_run("a", "s1", "public", "t", "9.9.9.9")
+    assert store.count_pending(session="s1", ip="1.1.1.1") == 1
+    assert store.count_pending(session="s2", ip="9.9.9.9") == 1
+    assert store.count_pending(session="s2", ip="") == 0
+    store.update_run("a", status="done")
+    assert store.count_pending(session="s1", ip="9.9.9.9") == 0

@@ -73,3 +73,23 @@ async def test_no_key_means_no_calls():
         StubTF(), Ledger(), "", source_url="https://x", on_screen_texts=[], session_id="s"
     )
     assert result.names == [] and result.sources == []
+
+
+async def test_a_tavily_failure_leaves_the_run_without_context(monkeypatch):
+    class Broken(FakeTavily):
+        async def extract(self, urls, **kwargs):
+            raise RuntimeError("432: usage limit exceeded")
+
+        async def search(self, query, **kwargs):
+            raise TimeoutError
+
+    monkeypatch.setitem(sys.modules, "tavily", types.SimpleNamespace(AsyncTavilyClient=Broken))
+    result = await context.gather_context(
+        StubTF(),
+        Ledger(),
+        "tvly-test",
+        source_url="https://commons.wikimedia.org/wiki/File:x.webm",
+        on_screen_texts=["Figure from Vaswani et al., 2017"],
+        session_id="s",
+    )
+    assert result.names == [] and result.sources == []
