@@ -126,6 +126,8 @@ def _publish(args: argparse.Namespace) -> None:
         "license_url": args.license_url,
         "source_url": args.source_url,
         "duration": result["video"]["duration"],
+        "run_seconds": round(result.get("timings", {}).get("total", 0)),
+        "provider": result.get("provider", ""),
     }
     if args.hero:
         start, end = (float(x) for x in args.hero.split(","))

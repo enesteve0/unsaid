@@ -186,6 +186,8 @@ export interface SampleInfo {
   source_url: string
   duration: number
   hero?: { start: number; end: number; moment_id?: string }
+  run_seconds?: number
+  provider?: string
 }
 
 export interface StageEvent {

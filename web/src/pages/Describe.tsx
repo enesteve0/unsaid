@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { api, type Health } from '../api'
+import { api, fmtTime, type Health } from '../api'
 import { BacklogPanel } from '../components/BacklogPanel'
 import { RunProgress } from '../components/RunProgress'
 import type { SampleInfo } from '../types'
@@ -76,6 +76,7 @@ export function Describe() {
   }
 
   const paused = health?.demo_mode === 'recorded'
+  const timed = samples.find((s) => s.run_seconds && s.provider === 'tokenfactory')
 
   return (
     <section aria-labelledby="describe-title" style={{ paddingTop: 48 }}>
@@ -83,11 +84,12 @@ export function Describe() {
         <div>
           <p className="eyebrow">Describe a lecture</p>
           <h1 id="describe-title" style={{ fontSize: 'clamp(2.4rem, 5vw, 4rem)' }}>
-            Your clip, described in a couple of minutes.
+            Your clip, described in a few minutes.
           </h1>
           <p>
             Up to 3 minutes of lecture video. You will see every stage, which model did it and what it cost, and you can stop at
             any time. Longer lectures go to the overnight backlog job.
+            {timed && ` The ${fmtTime(timed.duration)} example took ${fmtTime(timed.run_seconds ?? 0)} from upload to finished track.`}
           </p>
         </div>
       </div>
