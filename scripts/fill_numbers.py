@@ -176,6 +176,8 @@ def main() -> int:
 
     report = json.loads(args.report.read_text()) if args.report.exists() else {"available": False}
     if report.get("available"):
+        if report.get("complete") is False:
+            problems.append(f"{args.report.name} is partial: the evaluation did not finish every clip")
         if report.get("provider") != "tokenfactory" and not args.allow_prototype:
             problems.append(
                 f"{args.report.name} was not made on Token Factory (provider {report.get('provider')!r})"

@@ -125,13 +125,12 @@ async def coverage(
 ) -> tuple[float, list[float]]:
     if not labels:
         return float("nan"), []
-    scores: list[float] = []
-    for label in labels:
+
+    async def judge(label: dict) -> float:
         # Describers often voice a visual when it appears, a few seconds before the speaker points at it.
         nearby = [c.text for c in cues if label["t"] - 12 <= c.start <= label["t"] + 15]
         if not nearby:
-            scores.append(0.0)
-            continue
+            return 0.0
         verdict = await tf.chat(
             Role.REASON,
             [
@@ -150,7 +149,9 @@ async def coverage(
             constrain=False,
             max_tokens=12000,
         )
-        scores.append({"yes": 1.0, "partial": 0.5, "no": 0.0}[verdict.parsed.verdict])  # type: ignore[union-attr]
+        return {"yes": 1.0, "partial": 0.5, "no": 0.0}[verdict.parsed.verdict]  # type: ignore[union-attr]
+
+    scores = list(await asyncio.gather(*(judge(label) for label in labels)))
     return sum(scores) / len(scores), scores
 
 
@@ -379,6 +380,7 @@ def main(argv: list[str] | None = None) -> None:
         default=1,
         help="describe every clip this many times and pool the runs (models vary)",
     )
+    parser.add_argument("--jobs", type=int, default=3, help="clips described at the same time")
     args = parser.parse_args(argv)
     clips = json.loads(Path(args.clips).read_text())
     out = Path(args.out)
@@ -386,37 +388,67 @@ def main(argv: list[str] | None = None) -> None:
     tf = TokenFactory(settings)
     asr = SpeechRecognizer(Path("models"))
 
+    total = len(clips) * args.repeat
+
+    def write(results: list[dict]) -> dict:
+        report = build_report(results, args.repeat, settings.provider)
+        report["complete"] = len(results) == total
+        Path(args.report).write_text(json.dumps(report, indent=1))
+        return report
+
     async def run_all() -> list[dict]:
-        results = []
-        for run in range(1, args.repeat + 1):
-            for clip in clips:  # sequential: keeps rate limits and the cost ledger easy to read
-                print(
-                    f"→ {clip['id']}" + (f" (run {run} of {args.repeat})" if args.repeat > 1 else ""),
-                    flush=True,
-                )
+        results: list[dict] = []
+        slots = asyncio.Semaphore(args.jobs)
+
+        async def one(run: int, clip: dict) -> None:
+            async with slots:
+                name = clip["id"] + (f" (run {run} of {args.repeat})" if args.repeat > 1 else "")
+                print(f"→ {name}", flush=True)
                 workdir = out / f"run{run}" if args.repeat > 1 else out
-                results.append({**await evaluate_clip(tf, asr, clip, workdir), "run": run})
+                try:
+                    row = await evaluate_clip(tf, asr, clip, workdir)
+                except (CreditExhausted, AuthFailure):
+                    raise
+                except Exception as exc:  # one clip's failure must not lose every other clip's run
+                    row = {
+                        "id": clip["id"],
+                        "title": clip["title"],
+                        "skipped": f"{type(exc).__name__}: {exc}",
+                    }
+                results.append({**row, "run": run})
+                write(results)  # saved after every clip, so an interruption keeps what is done
+                print(f"✓ {name} ({len(results)} of {total})", flush=True)
+
+        await asyncio.gather(*(one(run, clip) for run in range(1, args.repeat + 1) for clip in clips))
         return results
 
-    results = asyncio.run(run_all())
+    report = write(asyncio.run(run_all()))
+    print(json.dumps(report.get("systems", []), indent=1))
+
+
+def build_report(results: list[dict], repeat: int, provider: str) -> dict:
     skipped = [r for r in results if "skipped" in r]
-    done = [r for r in results if "skipped" not in r]
+    done = sorted((r for r in results if "skipped" not in r), key=lambda r: (r["run"], r["id"]))
+    if not done:
+        return {
+            "available": False,
+            "skipped": [{"id": r["id"], "run": r["run"], "reason": r["skipped"]} for r in skipped],
+        }
     report = aggregate(done)
-    report["runs"] = args.repeat
-    report["provider"] = settings.provider
-    if args.repeat > 1:
+    report["runs"] = repeat
+    report["provider"] = provider
+    if repeat > 1:
         report["per_run"] = [
             {"run": run, "systems": summarize(subset)}
-            for run in range(1, args.repeat + 1)
+            for run in range(1, repeat + 1)
             if (subset := [r for r in done if r["run"] == run])
         ]
         report["notes"].append(
-            f"Every clip was described {args.repeat} times, because model outputs vary from run to run; the "
+            f"Every clip was described {repeat} times, because model outputs vary from run to run; the "
             "metrics pool all runs, and per_run shows each run on its own."
         )
     report["skipped"] = [{"id": r["id"], "run": r["run"], "reason": r["skipped"]} for r in skipped]
-    Path(args.report).write_text(json.dumps(report, indent=1))
-    print(json.dumps(report["systems"], indent=1))
+    return report
 
 
 if __name__ == "__main__":

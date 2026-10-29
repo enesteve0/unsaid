@@ -57,3 +57,16 @@ def test_repeated_runs_pool_metrics_but_count_each_clip_once():
 def test_coverage_is_the_share_of_all_labelled_moments_not_a_mean_of_clips():
     report = aggregate([clip("a", "dev", 1.0, labels=1), clip("b", "dev", 0.0, labels=7)])
     assert unsaid_metrics(report["systems"])["coverage"] == 1 / 8
+
+
+def test_a_partial_evaluation_keeps_the_finished_clips_and_lists_the_skipped_ones():
+    from eval.run_eval import build_report
+
+    rows = [
+        clip("a", "dev", 1.0) | {"run": 1},
+        {"id": "b", "title": "b", "skipped": "TimeoutError: ", "run": 1},
+    ]
+    report = build_report(rows, repeat=1, provider="tokenfactory")
+    assert report["clips"] == 1 and report["provider"] == "tokenfactory"
+    assert report["skipped"] == [{"id": "b", "run": 1, "reason": "TimeoutError: "}]
+    assert build_report(rows[1:], repeat=1, provider="tokenfactory")["available"] is False

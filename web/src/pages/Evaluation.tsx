@@ -24,6 +24,8 @@ interface Report {
   clips?: number
   minutes?: number
   runs?: number
+  complete?: boolean
+  provider?: string
   systems?: SystemRow[]
   splits?: Split[]
   metric_labels?: MetricLabels
@@ -106,6 +108,9 @@ export function Evaluation() {
             {report.clips} {report.clips === 1 ? 'clip' : 'clips'} · {report.minutes?.toFixed(1)} minutes of video
             {(report.runs ?? 1) > 1 ? ` · each described ${report.runs} times` : ''} · generated {report.generated_at}
           </p>
+          {report.complete === false && (
+            <p className="notice">Partial results: the evaluation is still running or stopped early. The numbers cover the clips listed.</p>
+          )}
           {systems.length === 2 && (
             <div className="panel" style={{ marginBottom: 22 }}>
               <ComparisonBars
