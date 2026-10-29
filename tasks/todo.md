@@ -59,7 +59,8 @@ Without keys (Claude):
 Key day, in order (owner steps marked **owner**):
 
 1. **owner:** copy the Token Factory key, then `! printf 'NEBIUS_API_KEY=%s\n' "$(pbpaste)" >> .env`; the same for
-   `TAVILY_API_KEY`. Claude appends a random `JUDGE_CODE` and checks the keys load without printing them.
+   `TAVILY_API_KEY`. (`.env` already holds `PROVIDER=tokenfactory` and a random `JUDGE_CODE`, created Oct 29.)
+   Claude checks the keys load without printing them.
 2. `STEP=smoke scripts/tf_day.sh` (about 5 min) → `docs/EVIDENCE.md`. Stop and diagnose on any failure.
 3. `STEP=samples scripts/tf_day.sh` (about 15 min). Check the hero cue against its frame (counts!) before choosing
    `--hero`; republish if needed; commit `samples/`.
