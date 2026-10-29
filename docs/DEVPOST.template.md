@@ -77,7 +77,8 @@ asked to place descriptions in pauses):
 - **Video pauses for extended descriptions:** Unsaid {{unsaid.pauses}} per minute; one-shot {{oneshot.pauses}}.
 - **Model cost per minute of video:** Unsaid {{unsaid.usd_per_min}}; one-shot {{oneshot.usd_per_min}}.
 
-{{coverage_sentence}}
+{{coverage_sentence}} One caveat: unsupported claims are scored by the same Super VL verifier that Unsaid's own
+check step answers to, so that row favours Unsaid; invented numbers and names are counted by code.
 
 {{dev_clips_word}} of the clips were also used to develop Unsaid's prompts. The other {{heldout_clips}} were labelled blind
 and never used to tune them (Unsaid ran on them once, before one later change to where paused descriptions start), and
