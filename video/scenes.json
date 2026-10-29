@@ -59,7 +59,7 @@
           "click": "role=button[name=/Explaining Fourier analysis/]"
         },
         {
-          "wait_for": "text=Describing",
+          "wait_for": "[role=status]",
           "timeout": 30000
         },
         {
