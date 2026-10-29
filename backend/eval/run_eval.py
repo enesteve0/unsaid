@@ -364,7 +364,8 @@ def aggregate(clips: list[dict]) -> dict:
             "Coverage labels were written by the builder after viewing the frames at each pointing moment; Nemotron 3 Ultra judges them.",
             provenance + " No phrase from any clip appears in a prompt.",
             "The same Super VL verifier checks both systems' descriptions against the frames; descriptions it could not "
-            "check are excluded from that rate and counted separately.",
+            "check are excluded from that rate and counted separately. Unsaid's own check-and-correct step answers to "
+            "this verifier, so this rate favours Unsaid; invented numbers and names are counted by code instead.",
         ],
     }
 
