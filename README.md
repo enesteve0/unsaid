@@ -6,7 +6,7 @@ Lecturers point instead of speaking: *“…and as you can see, this curve tells
 student hears the sentence but never learns what the curve shows. Unsaid watches a lecture video, finds the moments
 where the speech relies on the picture, and describes what is unsaid in the pauses, without ever talking over the
 lecturer. It runs on NVIDIA Nemotron models served by **Nebius Token Factory**, with NVIDIA Parakeet speech recognition
-and an overnight backlog job on **Nebius Serverless**.
+on CPU and an overnight backlog job built for **Nebius Serverless Jobs**.
 
 Built for the [Nebius x NVIDIA Global AI Hackathon](https://nebiusglobalaihackathon.devpost.com/), *Best Apps and Agents* track.
 
@@ -29,7 +29,7 @@ Built for the [Nebius x NVIDIA Global AI Hackathon](https://nebiusglobalaihackat
    Final Cut Pro markers, or everything as JSON.
 5. **Fix it at the source.** For each pointing moment, Unsaid suggests a sentence the lecturer could say next time so
    the words carry the picture (W3C calls this integrated description).
-6. **Run the backlog overnight.** A Nebius Serverless Job describes a whole playlist, resumes where it stopped,
+6. **Run the backlog overnight.** A batch job, built for Nebius Serverless Jobs, describes a whole playlist, resumes where it stopped,
    respects a dollar cap and leaves a digest: how many lectures are ready and how many need a person.
 
 ## How it works

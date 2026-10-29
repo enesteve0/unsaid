@@ -32,7 +32,7 @@ says:
 - Every description is **checked by code and re-checked against the frames**, and shows the evidence.
 - It exports a WebVTT description track, captions, a transcript with descriptions inline, and Final Cut Pro markers.
 - It suggests **the sentence the lecturer could say next time**, so the fix happens at the source.
-- Long lectures run **overnight as a Nebius Serverless Job** with a dollar cap.
+- {{backlog_line}}
 
 Try the 30-second test on the home page: hear a clip as a blind student does, then hear it with Unsaid.
 
@@ -126,7 +126,7 @@ fix happens before the recording, which is why Unsaid coaches the lecturer.
 
 ## Built with
 
-nebius-token-factory, nebius-serverless, nvidia-nemotron, nemotron-3-ultra, nemotron-3.5-super-vl,
+nebius-token-factory, {{hosting_tags}}nvidia-nemotron, nemotron-3-ultra, nemotron-3.5-super-vl,
 nemotron-3.5-lightning, nemotron-3-nano, nvidia-parakeet, onnxruntime, tavily, python, fastapi, pydantic, ffmpeg,
 react, typescript, vite, playwright, axe-core, docker
 

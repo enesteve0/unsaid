@@ -14,6 +14,7 @@ import argparse
 import json
 import re
 import sys
+import urllib.request
 from pathlib import Path
 
 REPO = Path(__file__).resolve().parent.parent
@@ -123,6 +124,23 @@ def sample_values(sample: dict) -> dict[str, str]:
     }
 
 
+def deployment_values(base: str) -> dict[str, str]:
+    """What the text may say about hosting, as the deployed app reports it (claims follow what actually runs)."""
+
+    def get(path: str) -> dict:
+        with urllib.request.urlopen(base + path, timeout=20) as response:
+            return json.load(response)
+
+    host, backlog = get("/api/health").get("host", ""), get("/api/backlog").get("available", False)
+    on_nebius = "Nebius" in host
+    return {
+        "backlog_line": "Long lectures run **overnight as a Nebius Serverless Job** with a dollar cap."
+        if backlog
+        else "Long lectures go to an **overnight batch job** (built for Nebius Serverless Jobs) with a dollar cap.",
+        "hosting_tags": "nebius-ai-cloud, nebius-serverless, " if on_nebius else "fly.io, ",
+    }
+
+
 def readme_block(report: dict, values: dict[str, str]) -> str:
     m = metrics(report["systems"])
     lines = [
@@ -172,6 +190,7 @@ def main() -> int:
     values: dict[str, str] = {"repo_url": args.repo_url}
     if args.demo_url:
         values["demo_url"] = args.demo_url.rstrip("/")
+        values |= deployment_values(args.demo_url.rstrip("/"))
     problems: list[str] = []
 
     report = json.loads(args.report.read_text()) if args.report.exists() else {"available": False}
