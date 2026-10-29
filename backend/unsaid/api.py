@@ -166,6 +166,16 @@ def create_app(settings: Settings | None = None) -> FastAPI:
             )
         return response
 
+    def live_status(lane: str) -> str:
+        """'live', or why a lane serves only the recorded examples: paused, ended or judges_only."""
+        if settings.demo_mode == "recorded" or queue.paused_for(lane):
+            return "paused"
+        if settings.live_until and time.strftime("%Y-%m-%d", time.gmtime()) > settings.live_until:
+            return "ended"
+        if lane != "judge" and not settings.public_live:
+            return "judges_only"
+        return "live"
+
     def lane_of(request: Request) -> str:
         token = request.cookies.get(JUDGE_COOKIE, "")
         return "judge" if judge_token and secrets.compare_digest(token, judge_token) else "public"
@@ -173,14 +183,14 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     # ---- status ----------------------------------------------------------------------------------------------
 
     @app.get("/api/health")
-    async def health() -> dict[str, Any]:
+    async def health(request: Request) -> dict[str, Any]:
+        status = live_status(lane_of(request))
         return {
             "ok": True,
             "provider": settings.provider,
             "host": settings.host,
-            "demo_mode": "recorded"
-            if (settings.demo_mode == "recorded" or queue.paused_for("public"))
-            else "live",
+            "demo_mode": "live" if status == "live" else "recorded",
+            "live_status": status,
             "models": model_status["models"],
             "models_checked": model_status["checked"],
             "live_runs": queue.active(),
@@ -237,9 +247,15 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         title: Annotated[str, Form()] = "My lecture",
         source_url: Annotated[str | None, Form()] = None,
     ) -> dict[str, Any]:
-        if settings.demo_mode == "recorded" or queue.paused_for(lane_of(request)):
+        status = live_status(lane_of(request))
+        if status != "live":
             raise HTTPException(
-                503, "Live describing is paused right now. The recorded examples show real runs."
+                503,
+                {
+                    "judges_only": "During the hackathon, live describing is open to judges (access code). "
+                    "The examples are real recorded runs.",
+                    "ended": "Live describing has ended for this demo. The examples are real recorded runs.",
+                }.get(status, "Live describing is paused right now. The recorded examples show real runs."),
             )
         if file is None and not sample_id:
             raise HTTPException(400, "Upload a video or choose a sample.")

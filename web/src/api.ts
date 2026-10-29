@@ -39,6 +39,7 @@ export interface Health {
   ok: boolean
   provider: string
   host?: string
+  live_status?: 'live' | 'paused' | 'ended' | 'judges_only'
   demo_mode: 'live' | 'recorded'
   models: Record<string, string>
   stages: { key: string; label: string; detail: string }[]

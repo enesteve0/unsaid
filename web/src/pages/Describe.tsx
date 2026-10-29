@@ -70,6 +70,7 @@ export function Describe() {
     try {
       const res = await api.judge(code)
       setLane(res.lane)
+      api.health().then(setHealth).catch(() => undefined)  // the judges' lane may be live when the public one is not
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Invalid code')
     }
@@ -95,7 +96,13 @@ export function Describe() {
       </div>
 
       {paused && (
-        <p className="notice">Live describing is paused right now. The examples below are real recorded runs and still work.</p>
+        <p className="notice">
+          {health?.live_status === 'judges_only'
+            ? 'During the hackathon, live describing is open to judges: unlock it with the access code below. The examples are real recorded runs.'
+            : health?.live_status === 'ended'
+              ? 'Live describing has ended for this demo. The examples below are real recorded runs and still work.'
+              : 'Live describing is paused right now. The examples below are real recorded runs and still work.'}
+        </p>
       )}
       {error && (
         <p className="notice error" role="alert">

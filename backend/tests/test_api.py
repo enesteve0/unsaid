@@ -144,3 +144,32 @@ def test_every_queued_run_holds_its_reserve_against_the_cap(app):
     assert client.post("/api/runs", data={"sample_id": "demo"}).status_code == 200  # its reserve still fits
     second = client.post("/api/runs", data={"sample_id": "demo"})  # the first is queued and holds its reserve
     assert second.status_code == 429 and "budget" in second.json()["detail"]
+
+
+def test_live_runs_can_be_limited_to_judges_and_end_on_a_date(tmp_path, monkeypatch):
+    async def probe(path):
+        return VideoInfo(duration=60.0, width=1280, height=720, fps=25.0, has_audio=True)
+
+    monkeypatch.setattr(jobs.RunQueue, "submit", lambda self, run_id, video, options, lane: None)
+    monkeypatch.setattr(api.media, "probe", probe)
+    sample = tmp_path / "samples" / "demo"
+    sample.mkdir(parents=True)
+    (sample / "video.mp4").write_bytes(b"x")
+    (tmp_path / "samples" / "manifest.json").write_text(json.dumps([{"id": "demo", "title": "Demo"}]))
+    base = dict(
+        _env_file=None, nebius_api_key="test", data_dir=tmp_path / "data", samples_dir=tmp_path / "samples"
+    )
+    base |= dict(web_dist=tmp_path / "none", judge_code="code-1234")
+
+    client = TestClient(api.create_app(Settings(**base, public_live=False)))
+    assert client.get("/api/health").json()["live_status"] == "judges_only"
+    refused = client.post("/api/runs", data={"sample_id": "demo"})
+    assert refused.status_code == 503 and "judges" in refused.json()["detail"]
+    client.post("/api/judge", json={"code": "code-1234"})
+    assert client.get("/api/health").json()["live_status"] == "live"
+    assert client.post("/api/runs", data={"sample_id": "demo"}).status_code == 200
+
+    ended = TestClient(api.create_app(Settings(**base, live_until="2026-01-01")))
+    ended.post("/api/judge", json={"code": "code-1234"})
+    assert ended.get("/api/health").json()["live_status"] == "ended"
+    assert ended.post("/api/runs", data={"sample_id": "demo"}).status_code == 503

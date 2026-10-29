@@ -85,6 +85,10 @@ class Settings(BaseSettings):
 
     # Access and spend controls (see README "Operations").
     judge_code: str = ""
+    # Live runs for everyone, or only for the judges' lane (access code); the examples always work.
+    public_live: bool = True
+    # Last day (UTC, YYYY-MM-DD) with live runs, e.g. when free model credit expires; empty for no end.
+    live_until: str = ""
     public_daily_usd: float = 0.50
     judge_daily_usd: float = 1.50
     monthly_ceiling_usd: float = 30.0
