@@ -151,8 +151,9 @@ nebius ai job create --name unsaid-backlog --image <image> --platform cpu-d3 --p
   a visible queue, never a single-user lock.
 - Daily and monthly spend caps. Every queued or running run reserves an estimate against them, and failed or
   stopped runs are charged for the calls they made.
-- If Token Factory fails repeatedly (credit, keys, every model in a chain), live runs pause for a while and the
-  clearly labelled recorded examples remain; `DEMO_MODE=recorded` does the same on purpose.
+- If the models keep failing, public live runs pause for ten minutes while the judges' lane keeps trying; if
+  Token Factory credit runs out or a key is rejected, all live runs pause. The clearly labelled recorded examples
+  always remain, and `DEMO_MODE=recorded` does the same on purpose.
 - Uploaded videos, and the audio, clips and frames taken from them, are deleted after 24 hours.
 
 ## Limitations
