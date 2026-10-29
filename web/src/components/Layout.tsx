@@ -1,8 +1,13 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { NavLink, Outlet } from 'react-router-dom'
 import { api } from '../api'
 
 export function Layout() {
+  const [host, setHost] = useState('')
+  useEffect(() => {
+    api.health().then((h) => setHost(h.host ?? '')).catch(() => undefined)
+  }, [])
+
   // A judge link like /?judge=1&code=XYZ unlocks the reserved judging lane, then the code leaves the address bar.
   useEffect(() => {
     const url = new URL(window.location.href)
@@ -37,8 +42,8 @@ export function Layout() {
         </main>
         <footer className="site-footer">
           <span>
-            Unsaid runs NVIDIA Nemotron models on Nebius Token Factory and NVIDIA Parakeet speech recognition on Nebius
-            AI Cloud. Context lookups by Tavily.
+            Unsaid runs NVIDIA Nemotron models on Nebius Token Factory and NVIDIA Parakeet speech recognition
+            {host ? ` on ${host}` : ' on CPU'}. Context lookups by Tavily.
           </span>
           <span>
             Descriptions are drafts with checks, not a replacement for professional describers. Uploads are deleted

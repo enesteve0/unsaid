@@ -75,7 +75,7 @@ export function About() {
           <li>Descriptions are drafts with checks. A person should review anything marked “needs review” before publishing.</li>
           <li>English only: the Nemotron models used here do not support other languages yet.</li>
           <li>Math notation is read as printed; complex derivations need a human describer.</li>
-          <li>Live runs take clips up to 3 minutes; longer lectures run overnight as a Nebius Serverless Job.</li>
+          <li>Live runs take clips up to 3 minutes; longer lectures go to the overnight backlog job, built for Nebius Serverless Jobs.</li>
         </ul>
       </section>
 

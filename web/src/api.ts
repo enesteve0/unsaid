@@ -38,6 +38,7 @@ export interface Backlog {
 export interface Health {
   ok: boolean
   provider: string
+  host?: string
   demo_mode: 'live' | 'recorded'
   models: Record<string, string>
   stages: { key: string; label: string; detail: string }[]

@@ -16,8 +16,8 @@ export function BacklogPanel() {
         Overnight backlog
       </h2>
       <p style={{ color: 'var(--paper-dim)' }}>
-        Longer lectures are described by a batch job on Nebius Serverless: it resumes where it stopped, never spends past
-        its dollar cap, and leaves a digest for the morning.
+        Longer lectures are described by a batch job built for Nebius Serverless Jobs: it resumes where it stopped, never
+        spends past its dollar cap, and leaves a digest for the morning.
       </p>
       {!backlog?.available ? (
         <p className="mono" style={{ color: 'var(--muted)' }}>

@@ -87,7 +87,7 @@ export function Describe() {
           </h1>
           <p>
             Up to 3 minutes of lecture video. You will see every stage, which model did it and what it cost, and you can stop at
-            any time. Longer lectures go to the overnight backlog on Nebius Serverless.
+            any time. Longer lectures go to the overnight backlog job.
           </p>
         </div>
       </div>

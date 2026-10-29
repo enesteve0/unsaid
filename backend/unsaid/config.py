@@ -66,6 +66,8 @@ class Settings(BaseSettings):
     data_dir: Path = Path("data")
     samples_dir: Path = Path("../samples")
     web_dist: Path | None = None  # the built web app; defaults to web/dist in the repository
+    # Where this server runs, shown in the footer ("Nebius AI Cloud", "Fly.io"); empty when unknown (local).
+    host: str = ""
     # The Serverless Job writes digest.json here (a mounted bucket in production).
     backlog_dir: Path = Path("data/backlog")
     eval_report: Path = Path("eval/report.json")

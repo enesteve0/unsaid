@@ -28,7 +28,7 @@ if [ -n "$EXISTING" ]; then
   nebius ai endpoint restart --id "$EXISTING"
 else
   ARGS=(--name "$NAME" --image "$IMAGE" --platform cpu-d3 --preset "$PRESET" --disk-size 20Gi
-        --container-port 8080 --auth none
+        --container-port 8080 --auth none --env HOST="Nebius AI Cloud"
         --env-secret NEBIUS_API_KEY=unsaid-secrets --env-secret TAVILY_API_KEY=unsaid-secrets
         --env-secret JUDGE_CODE=unsaid-secrets)
   if [ -n "${FILESYSTEM_ID:-}" ]; then

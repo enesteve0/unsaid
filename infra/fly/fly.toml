@@ -8,6 +8,7 @@
   DATA_DIR = "/data"
   DEMO_MODE = "live"
   PROVIDER = "tokenfactory"
+  HOST = "Fly.io"
 
 [[mounts]]
   source = "unsaid_data"

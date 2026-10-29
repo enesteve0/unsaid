@@ -175,6 +175,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         return {
             "ok": True,
             "provider": settings.provider,
+            "host": settings.host,
             "demo_mode": "recorded" if (settings.demo_mode == "recorded" or queue.paused) else "live",
             "models": model_status["models"],
             "models_checked": model_status["checked"],
