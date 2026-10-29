@@ -4,7 +4,8 @@ import { api, sampleMedia } from '../api'
 import { Player, type Mode, type PlayerHandle } from '../components/Player'
 import type { RunResult } from '../types'
 
-/** Full-screen player for presenting in a room (and for recording the demo): /cinema/:id?mode=heard&start=&end= */
+/** Full-screen player for presenting in a room (and for recording the demo): /cinema/:id?mode=heard&start=&end=
+ * With voice=off, hold=<seconds> sets how long a paused description holds the video (the recorded voice's length). */
 export function Cinema() {
   const { id = '' } = useParams()
   const [params] = useSearchParams()
@@ -24,7 +25,17 @@ export function Cinema() {
   return (
     <div className="cinema">
       {params.get('caption') && <p className="cinema-caption">{params.get('caption')}</p>}
-      {result && <Player result={result} media={sampleMedia(id)} mode={mode} window={clip} handle={player} voiceOff={params.get('voice') === 'off'} />}
+      {result && (
+        <Player
+          result={result}
+          media={sampleMedia(id)}
+          mode={mode}
+          window={clip}
+          handle={player}
+          voiceOff={params.get('voice') === 'off'}
+          holdSeconds={params.get('hold') ? Number(params.get('hold')) : undefined}
+        />
+      )}
     </div>
   )
 }

@@ -17,18 +17,30 @@ const timingPath = join(out, 'timing.json')
 const timing = existsSync(timingPath) ? JSON.parse(readFileSync(timingPath)) : {}
 // Cold open: the full-screen player, first as a blind student hears it, then with Unsaid.
 const co = script.cold_open
+// A paused (extended) description holds the picture for as long as its recorded voice; assemble.py inserts the
+// same silence into the lecture audio there.
+const linesPath = new URL('../../video/build/tts/lines.json', import.meta.url)
+const describer = existsSync(linesPath) ? JSON.parse(readFileSync(linesPath)).describer : null
+const hold = describer?.extended ? describer.seconds + 0.4 : 0
 for (const [id, mode, caption] of [['cold_heard', 'heard', co.first_card], ['cold_unsaid', 'unsaid', '']]) {
   if (only && !only.includes(id)) continue
   const context = await browser.newContext({ viewport: { width, height }, deviceScaleFactor: 1, recordVideo: { dir: out, size: { width, height } } })
   const t0 = Date.now()
   const page = await context.newPage()
-  const q = new URLSearchParams({ mode, voice: 'off', start: co.lecture_start, end: co.lecture_end, ...(caption ? { caption } : {}) })
+  const q = new URLSearchParams({
+    mode,
+    voice: 'off',
+    start: co.lecture_start,
+    end: co.lecture_end,
+    ...(caption ? { caption } : {}),
+    ...(mode === 'unsaid' && hold ? { hold: hold.toFixed(2) } : {}),
+  })
   await page.goto(`${base}/cinema/${script.sample}?${q}`, { waitUntil: 'load' })
   await page.getByRole('button', { name: 'Play' }).waitFor({ timeout: 30000 })
   await page.waitForTimeout(1500)
   await page.getByRole('button', { name: 'Play' }).click()
   timing[id] = (Date.now() - t0) / 1000
-  await page.waitForTimeout((co.lecture_end - co.lecture_start) * 1000 + (mode === 'unsaid' ? 6000 : 1500))
+  await page.waitForTimeout((co.lecture_end - co.lecture_start) * 1000 + (mode === 'unsaid' ? 6000 + hold * 1000 : 1500))
   const video = page.video()
   await context.close()
   renameSync(await video.path(), join(out, `${id}.webm`))

@@ -73,12 +73,24 @@ def scene(rec: Path, narration: Path, out: Path, speedup: bool) -> None:
     )
 
 
-def cold(rec: Path, play_at: float, lecture: Path, seconds: float, out: Path, describer: Path | None = None, cue_offset: float = 0.0, tail: float = 1.2) -> None:
-    """The full-screen player recording, with the lecture audio (and the description voice) laid back on."""
-    total = play_at + seconds + tail
+def cold(rec: Path, play_at: float, lecture: Path, seconds: float, out: Path, describer: Path | None = None, cue_offset: float = 0.0, tail: float = 1.2, hold: float = 0.0) -> None:
+    """The full-screen player recording, with the lecture audio (and the description voice) laid back on.
+
+    `hold`: a paused (extended) description stopped the picture for this long at cue_offset, so the lecture audio
+    stops there too, and the description is heard in that silence, never over the lecturer.
+    """
+    total = play_at + seconds + hold + tail
     inputs = ["-i", str(rec), "-i", str(lecture)]
     delay = int(play_at * 1000)
-    audio = f"[1:a]adelay={delay}|{delay},apad[lec]"
+    if hold:
+        audio = (
+            f"[1:a]atrim=0:{cue_offset:.3f},asetpts=PTS-STARTPTS[l1];"
+            f"[1:a]atrim={cue_offset:.3f},asetpts=PTS-STARTPTS[l2];"
+            f"anullsrc=r=48000:cl=stereo,atrim=0:{hold:.3f}[gap];"
+            f"[l1][gap][l2]concat=n=3:v=0:a=1,adelay={delay}|{delay},apad[lec]"
+        )
+    else:
+        audio = f"[1:a]adelay={delay}|{delay},apad[lec]"
     mix = "[lec]"
     if describer is not None:
         inputs += ["-i", str(describer)]
@@ -112,8 +124,10 @@ def main() -> None:
     card(SEG / "02_question.mp4", 2.4, [(co["question"], "InstrumentSerif-Italic.ttf", 120, PAPER, 0)])
     parts.append(SEG / "02_question.mp4")
     cue_offset = lines["describer"]["cue_start"] - co["lecture_start"]
+    hold = lines["describer"]["seconds"] + 0.4 if lines["describer"].get("extended") else 0.0
+    tail = 1.2 if hold else max(1.2, lines["describer"]["seconds"] + cue_offset - seconds + 0.8)
     cold(BUILD / "rec" / "cold_unsaid.webm", timing["cold_unsaid"], lecture, seconds, SEG / "03_unsaid.mp4",
-         describer=Path(lines["describer"]["path"]), cue_offset=cue_offset, tail=max(1.2, lines["describer"]["seconds"] + cue_offset - seconds + 0.8))
+         describer=Path(lines["describer"]["path"]), cue_offset=cue_offset, tail=tail, hold=hold)
     parts.append(SEG / "03_unsaid.mp4")
     card(SEG / "04_title.mp4", 3.2, [
         ("Unsaid", "InstrumentSerif-Regular.ttf", 190, PAPER, -40),

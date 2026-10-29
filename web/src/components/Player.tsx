@@ -24,7 +24,12 @@ interface Props {
   compact?: boolean
   /** Show descriptions without speaking them (used when recording the demo; the voice is added afterwards). */
   voiceOff?: boolean
+  /** Without a voice, how long a paused (extended) description holds the video; by default, the time to read it. */
+  holdSeconds?: number
 }
+
+/** Time to hear a description read aloud at describer pace (2.5 words per second), with a short margin. */
+const readingSeconds = (text: string) => Math.max(1.5, text.split(/\s+/).filter(Boolean).length / 2.5 + 0.6)
 
 const MODE_LABEL: Record<Mode, string> = {
   heard: 'As heard',
@@ -32,7 +37,7 @@ const MODE_LABEL: Record<Mode, string> = {
   watch: 'Watch',
 }
 
-export function Player({ result, media, mode, onModeChange, window: clip, onTime, onCue, handle, compact, voiceOff }: Props) {
+export function Player({ result, media, mode, onModeChange, window: clip, onTime, onCue, handle, compact, voiceOff, holdSeconds }: Props) {
   const video = useRef<HTMLVideoElement>(null)
   const spoken = useRef(new Set<string>())
   const pausedForCue = useRef(false)
@@ -126,8 +131,11 @@ export function Player({ result, media, mode, onModeChange, window: clip, onTime
           }
           // Keep the text on screen for at least as long as it takes to say, even if speech ends early.
           const shownUntil = performance.now() + Math.max(due.end - due.start, 1.5) * 1000
+          // Without our own voice (recording, or a screen reader speaking instead), a paused description still holds
+          // the video for as long as it takes to hear it, so the lecture never resumes over it.
           const silent = voiceOff || output === 'reader'
-          const speak = silent ? (_: string, done: () => void) => window.setTimeout(done, (due.end - due.start) * 1000) : narrator.speak.bind(narrator)
+          const holdFor = due.extended ? (holdSeconds ?? readingSeconds(due.text)) : due.end - due.start
+          const speak = silent ? (_: string, done: () => void) => window.setTimeout(done, holdFor * 1000) : narrator.speak.bind(narrator)
           speak(due.text, () => {
             v.volume = 1
             const linger = Math.max(shownUntil - performance.now(), 0) + 600
@@ -143,7 +151,7 @@ export function Player({ result, media, mode, onModeChange, window: clip, onTime
     }
     raf = requestAnimationFrame(tick)
     return () => cancelAnimationFrame(raf)
-  }, [playing, describing, cues, clip, onTime, setCue, voiceOff, output])
+  }, [playing, describing, cues, clip, onTime, setCue, voiceOff, output, holdSeconds])
 
   useEffect(() => () => narrator.cancel(), [])
 

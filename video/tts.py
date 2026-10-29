@@ -89,7 +89,11 @@ def fill(text: str, report: dict, sample: dict, deployed: dict | None = None) ->
 
 
 def hero_cue(sample: dict, start: float, end: float) -> dict:
-    cues = [c for c in sample["cues"] if c["tier"] != "never" and start <= c["start"] <= end + 6]
+    cues = [
+        c
+        for c in sample["cues"]
+        if c["tier"] != "never" and not c.get("gate_failures") and start <= c["start"] <= end + 6
+    ]
     if not cues:
         raise SystemExit("no description inside the cold-open window; adjust cold_open in scenes.json")
     return cues[0]
@@ -123,6 +127,7 @@ def main() -> None:
         "seconds": round(len(audio) / rate, 3),
         "path": str(path),
         "cue_start": cue["start"],
+        "extended": cue.get("extended", False),  # the video pauses while it is spoken
     }
 
     # Round trip: does speech recognition hear what we meant? Catches mispronounced names before the edit.
