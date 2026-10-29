@@ -145,11 +145,15 @@ nebius ai job create --name unsaid-backlog --image <image> --platform cpu-d3 --p
 ## Operations (judging period)
 
 - Free, public, no sign-up. Each browser gets its own runs. Examples load instantly.
-- An access code (in the Devpost testing instructions) unlocks a reserved lane for judges.
-- Public lane: 3 live runs per browser per 10 minutes, 5 per IP per hour; a visible queue, never a single-user lock.
-- Daily and monthly spend caps; `DEMO_MODE=recorded` serves clearly labelled recorded runs if live inference is
-  unavailable.
-- Uploaded videos are deleted after 24 hours.
+- An access code (in the Devpost testing instructions) opens the judges' lane: a run slot that public runs never
+  use, and its own budget.
+- Public lane: one live run at a time per browser or address, 3 per browser per 10 minutes, 5 per address per hour;
+  a visible queue, never a single-user lock.
+- Daily and monthly spend caps. Every queued or running run reserves an estimate against them, and failed or
+  stopped runs are charged for the calls they made.
+- If Token Factory fails repeatedly (credit, keys, every model in a chain), live runs pause for a while and the
+  clearly labelled recorded examples remain; `DEMO_MODE=recorded` does the same on purpose.
+- Uploaded videos, and the audio, clips and frames taken from them, are deleted after 24 hours.
 
 ## Limitations
 
