@@ -40,21 +40,22 @@ Nine stages, four Nemotron models on Nebius Token Factory, each doing the one jo
 
 1. **Listen:** NVIDIA Parakeet TDT 0.6B v2 (ONNX, CPU) transcribes with word timings and finds every silence. Super VL
    has no audio input, so this is how Unsaid knows when it may speak.
-2. **Watch:** Nemotron 3.5 Super VL reads each segment as a low-frame-rate clip plus full-resolution stills, and returns
+2. **Segment:** code splits the video at slide changes and flags pointing phrases (“as you can see”, “this curve”).
+3. **Watch:** Nemotron 3.5 Super VL reads each segment as a low-frame-rate clip plus full-resolution stills, and returns
    strict JSON: slide text, charts with values, actions with times.
-3. **Resolve:** Nemotron 3 Nano decides what each “this” or “here” actually points at. It rejects figures of speech,
+4. **Resolve:** Nemotron 3 Nano decides what each “this” or “here” actually points at. It rejects figures of speech,
    hypotheticals and phrases about time.
-4. **Context:** Tavily reads the video’s own page and any works cited on slides, so names come from sources and never
+5. **Context:** Tavily reads the video’s own page and any works cited on slides, so names come from sources and never
    from faces.
-5. **Understand:** Nemotron 3 Ultra reads the whole lecture in one context: the transcript, every segment report and
+6. **Understand:** Nemotron 3 Ultra reads the whole lecture in one context: the transcript, every segment report and
    every silence with its word budget. It decides what is visual-only and how important it is, and drafts each
    description to fit its pause.
-6. **Write & fit:** code gates decide. A description must fit its silence (planned at 2.5 words per second, with guard
+7. **Write & fit:** code gates decide. A description must fit its silence (planned at 2.5 words per second, with guard
    bands) and must never overlap speech. It may use no number that isn’t printed on screen, no name without a source,
    and no “we see”. Nemotron 3.5 Lightning repairs failures; code trims; only essential facts may pause the video.
-7. **Check:** Super VL judges every claim against frames from that moment (supported, contradicted or not visible),
+8. **Check:** Super VL judges every claim against frames from that moment (supported, contradicted or not visible),
    which sets each description’s tier: ready, needs review or withheld.
-8. **Deliver:** tracks, transcript, markers and lecturer tips.
+9. **Deliver:** tracks, transcript, markers and lecturer tips.
 
 Every Token Factory call goes into a ledger with tokens, cached tokens, reasoning tokens, latency and cost. That
 gives each video a price ({{usd_per_min}} per minute of video in the evaluation) and a counterfactual: the same text
@@ -99,6 +100,10 @@ sets separately and lists where Unsaid still fails. No phrase from any clip appe
   longer shrink a description to a fragment.
 - **Requests that never answer.** A few requests hung until the client gave up. Every call now streams, so a stall
   is cut off after a minute without a chunk instead of after a three-minute budget.
+- **Counting is hard for every model in the loop.** On one run, Super VL read twenty sampled points as “bars 0
+  through 10 and 11 through 20”, Ultra turned that into “11 at 10, 9 at zero” (the frame shows ten and ten), and
+  the frame check passed it. Code cannot catch a plausible count; the Evaluation page lists such failures, and
+  tiers mark what a person should check.
 - **“This” is not always pointing.** “In the right polarity”, “at this point” and “students could look at the graph
   later” all match a naive lexicon; Nano filters them.
 
