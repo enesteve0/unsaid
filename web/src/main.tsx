@@ -10,6 +10,8 @@ import { Home } from './pages/Home'
 import { RunPage, SamplePage } from './pages/ResultPage'
 import './styles.css'
 
+const basename = import.meta.env.BASE_URL.replace(/\/$/, '')
+
 const router = createBrowserRouter([
   { path: '/cinema/:id', element: <Cinema /> },
   {
@@ -23,7 +25,7 @@ const router = createBrowserRouter([
       { path: '/about', element: <About /> },
     ],
   },
-])
+], { basename })
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>

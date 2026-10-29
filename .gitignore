@@ -23,3 +23,6 @@ backend/models/
 
 # Python bytecode (scripts/ is imported by the backend tests)
 __pycache__/
+
+# Static demo build (infra/pages/build.sh)
+site/

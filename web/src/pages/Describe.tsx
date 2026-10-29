@@ -97,7 +97,9 @@ export function Describe() {
 
       {paused && (
         <p className="notice">
-          {health?.live_status === 'judges_only'
+          {health?.live_status === 'static'
+            ? 'This demo is a static site that shows recorded runs. To describe your own lecture, run Unsaid with your own Nebius Token Factory key: see Quickstart in the README on GitHub.'
+            : health?.live_status === 'judges_only'
             ? 'During the hackathon, live describing is open to judges: unlock it with the access code below. The examples are real recorded runs.'
             : health?.live_status === 'ended'
               ? 'Live describing has ended for this demo. The examples below are real recorded runs and still work.'
@@ -186,6 +188,7 @@ export function Describe() {
               </div>
             </div>
             <BacklogPanel />
+            {health?.live_status !== 'static' && (
             <details className="panel">
               <summary>Have an access code?</summary>
               <form onSubmit={unlock} className="field">
@@ -197,6 +200,7 @@ export function Describe() {
                 {lane && <span className="hint">Unlocked: your runs use the reserved judging lane.</span>}
               </form>
             </details>
+            )}
           </div>
         </div>
       )}

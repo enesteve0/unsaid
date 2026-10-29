@@ -1,5 +1,13 @@
 import type { MediaBase, RunResult, SampleInfo } from './types'
 
+/** The static demo (GitHub Pages) has no server: examples and the evaluation are files, and nothing runs live. */
+export const STATIC = import.meta.env.VITE_STATIC === '1'
+const BASE = import.meta.env.BASE_URL
+const file = (path: string) => BASE + path
+
+const NO_SERVER = () => Promise.reject(new ApiError('This demo is a static site: describing a new clip needs the full app.', 503))
+const STATIC_HEALTH: Health = { ok: true, provider: 'tokenfactory', host: '', live_status: 'static', demo_mode: 'recorded', models: {}, stages: [] }
+
 export class ApiError extends Error {
   readonly status: number
 
@@ -39,13 +47,13 @@ export interface Health {
   ok: boolean
   provider: string
   host?: string
-  live_status?: 'live' | 'paused' | 'ended' | 'judges_only'
+  live_status?: 'live' | 'paused' | 'ended' | 'judges_only' | 'static'
   demo_mode: 'live' | 'recorded'
   models: Record<string, string>
   stages: { key: string; label: string; detail: string }[]
 }
 
-export const api = {
+const live = {
   health: () => request<Health>('/api/health'),
   samples: () => request<SampleInfo[]>('/api/samples'),
   sampleResult: (id: string) => request<RunResult>(`/api/samples/${encodeURIComponent(id)}/result`),
@@ -72,8 +80,26 @@ export const api = {
   backlog: () => request<Backlog>('/api/backlog'),
 }
 
+export const api: typeof live = STATIC
+  ? {
+      ...live,
+      health: () => Promise.resolve(STATIC_HEALTH),
+      samples: () => request<SampleInfo[]>(file('media/samples/manifest.json')),
+      sampleResult: (id: string) => request<RunResult>(file(`media/samples/${encodeURIComponent(id)}/result.json`)),
+      evaluation: () => request<Record<string, unknown>>(file('eval/report.json')),
+      backlog: () => Promise.resolve({ available: false }),
+      runResult: NO_SERVER,
+      runStatus: NO_SERVER,
+      myRuns: NO_SERVER,
+      createRun: NO_SERVER,
+      cancelRun: NO_SERVER,
+      judge: NO_SERVER,
+      editCue: NO_SERVER,
+    }
+  : live
+
 export function sampleMedia(id: string): MediaBase {
-  const base = `/media/samples/${encodeURIComponent(id)}`
+  const base = `${BASE}media/samples/${encodeURIComponent(id)}`
   return {
     video: `${base}/video.mp4`,
     poster: `${base}/poster.jpg`,
