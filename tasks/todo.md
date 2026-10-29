@@ -46,12 +46,14 @@ Without keys (Claude):
 
 - [x] PROVENANCE note on `a923416`; this plan
 - [x] Nebius CLI 0.12.297 at `~/.nebius/bin/nebius` (shell config untouched); Fly.io fallback in `infra/fly/`
-- [ ] amd64 image builds with the current code (Docker Desktop was stopped)
+- [x] amd64 image builds with the current code (813 MB) and serves the app; the traversal request gets index.html
 - [x] Independent reviews (pipeline; public demo security/robustness): all high and medium findings fixed with
       tests, except the backup-key race (no backup key is used) and running the container as non-root
 - [x] Local QA: phone-width overflow fixed; "Title card shows title." now fails a gate; all 8 e2e tests pass
 - [x] `scripts/fill_numbers.py`: Devpost/README numbers from `eval/report.json` and the sample ledger
-- [ ] Video draft re-rendered from the current build; one command to re-render with Token Factory data + demo URL
+- [x] Video draft re-rendered end to end (2:33 before the evaluation line): narration checked by ASR round trip;
+      the cold open's paused description verified by transcription (no lecture word inside the pause); gallery
+      JPEGs under 1 MB. Recording uses Playwright's own Chromium (Playwright 1.64 loses the system Chrome 156).
 - [x] gitleaks (100 commits, no leaks) → public → renamed `enesteve0/unsaid` → description, topics, MIT detected
 
 Key day, in order (owner steps marked **owner**):

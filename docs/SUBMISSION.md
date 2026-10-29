@@ -11,9 +11,9 @@ Tick a box only with evidence.
 | Runtime call to an NVIDIA open model through the Token Factory inference API | ☐ | `docs/EVIDENCE.md` from `backend/scripts/smoke.py` (needs `NEBIUS_API_KEY`) |
 | Track: Best Apps and Agents, genuine attempt (multi-step workflow chaining tools) | ☑ | nine-stage pipeline, `backend/unsaid/pipeline.py` |
 | Working demo URL, free and unrestricted until Dec 15 23:00 TRT | ☐ | Nebius Serverless endpoint (scripts in `infra/nebius/`), monitor workflow `.github/workflows/monitor.yml` |
-| Public repo with an OSI license visible in About | ☐ | owner authorized publication on Oct 29 after a secret scan; MIT `LICENSE` present |
+| Public repo with an OSI license visible in About | ☑ | public since 2026-10-29 as [enesteve0/unsaid](https://github.com/enesteve0/unsaid) after a clean gitleaks scan of all commits; GitHub detects MIT |
 | README with setup and how NVIDIA models, Token Factory and other Nebius services are used | ☑ (numbers pending) | `README.md` |
-| Public YouTube video under 3 minutes showing the project working | ☐ | pipeline in `video/` (draft assembled locally) |
+| Public YouTube video under 3 minutes showing the project working | ☐ | pipeline in `video/`; the draft assembles to 2:33 locally; final render against the deployed URL |
 | Project description, built with, try-it links | ☐ | `docs/DEVPOST.md` (placeholders filled from the evaluation) |
 | Feedback on Token Factory, AI Cloud and NVIDIA tools | ☐ (NVIDIA items done) | `FEEDBACK.md` |
 | New project (after Aug 26, 2026) | ☑ | git history starts 2026-10-23 (docs), code from 2026-10-26; `docs/PROVENANCE.md` |
@@ -34,8 +34,8 @@ Tick a box only with evidence.
       text and video
 - [ ] Deployed build passes the judge path from a fresh browser (`/?judge=1`), a live 2-minute upload, Stop,
       exports; axe checks against the deployed URL
-- [ ] Secret scan of the tree and full history (`gitleaks` or equivalent) → repository public → renamed to
-      `enesteve0/unsaid` → LICENSE detected in About
+- [x] Secret scan of the tree and full history (`gitleaks` or equivalent) → repository public → renamed to
+      `enesteve0/unsaid` → LICENSE detected in About (2026-10-29)
 - [ ] `DEMO_URL` repository variable set so the monitor runs
 - [ ] Tag `submission-2026-10-30`; record commit, URLs and access checks in `docs/PROVENANCE.md`
 - [ ] After the deadline: change only environment configuration documented in the README
