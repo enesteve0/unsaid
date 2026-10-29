@@ -44,13 +44,15 @@ change it does not contain. That sample predates every quality fix and must be r
 
 Without keys (Claude):
 
-- [ ] PROVENANCE note on `a923416`; this plan
-- [ ] Nebius CLI installed (owner then runs `nebius profile create`); Fly.io fallback config; image builds
-- [ ] Independent review of the pipeline and of the public demo's robustness/security; fix confirmed issues
-- [ ] Local QA of the whole judge path on the current code (prototype provider), fix what breaks
-- [ ] `scripts/fill_numbers.py`: Devpost/README numbers from `eval/report.json` and the sample ledger, no hand typing
+- [x] PROVENANCE note on `a923416`; this plan
+- [x] Nebius CLI 0.12.297 at `~/.nebius/bin/nebius` (shell config untouched); Fly.io fallback in `infra/fly/`
+- [ ] amd64 image builds with the current code (Docker Desktop was stopped)
+- [x] Independent reviews (pipeline; public demo security/robustness): all high and medium findings fixed with
+      tests, except the backup-key race (no backup key is used) and running the container as non-root
+- [x] Local QA: phone-width overflow fixed; "Title card shows title." now fails a gate; all 8 e2e tests pass
+- [x] `scripts/fill_numbers.py`: Devpost/README numbers from `eval/report.json` and the sample ledger
 - [ ] Video draft re-rendered from the current build; one command to re-render with Token Factory data + demo URL
-- [ ] gitleaks → repository public → renamed `enesteve0/unsaid` → description, homepage, topics, LICENSE in About
+- [x] gitleaks (100 commits, no leaks) → public → renamed `enesteve0/unsaid` → description, topics, MIT detected
 
 When the key lands: `scripts/tf_day.sh` → commit samples, report, `docs/EVIDENCE.md` → deploy → fill numbers →
 re-render video → FEEDBACK Token Factory section.

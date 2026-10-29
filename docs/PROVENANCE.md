@@ -43,6 +43,19 @@ descriptions start is `b10c380`. It was found on the laser development clip, and
 report both disclose the single prototype run on the held-out clips that came before it. The example is replaced
 by a Token Factory run before submission.
 
+### 2026-10-29: publication
+
+- Before publishing, gitleaks 8.30.1 scanned all 100 commits on every ref and found no leaks. A pattern search of
+  the tracked files for API-key formats (NVIDIA, Tavily, OpenAI-style, GitHub, AWS) found none. The only private
+  detail in the history is a local font path in an earlier version of `video/cards/thumbnail.html`, which shows the
+  builder's macOS user name. It is not a credential, and the current file uses relative paths.
+- The repository was renamed from `enesteve0/nebius-nvidia-global-ai-hackathon-2026` to `enesteve0/unsaid` (the
+  old URL redirects) and made public on the morning of 2026-10-29, as the owner had authorized.
+  GitHub detects the MIT license.
+- Before publication, two independent reviews (the pipeline, and the public demo's security and robustness) led
+  to the fixes in the commits of 2026-10-29. The most serious was that the web route could serve files outside
+  the built app. The app had never been deployed publicly.
+
 ## Recording future work
 
 For every imported component, record its upstream URL, immutable commit/version, license, purpose and changes. For every material project decision, record date, rationale and source. If a baseline project is reused, identify its pre-event commit and explain the event-period work separately.
