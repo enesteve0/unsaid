@@ -20,6 +20,7 @@ from pathlib import Path
 
 from unsaid.asr import SpeechRecognizer
 from unsaid.config import get_settings
+from unsaid.ledger import Ledger
 from unsaid.pipeline import RunOptions, run_pipeline
 from unsaid.tf_client import AuthFailure, CreditExhausted, TokenFactory
 
@@ -62,6 +63,7 @@ async def backlog(manifest: Path, out: Path, budget_usd: float) -> dict:
             )
             continue
         workdir.mkdir(parents=True, exist_ok=True)
+        ledger = Ledger()  # passed in, so a lecture that fails late still counts toward the cap
         try:
             video = _fetch(item["source"], workdir / "source.mp4")
             result = await run_pipeline(
@@ -71,9 +73,9 @@ async def backlog(manifest: Path, out: Path, budget_usd: float) -> dict:
                 tf=tf,
                 asr=asr,
                 options=RunOptions(title=item["title"], source_url=item.get("page"), session_id="backlog"),
+                ledger=ledger,
             )
             cost = result["ledger"]["summary"]["total_usd"]
-            spent += cost
             rows.append(
                 {
                     "id": item["id"],
@@ -97,6 +99,8 @@ async def backlog(manifest: Path, out: Path, budget_usd: float) -> dict:
                     "reason": f"{type(exc).__name__}: {exc}"[:300],
                 }
             )
+        finally:
+            spent += ledger.total_cost
     digest = {
         "finished_at": datetime.now(UTC).isoformat(timespec="seconds"),
         "seconds": round(time.time() - started, 1),

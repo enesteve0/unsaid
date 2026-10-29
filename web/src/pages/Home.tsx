@@ -5,10 +5,11 @@ import { Checks } from '../components/Checks'
 import { CueCard } from '../components/CueCard'
 import { Player, type Mode, type PlayerHandle } from '../components/Player'
 import { STAGES } from '../lib/stages'
+import { isPublished } from '../lib/timeline'
 import type { Cue, RunResult, SampleInfo } from '../types'
 
 function heroWindow(result: RunResult, sample: SampleInfo): { start: number; end: number; cue?: Cue } {
-  const cues = result.cues.filter((c) => c.tier !== 'never' && !c.extended)
+  const cues = result.cues.filter((c) => isPublished(c) && !c.extended)
   if (sample.hero) {
     const cue = cues.find((c) => c.start >= sample.hero!.start && c.start <= sample.hero!.end)
     return { start: sample.hero.start, end: sample.hero.end, cue }

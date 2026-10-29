@@ -43,6 +43,8 @@ MEDIUM_WORDS = {
     "a", "an", "the", "this", "that", "these", "those", "it", "its", "their", "on", "in", "at", "to", "from", "with",
     "and", "or", "of", "for", "by", "as",
 }  # fmt: skip
+TITLE_WORDS = ("Dr", "Mr", "Mrs", "Ms", "Prof", "Sir", "St", "Mt", "Fig", "No", "vs")
+TITLES = re.compile(rf"\b({'|'.join(TITLE_WORDS)})\.", re.I)
 SPECULATION = re.compile(r"\b(?:seems?|appears?|probably|maybe|perhaps|might be|likely)\b", re.I)
 PAST_TENSE = re.compile(r"\b(?:was|were|had|did)\b", re.I)
 
@@ -243,20 +245,25 @@ def estimate_seconds(text: str, words_per_second: float) -> float:
     return spoken_word_count(text) / words_per_second + pauses
 
 
+# Cue times are stored to the millisecond; a re-check of a stored cue must not fail on that rounding.
+TOLERANCE = 0.001
+
+
 def overlaps(start: float, end: float, speech: Iterable[Interval], guard: float) -> bool:
-    return any(start < s.end + guard and end > s.start - guard for s in speech)
+    return any(start < s.end + guard - TOLERANCE and end > s.start - guard + TOLERANCE for s in speech)
 
 
 def unknown_names(text: str, known_vocabulary: set[str]) -> list[str]:
     """Capitalised tokens (not sentence-initial) that appear nowhere on screen, in speech or in the registry."""
     unknown: list[str] = []
+    text = TITLES.sub(r"\1", text)  # "Dr. Smith" is one sentence, so "Smith" is checked
     for sentence in re.split(r"(?<=[.!?:;])\s+", text.strip()):
         tokens = re.findall(r"[A-Za-z][A-Za-z'’-]*", sentence)
         for token in tokens[1:]:
             if not token[0].isupper():
                 continue
             base = token.lower().strip("'’").removesuffix("'s").removesuffix("’s")
-            if base in COMMON_CAPITALISED or base in known_vocabulary:
+            if base in COMMON_CAPITALISED or base in known_vocabulary or token in TITLE_WORDS:
                 continue
             unknown.append(token)
     return unknown
@@ -268,6 +275,13 @@ def vocabulary(*texts: Iterable[str]) -> set[str]:
         for text in group:
             vocab.update(w.lower() for w in re.findall(r"[A-Za-z][A-Za-z'’-]*", text))
     return vocab
+
+
+def mentions(name: str, text: str) -> bool:
+    """Whole words only: "Li" is not mentioned in "line", nor "Chang" in "changes"."""
+    return (
+        bool(name.strip()) and re.search(rf"(?<!\w){re.escape(name.strip())}(?!\w)", text, re.I) is not None
+    )
 
 
 def says_nothing(text: str) -> bool:
@@ -295,7 +309,7 @@ def check_cue(
     elif says_nothing(text):
         report.failures.append("says_nothing")
     if not extended:
-        if end > window_end - guard:
+        if end > window_end - guard + TOLERANCE:
             report.failures.append(
                 f"too_long: needs {report.estimated_seconds:.1f}s, has {window_end - guard - start:.1f}s"
             )

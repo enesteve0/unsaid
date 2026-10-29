@@ -1,3 +1,4 @@
+import { isPublished } from '../lib/timeline'
 import type { Cue, RunResult } from '../types'
 
 interface Props {
@@ -16,8 +17,8 @@ export function Timeline({ result, current, activeCueId, onSeek }: Props) {
   const step = duration > 600 ? 60 : duration > 180 ? 30 : duration > 60 ? 10 : 5
   const ticks = Array.from({ length: Math.floor(duration / step) + 1 }, (_, i) => i * step)
   const visualMoments = result.moments.filter((m) => result.resolutions[m.id]?.refers_to_visual)
-  const inline = result.cues.filter((c) => !c.extended && c.tier !== 'never')
-  const extended = result.cues.filter((c) => c.extended && c.tier !== 'never')
+  const inline = result.cues.filter((c) => !c.extended && isPublished(c))
+  const extended = result.cues.filter((c) => c.extended && isPublished(c))
 
   const summary =
     `Timeline of ${Math.round(duration)} seconds: ${result.speech.length} stretches of speech, ` +

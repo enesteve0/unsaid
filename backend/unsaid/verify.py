@@ -13,7 +13,7 @@ from __future__ import annotations
 import asyncio
 from pathlib import Path
 
-from . import media
+from . import gates, media
 from .config import Role
 from .ledger import Ledger
 from .schemas import Cue, LessonBible, Verification
@@ -71,7 +71,7 @@ async def verify_cue(
 
 def assign_tier(cue: Cue, allowed_names: list[str]) -> None:
     v = cue.verification
-    names_known = any(name.lower() in cue.text.lower() for name in allowed_names)
+    names_known = any(gates.mentions(name, cue.text) for name in allowed_names)
     if v is not None and v.identifies_person and not names_known:
         cue.tier = "never"
     elif cue.gate_failures or cue.gate_warnings or v is None or not v.supported:

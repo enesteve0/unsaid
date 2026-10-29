@@ -9,6 +9,11 @@ from fractions import Fraction
 from .schemas import Cue, Word
 
 
+def vtt_text(text: str) -> str:
+    """Cue text as WebVTT requires: & < > escaped, on one line, and no "-->" that would end the cue early."""
+    return " ".join(html.escape(text, quote=False).split()).replace("--&gt;", "→")
+
+
 def timestamp(seconds: float, sep: str = ".") -> str:
     ms = round(max(seconds, 0) * 1000)
     h, rem = divmod(ms, 3_600_000)
@@ -27,14 +32,14 @@ def descriptions_vtt(cues: Iterable[Cue]) -> str:
         "",
     ]
     for cue in sorted(cues, key=lambda c: c.start):
-        if cue.tier == "never":
+        if not cue.published:
             continue
         if cue.extended:
             lines += [f"NOTE extended description {cue.id}", ""]
         lines += [
             cue.id,
             f"{timestamp(cue.start)} --> {timestamp(max(cue.end, cue.start + 0.5))}",
-            cue.text,
+            vtt_text(cue.text),
             "",
         ]
     return "\n".join(lines)
@@ -63,14 +68,14 @@ def _caption_chunks(
 def captions_vtt(words: list[Word]) -> str:
     lines = ["WEBVTT", ""]
     for i, (start, end, text) in enumerate(_caption_chunks(words), start=1):
-        lines += [f"c{i}", f"{timestamp(start)} --> {timestamp(end)}", text, ""]
+        lines += [f"c{i}", f"{timestamp(start)} --> {timestamp(end)}", vtt_text(text), ""]
     return "\n".join(lines)
 
 
 def captions_srt(words: list[Word]) -> str:
     lines: list[str] = []
     for i, (start, end, text) in enumerate(_caption_chunks(words), start=1):
-        lines += [str(i), f"{timestamp(start, ',')} --> {timestamp(end, ',')}", text, ""]
+        lines += [str(i), f"{timestamp(start, ',')} --> {timestamp(end, ',')}", " ".join(text.split()), ""]
     return "\n".join(lines)
 
 
@@ -83,7 +88,7 @@ def transcript_html(words: list[Word], cues: Iterable[Cue], title: str) -> str:
     items += [
         (c.start, f'<p class="description"><strong>Description:</strong> {html.escape(c.text)}</p>')
         for c in cues
-        if c.tier != "never"
+        if c.published
     ]
     body = "\n".join(markup for _, markup in sorted(items, key=lambda x: x[0]))
     return (
@@ -93,7 +98,7 @@ def transcript_html(words: list[Word], cues: Iterable[Cue], title: str) -> str:
 
 
 def _rational(seconds: float, fps: float) -> str:
-    frame = Fraction(1, round(fps or 25))
+    frame = Fraction(1, max(1, round(fps or 25)))
     frames = round(seconds / frame)
     value = Fraction(frames) * frame
     return f"{value.numerator}/{value.denominator}s" if value.denominator != 1 else f"{value.numerator}s"
@@ -103,12 +108,12 @@ def fcpxml_markers(
     cues: Iterable[Cue], *, name: str, duration: float, fps: float, width: int, height: int
 ) -> str:
     """Final Cut Pro project with one marker per description, on a gap clip so it imports without media."""
-    rate = round(fps or 25)
+    rate = max(1, round(fps or 25))
     markers = "\n".join(
         f'          <marker start="{_rational(c.start, rate)}" duration="{_rational(1 / rate, rate)}" '
         f'value="{html.escape(("[EXTENDED] " if c.extended else "") + c.text, quote=True)}"/>'
         for c in sorted(cues, key=lambda c: c.start)
-        if c.tier != "never"
+        if c.published
     )
     total = _rational(duration, rate)
     return f"""<?xml version="1.0" encoding="UTF-8"?>

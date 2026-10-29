@@ -105,3 +105,32 @@ def test_a_description_must_say_what_it_shows():
     assert says_nothing("Slide displays text.") and says_nothing("The screen shows a new image.")
     assert not says_nothing("Title: Harmonic Analyzer, Analysis.")
     assert not says_nothing("Yellow box around the left half.")
+
+
+def test_a_stored_cue_rechecks_cleanly_despite_millisecond_rounding():
+    speech = [Interval(start=0.0, end=12.3454), Interval(start=16.0, end=20.0)]
+    start = round(12.3454 + 0.15, 3)  # 12.495, a hair before speech end + guard
+    report = check_cue(
+        "Gears turn behind glass.",
+        start,
+        16.0,
+        speech=speech,
+        allowed_numbers=set(),
+        known_vocabulary=set(),
+        words_per_second=2.5,
+        guard=0.15,
+    )
+    assert "talks_over_speech" not in report.failures
+
+
+def test_names_match_whole_words_only():
+    from unsaid.gates import mentions
+
+    assert mentions("Li", "Figure from Li et al.") and not mentions("Li", "A line rises.")
+    assert not mentions("Chang", "The slope changes.") and mentions(
+        "Hammack", "Bill Hammack turns the crank."
+    )
+
+
+def test_a_title_does_not_hide_the_name_after_it():
+    assert unknown_names("Photo of Dr. Smith at the board.", set()) == ["Smith"]

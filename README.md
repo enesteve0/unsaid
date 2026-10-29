@@ -75,9 +75,12 @@ Models write; code decides. A description is used only if:
   or on the video’s page (fetched with Tavily);
 - it avoids “we see”, “the image shows” and “in this video”; hedges and past tense are flagged for review;
 - if nothing fits, it becomes an extended description of at most 30 words (the player pauses the video at the end of
-  the speaker's sentence, WCAG 2.1 SC 1.2.7), but only for facts Ultra marked essential. Anything else is left out
-  rather than squeezed into a fragment;
-- a description that identifies a person without a source is withheld.
+  the speaker's sentence, WCAG 2.1 SC 1.2.7), but only for facts Ultra marked essential or that the speaker points at,
+  and never in the middle of another description. Anything else is left out rather than squeezed into a fragment;
+- it says what the picture shows, not only what kind of picture it is ("Title card shows title." fails);
+- a description that identifies a person without a source is withheld, and one that still breaks a rule after two
+  repairs is held back: it is not spoken or exported until a person fixes it in the editor, where the same checks
+  run again.
 
 ## Results
 

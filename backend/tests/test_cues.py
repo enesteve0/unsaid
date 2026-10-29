@@ -261,3 +261,50 @@ async def test_paused_description_waits_until_the_thing_is_on_screen():
         moment_times={"p3": 76.3},
     )
     assert cues[0].extended and cues[0].start == 91.7
+
+
+async def test_pointing_description_never_starts_before_the_thing_is_on_screen():
+    # Pointing at 12 s, the thing shows at 20 s: the 17.5 s silence is within 10 s of the pointing but too early.
+    silences = [Gap(id="g1", start=17.5, end=21.5), Gap(id="g2", start=20.5, end=24.0)]
+    cues = await place(
+        [CuePlan(gap_id="g1", fact_ids=["f2"], draft=DRAFT)],
+        [plan_fact("f2", 20.0, "p2")],
+        silences,
+        {"p2": 12.0},
+    )
+    assert cues["f2"].gap_id == "g2" and cues["f2"].start >= 20.0
+
+
+async def test_pointing_description_never_starts_more_than_ten_seconds_after_the_pointing():
+    # The thing shows 8 s after the pointing; a silence 16 s after the pointing is too late.
+    silences = [Gap(id="g1", start=26.0, end=30.0)]
+    cues = await place(
+        [CuePlan(gap_id="g1", fact_ids=["f2"], draft=DRAFT)],
+        [plan_fact("f2", 18.0, "p2")],
+        silences,
+        {"p2": 10.0},
+    )
+    assert cues["f2"].extended and cues["f2"].start == 18.0
+
+
+async def test_an_unimportant_fact_never_pauses_the_video():
+    unimportant = plan_fact("f1", 5.0).model_copy(update={"importance": 1})
+    cues = await place(
+        [CuePlan(gap_id="extended", fact_ids=["f1"], draft=DRAFT)], [unimportant], SILENCES, {}
+    )
+    assert cues == {}
+
+
+def test_trimming_never_leaves_a_fragment():
+    out = list(trim_candidates("Crank, bars, gears, and a chain drive the rods up and down."))
+    assert all(len(c.split()) >= 4 for c in out)
+
+
+async def test_a_pause_never_interrupts_another_description():
+    plans = [
+        CuePlan(gap_id="g2", fact_ids=["f1"], draft=DRAFT),
+        CuePlan(gap_id="extended", fact_ids=["f2"], draft="Pink rod."),
+    ]
+    cues = await place(plans, [plan_fact("f1", 17.0), plan_fact("f2", 18.5)], SILENCES, {})
+    inline, paused = cues["f1"], cues["f2"]
+    assert not inline.extended and paused.extended and paused.start == inline.end

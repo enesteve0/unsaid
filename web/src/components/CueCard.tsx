@@ -29,6 +29,7 @@ function gateRows(cue: Cue, result: RunResult) {
   rows.push({ state: has('number_not_on_screen') ? 'fail' : 'pass', text: 'Every number is printed on screen' })
   rows.push({ state: has('unknown_name') ? 'fail' : 'pass', text: 'Names only from the screen, the speech or the source page' })
   rows.push({ state: has('banned_phrase') ? 'fail' : 'pass', text: 'Describer style: no “we see”, present tense' })
+  rows.push({ state: has('says_nothing') || has('empty') ? 'fail' : 'pass', text: 'Says what the picture shows, not just what kind of picture it is' })
   for (const w of cue.gate_warnings) rows.push({ state: 'warn', text: w === 'speculation' ? 'Hedged wording (appears, seems)' : 'Past tense' })
   return rows
 }
@@ -63,7 +64,11 @@ export function CueCard({ cue, result, active, runId, onPlay, onSaved }: Props) 
     <article className="cue-card" data-active={active ? 'true' : 'false'} aria-label={`Description at ${fmtTime(cue.start)}`}>
       <header>
         <span className="mono">{fmtTime(cue.start)}</span>
-        <span className={`badge ${cue.tier}`}>{TIER_LABEL[cue.tier]}</span>
+        {cue.gate_failures.length > 0 && cue.tier !== 'never' ? (
+          <span className="badge never">Held back: breaks a rule</span>
+        ) : (
+          <span className={`badge ${cue.tier}`}>{TIER_LABEL[cue.tier]}</span>
+        )}
         {cue.extended && <span className="badge ext">Extended</span>}
         {cue.repairs > 0 && <span className="badge review">Rewritten {cue.repairs}× to fit</span>}
         {cue.edited && <span className="badge auto">Edited by a person</span>}

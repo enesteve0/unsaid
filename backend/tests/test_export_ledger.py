@@ -90,3 +90,25 @@ def test_cost_and_counterfactual():
     # Lightning text step costs far less than it would on Ultra; the vision step has no Ultra alternative.
     assert summary["ultra_only_usd"] > summary["total_usd"]
     assert summary["usd_per_accepted_cue"] == round(summary["total_usd"] / 2, 6)
+
+
+def test_cue_text_is_escaped_for_webvtt_and_held_back_cues_are_left_out():
+    cues = [
+        Cue(id="ad-1", gap_id="g1", start=1, end=2, text="p < 0.05 for R&D\n--> next", tier="auto"),
+        Cue(
+            id="ad-2",
+            gap_id="g2",
+            start=3,
+            end=4,
+            text="Accuracy 42%.",
+            tier="review",
+            gate_failures=["number_not_on_screen: 42"],
+        ),
+    ]
+    vtt = descriptions_vtt(cues)
+    assert "p &lt; 0.05 for R&amp;D → next" in vtt and "42" not in vtt
+
+
+def test_fcpxml_survives_a_frame_rate_below_one():
+    xml = fcpxml_markers([], name="t", duration=10, fps=0.4, width=640, height=360)
+    ET.fromstring(xml.split("\n", 2)[2])

@@ -210,6 +210,11 @@ class Cue(BaseModel):
     tier: Tier = "review"
     sources: list[Source] = Field(default_factory=list)
 
+    @property
+    def published(self) -> bool:
+        """Spoken and exported: not withheld, and no hard rule still broken after repair (a person can fix it)."""
+        return self.tier != "never" and not self.gate_failures
+
 
 class Tip(BaseModel):
     moment_id: str

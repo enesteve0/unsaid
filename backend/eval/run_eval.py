@@ -174,7 +174,7 @@ async def evaluate_clip(tf: TokenFactory, asr: SpeechRecognizer, clip: dict, out
         # An infrastructure failure, not a judgement on either system: leave the clip out and say why.
         return {"id": clip["id"], "title": clip["title"], "skipped": str(exc)}
     unsaid_seconds = time.perf_counter() - t0
-    unsaid_cues = [Cue(**c) for c in result["cues"] if c["tier"] != "never"]
+    unsaid_cues = [cue for c in result["cues"] if (cue := Cue(**c)).published]
     speech = [Interval(**s) for s in result["speech"]]
     words = [Word(**w) for w in result["transcript"]]
     duration = result["video"]["duration"]

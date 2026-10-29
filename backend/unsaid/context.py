@@ -16,6 +16,7 @@ import logging
 import re
 from dataclasses import dataclass, field
 
+from . import gates
 from .config import Role
 from .ledger import Ledger
 from .schemas import ContextNames, Source
@@ -45,6 +46,9 @@ def citations_in(texts: list[str], limit: int = 3) -> list[str]:
     found: list[str] = []
     for text in texts:
         for match in [*CITATION.findall(text), *URL_TEXT.findall(text)]:
+            # "In 2019" looks like "Smith 2019" to the pattern; a citation starts with a name.
+            if match.split()[0].strip(",").lower() in gates.COMMON_CAPITALISED:
+                continue
             if match not in found:
                 found.append(match)
     return found[:limit]
@@ -93,7 +97,11 @@ async def gather_context(
                     used_for=f"citation: {citation}",
                 )
             )
-            result.names.extend(re.findall(r"[A-Z][A-Za-z'’-]+", citation))
+            result.names.extend(
+                w
+                for w in re.findall(r"[A-Z][A-Za-z'’-]+", citation)
+                if w.lower() not in gates.COMMON_CAPITALISED
+            )
 
     await asyncio.gather(*(look_up(c) for c in citations_in(on_screen_texts)))
     return result
@@ -119,7 +127,7 @@ async def _source_page(
             )
             parsed: ContextNames = names.parsed  # type: ignore[assignment]
             lowered = text.lower()
-            verified = [n for n in [*parsed.people, *parsed.terms] if n and n.lower() in lowered]
+            verified = [n for n in [*parsed.people, *parsed.terms] if gates.mentions(n, lowered)]
             result.names.extend(verified)
             result.title = parsed.title
             result.sources.append(

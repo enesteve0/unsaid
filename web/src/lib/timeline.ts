@@ -24,8 +24,11 @@ export function sentences(words: Word[]): Sentence[] {
   return out
 }
 
+/** Spoken and exported: not withheld, and no hard rule still broken after repair (a person can fix it). */
+export const isPublished = (c: Cue) => c.tier !== 'never' && c.gate_failures.length === 0
+
 export function playableCues(result: RunResult): Cue[] {
-  return [...result.cues].filter((c) => c.tier !== 'never').sort((a, b) => a.start - b.start)
+  return [...result.cues].filter(isPublished).sort((a, b) => a.start - b.start)
 }
 
 export function sentenceAt(list: Sentence[], t: number): Sentence | undefined {

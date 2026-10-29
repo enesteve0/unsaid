@@ -119,7 +119,11 @@ async def correct_unsupported(
         cue.text = text
         if not cue.extended:
             cue.end = round(cue.start + report.estimated_seconds, 3)
-        await verify_cue(tf, ledger, video, cue, check_times(cue, bible, duration, moment_times), workdir)
+        try:
+            await verify_cue(tf, ledger, video, cue, check_times(cue, bible, duration, moment_times), workdir)
+        except BaseException:
+            cue.text, cue.verification, cue.end = before_text, before_verdict, before_end
+            raise
         after = cue.verification
         unsupported_before = sum(c.verdict != "supported" for c in v.claims)
         if after is not None and not any(c.verdict == "contradicted" for c in after.claims):
@@ -128,6 +132,7 @@ async def correct_unsupported(
                 # Strictly better: no contradictions left and fewer unsupported claims. Anything still unverified
                 # keeps the description in review.
                 cue.corrected_from = before_text
+                cue.gate_failures = report.failures
                 cue.gate_warnings = report.warnings
                 step = "corrected" if after.supported else "partly corrected"
                 cue.origin = f"{cue.origin} + {step} after the frame check".lstrip(" +")

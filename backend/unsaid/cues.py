@@ -11,6 +11,7 @@ from __future__ import annotations
 
 import asyncio
 import json
+import logging
 import re
 from collections.abc import Iterator
 from dataclasses import dataclass, field
@@ -21,7 +22,9 @@ from .config import Role, Settings
 from .ledger import Ledger
 from .perceive import Observation
 from .schemas import Cue, CuePlan, CueText, Gap, Interval, LessonBible, VisualFact, Word
-from .tf_client import TokenFactory
+from .tf_client import AuthFailure, CreditExhausted, TokenFactory
+
+log = logging.getLogger(__name__)
 
 MAX_REPAIRS = 2
 EXTENDED_WORDS = gates.EXTENDED_WORDS
@@ -95,7 +98,7 @@ def verified_names(
             *context_names,
         ]
     ).lower()
-    names = [r.name for r in bible.registry if r.name and r.name.lower() in haystack]
+    names = [r.name for r in bible.registry if r.name and gates.mentions(r.name, haystack)]
     return list(dict.fromkeys([*names, *context_names]))
 
 
@@ -122,7 +125,7 @@ def trim_candidates(text: str) -> Iterator[str]:
     clauses = [x for x in re.split(r",\s+|\s+[—–]\s+", sentences[0]) if x] if sentences else []
     for k in range(len(clauses) - 1, 0, -1):
         candidate = ", ".join(clauses[:k]).rstrip(".;:,") + "."
-        if len(candidate.split()) >= 3:
+        if len(candidate.split()) >= MIN_INLINE_WORDS:
             yield candidate
 
 
@@ -142,13 +145,14 @@ class _Placement:
     n: int
     plan: CuePlan
     facts: list[VisualFact]
-    anchor: float  # the pointing moment the description resolves, else when its first fact appears
+    anchor: float  # the later of the pointing moment and when its facts are on screen, else when they appear
     gap: Gap | None
     pointed: bool  # resolves a pointing moment and still needs its silence checked or moved
+    earliest: float = 0.0  # a pointing description starts no earlier than 3 s before the pointing, nor before
+    latest: float = 0.0  # its facts are on screen, and no later than 10 s after the pointing
 
-
-def _near(gap: Gap, anchor: float) -> bool:
-    return anchor + POINTING_WINDOW[0] <= gap.start <= anchor + POINTING_WINDOW[1]
+    def fits(self, gap: Gap, guard: float) -> bool:
+        return self.earliest <= gap.start + guard <= self.latest
 
 
 def _timing_only(report: gates.GateReport) -> bool:
@@ -170,16 +174,25 @@ async def write_cue(
     allowed_names: list[str],
     pause_at: float | None = None,
 ) -> Cue | None:
-    """`pause_at` is where an extended description pauses the video; by default, where its first fact appears."""
+    """`pause_at` is where an extended description pauses the video; by default, where its first fact appears.
+
+    Only an essential fact, or one the speaker points at, may pause the video; anything else that does not fit a
+    silence is left out. A pause is never earlier than `pause_at`, so it never comes before the thing is on screen.
+    """
     essential = max(f.importance for f in facts) >= 3
+    may_pause = essential or any(f.moment_ids for f in facts)
     start_hint = pause_at if pause_at is not None else min(f.t for f in facts)
+    if gap is None and not may_pause:
+        return None
     start, window_end, budget = _window(gap, start_hint, settings)
     extended = gap is None
     if gap is not None and budget < MIN_INLINE_WORDS:
         if not essential:
             return None
         extended = True
-        start, window_end, budget = _window(None, gap.start + settings.speech_guard_seconds, settings)
+        start, window_end, budget = _window(
+            None, max(gap.start + settings.speech_guard_seconds, start_hint), settings
+        )
 
     def check(text: str, as_extended: bool) -> gates.GateReport:
         return gates.check_cue(
@@ -272,7 +285,7 @@ async def write_cue(
         if not essential:
             return None
         extended = True
-        start, window_end, _ = _window(None, start, settings)
+        start, window_end, _ = _window(None, max(start, start_hint), settings)
         report = check(text, True)
         origin.append("extended: video pauses")
 
@@ -319,9 +332,23 @@ async def write_all(
         if not facts:
             continue
         pointed = [moment_times[m] for f in facts for m in f.moment_ids if m in moment_times]
-        anchor = max(min(pointed), max(f.t for f in facts)) if pointed else min(f.t for f in facts)
         gap = gaps_by_id.get(plan.gap_id)
-        placed.append(_Placement(n, plan, facts, anchor, gap, bool(pointed) and gap is not None))
+        if pointed:
+            moment, visible = min(pointed), max(f.t for f in facts)
+            placed.append(
+                _Placement(
+                    n,
+                    plan,
+                    facts,
+                    max(moment, visible),
+                    gap,
+                    gap is not None,
+                    earliest=max(moment + POINTING_WINDOW[0], visible),
+                    latest=moment + POINTING_WINDOW[1],
+                )
+            )
+        else:
+            placed.append(_Placement(n, plan, facts, min(f.t for f in facts), gap, False))
 
     # One cue per silence. Silences that Ultra chose well are taken first; a second plan for the same silence
     # becomes extended. A pointing description that Ultra put far from its moment then moves to the first free
@@ -330,7 +357,7 @@ async def write_all(
     for p in placed:
         if p.gap is None:
             continue
-        if p.pointed and not _near(p.gap, p.anchor):
+        if p.pointed and not p.fits(p.gap, settings.speech_guard_seconds):
             p.gap = None
             continue
         p.pointed = False  # placed well: nothing to move
@@ -340,7 +367,9 @@ async def write_all(
             used.add(p.gap.id)
     for p in placed:
         if p.pointed:
-            p.gap = next((g for g in gaps if g.id not in used and _near(g, p.anchor)), None)
+            p.gap = next(
+                (g for g in gaps if g.id not in used and p.fits(g, settings.speech_guard_seconds)), None
+            )
             if p.gap is not None:
                 used.add(p.gap.id)
 
@@ -361,5 +390,17 @@ async def write_all(
         )
         for p in placed
     ]
-    written = await asyncio.gather(*jobs)
-    return sorted((c for c in written if c is not None), key=lambda c: c.start)
+    # One description whose repair fails is dropped; it does not take the others with it.
+    written = await asyncio.gather(*jobs, return_exceptions=True)
+    for outcome in written:
+        if isinstance(outcome, (CreditExhausted, AuthFailure)):
+            raise outcome
+        if isinstance(outcome, BaseException):
+            log.warning("a description was dropped: %s: %s", type(outcome).__name__, outcome)
+    cues = sorted((c for c in written if isinstance(c, Cue)), key=lambda c: c.start)
+    for cue in cues:
+        if cue.extended:
+            speaking = next((c for c in cues if not c.extended and c.start <= cue.start < c.end), None)
+            if speaking is not None:  # inline descriptions sit in silences, so its end is still silent
+                cue.start, cue.end = speaking.end, round(speaking.end + 0.5, 3)
+    return sorted(cues, key=lambda c: c.start)

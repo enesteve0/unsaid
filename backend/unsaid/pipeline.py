@@ -9,13 +9,14 @@ from __future__ import annotations
 import asyncio
 import inspect
 import json
+import logging
 import time
 from collections.abc import Awaitable, Callable
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
-from . import export, media
+from . import export, gates, media
 from .asr import SpeechRecognizer, Transcript
 from .bible import build_bible
 from .config import Settings
@@ -31,6 +32,8 @@ from .segments import attach_moments, build_segments, find_gaps
 from .tf_client import AuthFailure, CreditExhausted, TokenFactory
 from .tips import lecturer_tips
 from .verify import verify_all
+
+log = logging.getLogger(__name__)
 
 STAGES = [
     ("listen", "Listen", "NVIDIA Parakeet speech recognition on CPU"),
@@ -81,13 +84,13 @@ def compute_metrics(
     resolutions: dict[str, PointerResolution],
     duration: float,
 ) -> dict[str, Any]:
-    inline = [c for c in cues if not c.extended and c.tier != "never"]
+    inline = [c for c in cues if not c.extended and c.published]
     talk_over = 0.0
     for c in inline:
         for s in speech:
             talk_over += max(0.0, min(c.end, s.end) - max(c.start, s.start))
     visual_moments = [m for m in moments if m.id in resolutions and resolutions[m.id].refers_to_visual]
-    covered = {mid for c in cues if c.tier != "never" for mid in c.moment_ids}
+    covered = {mid for c in cues if c.published for mid in c.moment_ids}
     tiers = {t: sum(1 for c in cues if c.tier == t) for t in ("auto", "review", "never")}
     failures: dict[str, int] = {}
     for c in cues:
@@ -255,7 +258,7 @@ async def run_pipeline(
     )
     for cue in cues:
         # Credit Tavily only where a description actually uses a name it supplied.
-        if any(name.lower() in cue.text.lower() for name in ctx.names):
+        if any(gates.mentions(name, cue.text) for name in ctx.names):
             cue.sources = ctx.sources
 
     allowed_names = verified_names(bible, observations, transcript.words, ctx.names)
@@ -286,7 +289,6 @@ async def run_pipeline(
     await stage("check", check)
 
     async def deliver():
-        tips = await lecturer_tips(tf, ledger, moments, resolutions, bible, cues)
         (workdir / "descriptions.vtt").write_text(export.descriptions_vtt(cues))
         (workdir / "captions.vtt").write_text(export.captions_vtt(transcript.words))
         (workdir / "captions.srt").write_text(export.captions_srt(transcript.words))
@@ -303,7 +305,14 @@ async def run_pipeline(
                 height=info.height,
             )
         )
-        return tips
+        # Tips are a bonus: the tracks above are written first, and a failed tips call costs only the tips.
+        try:
+            return await lecturer_tips(tf, ledger, moments, resolutions, bible, cues)
+        except (CreditExhausted, AuthFailure):
+            raise
+        except Exception as exc:
+            log.warning("lecturer tips skipped: %s: %s", type(exc).__name__, exc)
+            return []
 
     tips = await stage("deliver", deliver)
 
