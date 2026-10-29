@@ -99,7 +99,8 @@ export function Home() {
               <Player result={result} media={sampleMedia(sample.id)} mode={mode} onModeChange={setMode} window={hero} handle={player} compact />
               <p className="mono" style={{ color: 'var(--muted)', marginTop: 10 }}>
                 {sample.title} — {sample.credit}.{' '}
-                <a href={sample.license_url}>{sample.license}</a>. Descriptions added by Unsaid.
+                <a href={sample.license_url}>{sample.license}</a>. Descriptions added by Unsaid
+                {result.provider === 'tokenfactory' ? ' on Nebius Token Factory.' : ", in a prototype run of the same models on NVIDIA's API catalog."}
               </p>
             </>
           ) : (
