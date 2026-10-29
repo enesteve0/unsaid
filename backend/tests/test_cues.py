@@ -12,7 +12,7 @@ CONTEXT = CueContext(allowed_numbers={"10", "0"}, vocabulary=set(), on_screen_te
 BIBLE = LessonBible(summary="", registry=[], notation=[], visual_facts=[], cue_plan=[], style_notes=[])
 
 
-def fact(importance=3):
+def fact(importance=3, moment_id="p1"):
     return VisualFact(
         id="f1",
         t=9.5,
@@ -20,7 +20,7 @@ def fact(importance=3):
         fact="Square wave from 0 to 10",
         importance=importance,
         already_spoken=False,
-        moment_id="p1",
+        moment_id=moment_id,
     )
 
 
@@ -39,13 +39,13 @@ class StubTF:
 GAP = Gap(id="g1", start=10.0, end=13.0)
 
 
-async def run(draft, tf, importance=3, gap=GAP):
+async def run(draft, tf, importance=3, gap=GAP, moment_id="p1"):
     return await write_cue(
         tf,
         Ledger(),
         SETTINGS,
         cue_id="001",
-        facts=[fact(importance)],
+        facts=[fact(importance, moment_id)],
         draft=draft,
         gap=gap,
         speech=SPEECH,
@@ -85,14 +85,32 @@ async def test_unfixable_timing_is_trimmed_before_pausing():
 async def test_unimportant_fact_that_cannot_fit_is_left_out():
     long = "A very long description of a minor detail that goes on and on without any sentence break at all here."
     tf = StubTF(long, long)
-    assert await run(long, tf, importance=2) is None
+    assert await run(long, tf, importance=2, moment_id="") is None
 
 
 async def test_tiny_silence_never_produces_a_fragment():
     tiny = Gap(id="g9", start=10.0, end=11.5)
-    assert await run("Yellow box.", StubTF(), importance=2, gap=tiny) is None
+    assert await run("Yellow box.", StubTF(), importance=2, gap=tiny, moment_id="") is None
     cue = await run("Yellow box highlights half a period.", StubTF(), importance=3, gap=tiny)
     assert cue is not None and cue.extended
+
+
+async def test_what_the_speaker_points_at_pauses_the_video_rather_than_being_left_out():
+    tiny = Gap(id="g9", start=10.0, end=11.5)
+    cue = await run("Yellow box highlights half a period.", StubTF(), importance=2, gap=tiny, moment_id="p1")
+    assert cue is not None and cue.extended
+
+
+async def test_a_pointing_description_never_moves_to_a_silence_too_short_for_one():
+    # The only free silence near the pointing moment holds fewer than four words: pause instead of using it.
+    silences = [Gap(id="g1", start=40.0, end=43.5), Gap(id="g2", start=11.0, end=12.4)]
+    cues = await place(
+        [CuePlan(gap_id="g1", fact_ids=["f2"], draft=DRAFT)],
+        [plan_fact("f2", 9.0, "p2")],
+        silences,
+        {"p2": 10.0},
+    )
+    assert cues["f2"].extended and cues["f2"].gap_id is None
 
 
 def words_of(*spans):
@@ -296,8 +314,11 @@ async def test_an_unimportant_fact_never_pauses_the_video():
 
 
 def test_trimming_never_leaves_a_fragment():
-    out = list(trim_candidates("Crank, bars, gears, and a chain drive the rods up and down."))
-    assert all(len(c.split()) >= 4 for c in out)
+    assert list(trim_candidates("Crank, bars, gears, and a chain drive the rods up and down.")) == []
+    assert list(trim_candidates("Yellow box. A pink rod rises on the left side of the machine.")) == []
+    assert list(trim_candidates("Square wave from 0 to 10. A bracket marks one period.")) == [
+        "Square wave from 0 to 10."
+    ]
 
 
 async def test_a_pause_never_interrupts_another_description():

@@ -123,6 +123,12 @@ class Store:
             (session, ip),
         )[0]["n"]
 
+    def count_active(self, lane: str) -> int:
+        """Runs of a lane still queued or running (a run is registered before its upload is read)."""
+        return self._q(
+            "SELECT COUNT(*) AS n FROM runs WHERE lane = ? AND status IN ('queued', 'running')", (lane,)
+        )[0]["n"]
+
     def delete_run(self, run_id: str) -> None:
         self._q("DELETE FROM runs WHERE id = ?", (run_id,))
 

@@ -69,13 +69,23 @@ def fill(text: str, report: dict, sample: dict, deployed: dict | None = None) ->
             else f"Unsaid spoke over the lecturer for {u['talk_over']:.1f} seconds a minute"
         )
         fit = "none" if o["in_silence"] == 0 else f"only {percent_words(o['in_silence'])}"
-        coverage = (
-            f" It covered more of the pointing moments, {percent_words(o['coverage'])} against "
-            f"{percent_words(u['coverage'])}, but mostly over the lecturer's voice."
-            if o["coverage"] > u["coverage"]
-            else f" Unsaid also covered more of the pointing moments: {percent_words(u['coverage'])} against "
-            f"{percent_words(o['coverage'])}."
-        )
+        if percent_words(o["coverage"]) == percent_words(u["coverage"]):
+            coverage = f" Both covered {percent_words(u['coverage'])} of the pointing moments."
+        elif o["coverage"] > u["coverage"]:
+            over = (
+                "mostly over the lecturer's voice"
+                if o["in_silence"] < 0.5
+                else "partly over the lecturer's voice"
+            )
+            coverage = (
+                f" It covered more of the pointing moments, {percent_words(o['coverage'])} against "
+                f"{percent_words(u['coverage'])}, but {over}."
+            )
+        else:
+            coverage = (
+                f" Unsaid also covered more of the pointing moments: {percent_words(u['coverage'])} against "
+                f"{percent_words(o['coverage'])}."
+            )
         values["evaluation_sentence"] = (
             f"On {report['clips']} lectures, {spoke}. The one-shot approach did, for {o['talk_over']:.0f} seconds of "
             f"every minute, and {fit} of its descriptions fit a pause.{coverage}"

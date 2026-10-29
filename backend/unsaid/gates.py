@@ -43,8 +43,10 @@ MEDIUM_WORDS = {
     "a", "an", "the", "this", "that", "these", "those", "it", "its", "their", "on", "in", "at", "to", "from", "with",
     "and", "or", "of", "for", "by", "as",
 }  # fmt: skip
-TITLE_WORDS = ("Dr", "Mr", "Mrs", "Ms", "Prof", "Sir", "St", "Mt", "Fig", "No", "vs")
-TITLES = re.compile(rf"\b({'|'.join(TITLE_WORDS)})\.", re.I)
+# Titles before a name: their period does not end the sentence. Case-sensitive and only before a capitalised word, so
+# "200 ms. Hand turns" still ends one.
+TITLE_WORDS = ("Dr", "Mr", "Mrs", "Ms", "Prof", "Sir", "St", "Mt")
+TITLES = re.compile(rf"\b({'|'.join(TITLE_WORDS)})\.(?=\s+[A-Z])")
 SPECULATION = re.compile(r"\b(?:seems?|appears?|probably|maybe|perhaps|might be|likely)\b", re.I)
 PAST_TENSE = re.compile(r"\b(?:was|were|had|did)\b", re.I)
 

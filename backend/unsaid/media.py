@@ -31,9 +31,10 @@ class VideoInfo:
     has_audio: bool
 
 
-async def _run(*args: str) -> tuple[str, str]:
+async def _run(*args: str, queued: bool = True) -> tuple[str, str]:
+    """`queued=False` skips the shared limit, for quick probes that a visitor's upload is waiting on."""
     slots = _slots.setdefault(asyncio.get_running_loop(), asyncio.Semaphore(FFMPEG_CONCURRENCY))
-    async with slots:
+    async with slots if queued else contextlib.nullcontext():
         proc = await asyncio.create_subprocess_exec(
             *args, stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE
         )
@@ -53,7 +54,15 @@ async def _run(*args: str) -> tuple[str, str]:
 
 async def probe(path: Path) -> VideoInfo:
     out, _ = await _run(
-        "ffprobe", "-v", "error", "-print_format", "json", "-show_format", "-show_streams", str(path)
+        "ffprobe",
+        "-v",
+        "error",
+        "-print_format",
+        "json",
+        "-show_format",
+        "-show_streams",
+        str(path),
+        queued=False,
     )
     data = json.loads(out)
     video = next((s for s in data.get("streams", []) if s.get("codec_type") == "video"), None)

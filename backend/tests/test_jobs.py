@@ -36,7 +36,7 @@ async def test_a_failed_run_still_charges_its_model_calls(tmp_path, monkeypatch)
     queue, store = make_queue(tmp_path)
     await start(queue, store, "r1")
     run = store.get_run("r1")
-    assert run["status"] == "failed" and "boom" in run["error"]
+    assert run["status"] == "failed" and "boom" not in run["error"]  # details stay in the server log
     assert round(store.spend_today("public"), 4) == 0.03  # 100k prompt tokens at $0.30 per million
     assert round(run["cost_usd"], 4) == 0.03
 
@@ -108,6 +108,51 @@ async def test_provider_failures_pause_live_runs(tmp_path, monkeypatch):
     monkeypatch.setattr(jobs, "run_pipeline", fails)
     queue, store = make_queue(tmp_path)
     for i in range(jobs.PROVIDER_FAILURES_BEFORE_PAUSE):
-        assert not queue.paused
+        assert not queue.paused_for("public")
         await start(queue, store, f"r{i}")
-    assert queue.paused
+    assert queue.paused_for("public") and not queue.paused_for("judge")  # judges keep their slot
+
+
+async def test_broken_uploads_do_not_pause_live_runs(tmp_path, monkeypatch):
+    async def unreadable(*args, **kwargs):
+        raise jobs.PerceptionFailed("could not read 4 of 4 segments")
+
+    monkeypatch.setattr(jobs, "run_pipeline", unreadable)
+    queue, store = make_queue(tmp_path)
+    for i in range(jobs.PROVIDER_FAILURES_BEFORE_PAUSE + 1):
+        await start(queue, store, f"r{i}")
+    assert not queue.paused_for("public")
+
+
+async def test_cancelling_a_queued_run_frees_its_place_at_once(tmp_path, monkeypatch):
+    release = asyncio.Event()
+
+    async def slow(*args, **kwargs):
+        await release.wait()
+
+    monkeypatch.setattr(jobs, "run_pipeline", slow)
+    queue, store = make_queue(tmp_path, max_concurrent_runs=2)
+    first = start(queue, store, "r0")
+    waiting = start(queue, store, "r1")
+    await asyncio.sleep(0.05)
+    assert queue.position("r1") == 1
+    queue.cancel("r1")
+    await waiting
+    assert store.get_run("r1")["status"] == "cancelled" and queue.position("r1") == 0
+    assert store.count_pending(session="session-r1", ip="") == 0
+    release.set()
+    await first
+
+
+async def test_a_stopped_run_is_charged_at_least_its_reserve(tmp_path, monkeypatch):
+    async def never_ends(*args, **kwargs):
+        await asyncio.Event().wait()
+
+    monkeypatch.setattr(jobs, "run_pipeline", never_ends)
+    queue, store = make_queue(tmp_path)
+    task = start(queue, store, "r1")
+    await asyncio.sleep(0.05)
+    queue.cancel("r1")
+    await task
+    assert store.get_run("r1")["status"] == "cancelled"
+    assert store.spend_today("public") == queue.settings.run_reserve_usd

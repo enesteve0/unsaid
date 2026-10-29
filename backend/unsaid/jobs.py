@@ -50,29 +50,40 @@ class RunQueue:
         self._cancel: dict[str, asyncio.Event] = {}
         self._tasks: dict[str, asyncio.Task] = {}
         self._provider_failures = 0
-        self.paused_until = 0.0
+        self.paused_until = 0.0  # every lane: credit or keys
+        self.public_paused_until = 0.0  # public lane only: the models are failing, keep judges' slot usable
         self.pause_reason = ""
 
     # ---- state ---------------------------------------------------------------------------------------------------
 
-    @property
-    def paused(self) -> bool:
-        return time.time() < self.paused_until
+    def paused_for(self, lane: str) -> bool:
+        now = time.time()
+        return now < self.paused_until or (lane != "judge" and now < self.public_paused_until)
 
-    def pause(self, seconds: float, reason: str) -> None:
-        self.paused_until = max(self.paused_until, time.time() + seconds)
+    def pause(self, seconds: float, reason: str, *, public_only: bool = False) -> None:
+        until = time.time() + seconds
+        if public_only:
+            self.public_paused_until = max(self.public_paused_until, until)
+        else:
+            self.paused_until = max(self.paused_until, until)
         self.pause_reason = reason
-        log.warning("live runs paused for %.0f s: %s", seconds, reason)
+        log.warning(
+            "live runs paused for %.0f s%s: %s", seconds, " (public lane)" if public_only else "", reason
+        )
 
     def active(self, lane: str | None = None) -> int:
         """Runs queued or running, in one lane or in all."""
         return sum(1 for value in self._lanes.values() if lane is None or value == lane)
 
     def committed_usd(self, lane: str) -> float:
-        """Spend already recorded today plus a reserve for every run of this lane still queued or running."""
-        return self.store.spend_today(lane) + self.active(lane) * self.settings.run_reserve_usd
+        """Spend already recorded today plus a reserve for every run of this lane still queued or running. The runs
+        are counted in the store, where a run is registered before its upload is read, so concurrent requests see
+        each other's reserve."""
+        return self.store.spend_today(lane) + self.store.count_active(lane) * self.settings.run_reserve_usd
 
     def over_budget(self, lane: str, *, reserve_new: bool) -> bool:
+        """`reserve_new`: may one more run join this lane (its own row not yet counted)? Otherwise: may a run that
+        reached its slot start, given what has really been spent?"""
         cap = self.settings.judge_daily_usd if lane == "judge" else self.settings.public_daily_usd
         extra = self.settings.run_reserve_usd if reserve_new else 0.0
         today = self.committed_usd(lane) if reserve_new else self.store.spend_today(lane)
@@ -103,8 +114,10 @@ class RunQueue:
             self._publish(run_id, {"type": "queued", "position": self.position(run_id)})
 
     def _finish(self, run_id: str, status: str, error: str = "", detail: str = "") -> None:
-        """Record how a run ended: `error` is shown to the visitor, `detail` stays on the server."""
-        self.store.update_run(run_id, status=status, finished=time.time(), error=(detail or error)[:500])
+        """Record how a run ended: `error` is shown to the visitor, `detail` only goes to the server log."""
+        if detail:
+            log.warning("run %s %s: %s", run_id, status, detail)
+        self.store.update_run(run_id, status=status, finished=time.time(), error=error[:500])
         self._publish(run_id, {"type": "finished", "status": status, **({"error": error} if error else {})})
 
     def _forget(self, run_id: str) -> None:
@@ -127,20 +140,23 @@ class RunQueue:
             return False
         event.set()
         task = self._tasks.get(run_id)
-        if run_id in self._waiting or task is None:
-            return True
-        task.cancel()  # stop in-flight model calls too
+        if task is not None:
+            task.cancel()  # leaves the queue at once, or stops in-flight model calls
         return True
 
     def _provider_failed(self) -> None:
         self._provider_failures += 1
         if self._provider_failures >= PROVIDER_FAILURES_BEFORE_PAUSE:
             self._provider_failures = 0
-            self.pause(600, "the models are not answering reliably")
+            self.pause(600, "the models are not answering reliably", public_only=True)
 
     async def _run(self, run_id: str, video: Path, options: RunOptions, lane: str) -> None:
         workdir = self.store.run_dir(run_id)
         ledger = Ledger()
+        started = False
+        interrupted = (
+            False  # stopped or timed out mid-run: a call cut off has no usage, so charge the reserve
+        )
         try:
             async with contextlib.AsyncExitStack() as slots:
                 if lane != "judge":
@@ -151,8 +167,9 @@ class RunQueue:
                 self._publish_positions()
                 if self._cancel[run_id].is_set():
                     raise Cancelled("before start")
-                if self.paused or self.over_budget(lane, reserve_new=False):
+                if self.paused_for(lane) or self.over_budget(lane, reserve_new=False):
                     raise OverBudget
+                started = True
                 self.store.update_run(run_id, status="running")
                 self._publish(run_id, {"type": "running"})
                 await asyncio.wait_for(
@@ -172,6 +189,7 @@ class RunQueue:
                 self._provider_failures = 0
                 self._finish(run_id, "done")
         except (Cancelled, asyncio.CancelledError):
+            interrupted = started
             self._finish(run_id, "cancelled")
         except OverBudget:
             self._finish(
@@ -192,6 +210,7 @@ class RunQueue:
             self.pause(900, "Token Factory rejected the API keys")
             self._finish(run_id, "failed", "Live describing is temporarily unavailable.", f"auth: {exc}")
         except TimeoutError:
+            interrupted = started
             self._finish(
                 run_id,
                 "failed",
@@ -199,7 +218,10 @@ class RunQueue:
                 "run timeout",
             )
         except (PerceptionFailed, TokenFactoryError) as exc:
-            self._provider_failed()
+            if isinstance(
+                exc, TokenFactoryError
+            ):  # a broken upload also fails perception; it is not the models
+                self._provider_failed()
             self._finish(
                 run_id,
                 "failed",
@@ -215,8 +237,12 @@ class RunQueue:
                 f"{type(exc).__name__}: {exc}",
             )
         finally:
+            charge = (
+                max(ledger.total_cost, self.settings.run_reserve_usd) if interrupted else ledger.total_cost
+            )
+            if charge:
+                self.store.add_spend(lane, charge)
             if ledger.total_cost:
-                self.store.add_spend(lane, ledger.total_cost)
                 self.store.update_run(run_id, cost_usd=round(ledger.total_cost, 6))
             if run_id in self._waiting:
                 self._waiting.remove(run_id)

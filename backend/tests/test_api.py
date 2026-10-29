@@ -125,10 +125,22 @@ def test_an_accepted_edit_reaches_the_downloads(app):
     assert "Gears turn behind glass." in (workdir / "transcript.html").read_text()
 
 
-def test_proxy_address_is_the_hop_the_proxy_appended():
+def test_proxy_address_is_the_hop_the_proxy_appended(monkeypatch):
+    monkeypatch.delenv("FLY_APP_NAME", raising=False)
     request = type("R", (), {})()
     request.headers = {"x-forwarded-for": "6.6.6.6, 203.0.113.9"}
     request.client = None
     assert api.client_ip(request) == "203.0.113.9"
-    request.headers = {"fly-client-ip": "198.51.100.4", "x-forwarded-for": "6.6.6.6"}
-    assert api.client_ip(request) == "198.51.100.4"
+    request.headers = {"fly-client-ip": "198.51.100.4", "x-forwarded-for": "6.6.6.6, 203.0.113.9"}
+    assert api.client_ip(request) == "203.0.113.9"  # off Fly, anyone can send that header
+    monkeypatch.setenv("FLY_APP_NAME", "unsaid-demo")
+    assert api.client_ip(request) == "198.51.100.4"  # on Fly, its proxy writes it
+
+
+def test_every_queued_run_holds_its_reserve_against_the_cap(app):
+    client, settings, _ = app
+    assert client.post("/api/judge", json={"code": "open-sesame-1234"}).status_code == 200
+    Store(settings.data_dir).add_spend("judge", settings.judge_daily_usd - settings.run_reserve_usd - 0.05)
+    assert client.post("/api/runs", data={"sample_id": "demo"}).status_code == 200  # its reserve still fits
+    second = client.post("/api/runs", data={"sample_id": "demo"})  # the first is queued and holds its reserve
+    assert second.status_code == 429 and "budget" in second.json()["detail"]

@@ -134,3 +134,5 @@ def test_names_match_whole_words_only():
 
 def test_a_title_does_not_hide_the_name_after_it():
     assert unknown_names("Photo of Dr. Smith at the board.", set()) == ["Smith"]
+    assert unknown_names("The pulse lasts 200 ms. Hand turns the crank.", set()) == []
+    assert unknown_names("The answer is no. Hand turns the crank.", set()) == []

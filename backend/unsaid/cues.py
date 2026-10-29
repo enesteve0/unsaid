@@ -3,8 +3,8 @@
 Nemotron 3 Ultra drafts every cue inside the lesson bible, with each silence's word budget in view. Code checks the
 draft. When a draft breaks a rule, Nemotron 3.5 Lightning repairs it (up to two turns quoting the exact failure), all
 cues in parallel. If the timing still fails, code trims trailing clauses, keeping the most important first clause.
-Only facts Ultra marked essential may become extended descriptions (the player pauses the video); anything else that
-cannot fit is left out and listed, never squeezed into a meaningless fragment.
+Only facts Ultra marked essential, or that the speaker points at, may become extended descriptions (the player pauses
+the video); anything else that cannot fit is left out and listed, never squeezed into a meaningless fragment.
 """
 
 from __future__ import annotations
@@ -121,7 +121,9 @@ def trim_candidates(text: str) -> Iterator[str]:
     """Shorter versions of a cue that keep its opening: drop trailing sentences, then trailing clauses."""
     sentences = [x for x in re.split(r"(?<=[.!?;])\s+", text.strip()) if x]
     for k in range(len(sentences) - 1, 0, -1):
-        yield " ".join(sentences[:k])
+        candidate = " ".join(sentences[:k])
+        if len(candidate.split()) >= MIN_INLINE_WORDS:
+            yield candidate
     clauses = [x for x in re.split(r",\s+|\s+[—–]\s+", sentences[0]) if x] if sentences else []
     for k in range(len(clauses) - 1, 0, -1):
         candidate = ", ".join(clauses[:k]).rstrip(".;:,") + "."
@@ -179,15 +181,14 @@ async def write_cue(
     Only an essential fact, or one the speaker points at, may pause the video; anything else that does not fit a
     silence is left out. A pause is never earlier than `pause_at`, so it never comes before the thing is on screen.
     """
-    essential = max(f.importance for f in facts) >= 3
-    may_pause = essential or any(f.moment_ids for f in facts)
+    may_pause = max(f.importance for f in facts) >= 3 or any(f.moment_ids for f in facts)
     start_hint = pause_at if pause_at is not None else min(f.t for f in facts)
     if gap is None and not may_pause:
         return None
     start, window_end, budget = _window(gap, start_hint, settings)
     extended = gap is None
     if gap is not None and budget < MIN_INLINE_WORDS:
-        if not essential:
+        if not may_pause:
             return None
         extended = True
         start, window_end, budget = _window(
@@ -282,7 +283,7 @@ async def write_cue(
                 break
 
     if not extended and any(f.startswith(TIMING) for f in report.failures):
-        if not essential:
+        if not may_pause:
             return None
         extended = True
         start, window_end, _ = _window(None, max(start, start_hint), settings)
@@ -368,7 +369,14 @@ async def write_all(
     for p in placed:
         if p.pointed:
             p.gap = next(
-                (g for g in gaps if g.id not in used and p.fits(g, settings.speech_guard_seconds)), None
+                (
+                    g
+                    for g in gaps
+                    if g.id not in used
+                    and p.fits(g, settings.speech_guard_seconds)
+                    and word_budget(g, settings) >= MIN_INLINE_WORDS
+                ),
+                None,
             )
             if p.gap is not None:
                 used.add(p.gap.id)
@@ -397,10 +405,15 @@ async def write_all(
             raise outcome
         if isinstance(outcome, BaseException):
             log.warning("a description was dropped: %s: %s", type(outcome).__name__, outcome)
-    cues = sorted((c for c in written if isinstance(c, Cue)), key=lambda c: c.start)
+    return separate_pauses([c for c in written if isinstance(c, Cue)])
+
+
+def separate_pauses(cues: list[Cue]) -> list[Cue]:
+    """A pause for an extended description never cuts into a description being spoken: it moves to that
+    description's end, which is still silent, since inline descriptions sit in silences."""
     for cue in cues:
         if cue.extended:
             speaking = next((c for c in cues if not c.extended and c.start <= cue.start < c.end), None)
-            if speaking is not None:  # inline descriptions sit in silences, so its end is still silent
+            if speaking is not None:
                 cue.start, cue.end = speaking.end, round(speaking.end + 0.5, 3)
     return sorted(cues, key=lambda c: c.start)

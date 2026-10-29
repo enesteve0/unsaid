@@ -11,6 +11,7 @@ import hashlib
 import hmac
 import json
 import logging
+import os
 import secrets
 import shutil
 import time
@@ -79,10 +80,11 @@ class UploadLimit:
 def client_ip(request: Request) -> str:
     """The visitor's address as the hosting proxy saw it.
 
-    Fly.io sets Fly-Client-IP itself. Otherwise the last X-Forwarded-For entry is the one the nearest proxy appended;
-    earlier entries come from the client and can be forged.
+    On Fly.io (FLY_APP_NAME is set) the proxy writes Fly-Client-IP itself; anywhere else that header is the client's
+    word and is ignored. Otherwise the last X-Forwarded-For entry is the one the nearest proxy appended; earlier
+    entries come from the client and can be forged.
     """
-    fly = request.headers.get("fly-client-ip", "").strip()
+    fly = request.headers.get("fly-client-ip", "").strip() if os.environ.get("FLY_APP_NAME") else ""
     if fly:
         return fly
     forwarded = [h.strip() for h in request.headers.get("x-forwarded-for", "").split(",") if h.strip()]
@@ -176,7 +178,9 @@ def create_app(settings: Settings | None = None) -> FastAPI:
             "ok": True,
             "provider": settings.provider,
             "host": settings.host,
-            "demo_mode": "recorded" if (settings.demo_mode == "recorded" or queue.paused) else "live",
+            "demo_mode": "recorded"
+            if (settings.demo_mode == "recorded" or queue.paused_for("public"))
+            else "live",
             "models": model_status["models"],
             "models_checked": model_status["checked"],
             "live_runs": queue.active(),
@@ -185,6 +189,9 @@ def create_app(settings: Settings | None = None) -> FastAPI:
 
     @app.post("/api/judge")
     async def judge(body: JudgeCode, request: Request, response: Response) -> dict[str, Any]:
+        if len(judge_attempts) > 10_000:  # forged or many addresses: forget everyone's old attempts
+            for ip in [k for k, v in judge_attempts.items() if not v or v[-1] < time.time() - 3600]:
+                del judge_attempts[ip]
         attempts = judge_attempts.setdefault(client_ip(request), deque())
         while attempts and attempts[0] < time.time() - 3600:
             attempts.popleft()
@@ -230,7 +237,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         title: Annotated[str, Form()] = "My lecture",
         source_url: Annotated[str | None, Form()] = None,
     ) -> dict[str, Any]:
-        if settings.demo_mode == "recorded" or queue.paused:
+        if settings.demo_mode == "recorded" or queue.paused_for(lane_of(request)):
             raise HTTPException(
                 503, "Live describing is paused right now. The recorded examples show real runs."
             )

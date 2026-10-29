@@ -85,7 +85,12 @@ def report_values(report: dict) -> dict[str, str]:
         "heldout_clips": str(splits["heldout"]["clips"]) if "heldout" in splits else "0",
     }
     fit = "none" if o["in_silence"] == 0 else f"only {pct(o['in_silence'])}"
-    if u["coverage"] >= o["coverage"]:
+    if pct(u["coverage"]) == pct(o["coverage"]):
+        values["coverage_sentence"] = (
+            f"Both covered {pct(u['coverage'])} of the pointing moments; {fit} of the one-shot descriptions fit a "
+            "pause, and Unsaid's all do."
+        )
+    elif u["coverage"] > o["coverage"]:
         values["coverage_sentence"] = (
             f"Unsaid covered more of the pointing moments ({pct(u['coverage'])} against {pct(o['coverage'])}) "
             "without speaking over the lecturer."

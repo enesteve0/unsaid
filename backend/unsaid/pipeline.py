@@ -22,7 +22,7 @@ from .bible import build_bible
 from .config import Settings
 from .context import ContextResult, gather_context
 from .correct import correct_unsupported
-from .cues import verified_names, write_all
+from .cues import separate_pauses, verified_names, write_all
 from .deixis import find_pointing_moments
 from .ledger import Ledger
 from .perceive import Observation, perceive
@@ -285,6 +285,8 @@ async def run_pipeline(
             workdir=workdir,
             moment_times=moment_times,
         )
+        separate_pauses(cues)  # a correction can lengthen a description that a pause was moved behind
+        cues.sort(key=lambda c: c.start)
 
     await stage("check", check)
 
