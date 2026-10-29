@@ -31,7 +31,7 @@ says:
 - Every description is **checked by code and re-checked against the frames**, and shows the evidence.
 - It exports a WebVTT description track, captions, a transcript with descriptions inline, and Final Cut Pro markers.
 - It suggests **the sentence the lecturer could say next time**, so the fix happens at the source.
-- {{backlog_line}}
+- Long lectures go to an **overnight batch job** (built for Nebius Serverless Jobs) with a dollar cap.
 
 Try the 30-second test on the home page: hear a clip as a blind student does, then hear it with Unsaid.
 
@@ -129,7 +129,7 @@ fix happens before the recording, which is why Unsaid coaches the lecturer.
 
 ## Built with
 
-nebius-token-factory, {{hosting_tags}}nvidia-nemotron, nemotron-3-ultra, nemotron-3.5-super-vl,
+nebius-token-factory, github-pages, nvidia-nemotron, nemotron-3-ultra, nemotron-3.5-super-vl,
 nemotron-3.5-lightning, nemotron-3-nano, nvidia-parakeet, onnxruntime, tavily, python, fastapi, pydantic, ffmpeg,
 react, typescript, vite, playwright, axe-core, docker
 
@@ -138,8 +138,10 @@ react, typescript, vite, playwright, axe-core, docker
 - **Track:** Best Apps and Agents
 - **New or existing:** New. Started 2026-10-26.
 - **Repository:** https://github.com/enesteve0/unsaid (MIT, LICENSE in About)
-- **Demo:** {{demo_url}}. Testing instructions: open {{demo_url}}/?judge=1 for the 30-second tour. The access code in
-  the private testing instructions unlocks a reserved judging lane, so live runs never wait behind public traffic.
+- **Demo:** https://enesteve0.github.io/unsaid. Testing instructions: open https://enesteve0.github.io/unsaid/?judge=1 for the 30-second tour. The hosted demo is
+  a static site with the recorded Token Factory runs, every check and the evaluation: it has no server, so it stays
+  up through judging at no cost. Describing a new clip needs the full app: clone the repository, add a Token Factory
+  key and run it (README, Quickstart); the video shows a live run end to end.
 - **Models and why:** see “How we built it”.
   - Super VL is the only vision model.
   - Ultra is used once per video, for whole-lecture judgement over a 1M-token context.

@@ -139,17 +139,23 @@ def sample_values(sample: dict) -> dict[str, str]:
 def deployment_values(base: str) -> dict[str, str]:
     """What the text may say about hosting, as the deployed app reports it (claims follow what actually runs)."""
 
-    def get(path: str) -> dict:
-        with urllib.request.urlopen(base + path, timeout=20) as response:
-            return json.load(response)
+    def get(path: str) -> dict | None:
+        try:
+            with urllib.request.urlopen(base + path, timeout=20) as response:
+                return json.load(response)
+        except (OSError, ValueError):  # the static demo has no API
+            return None
 
-    host, backlog = get("/api/health").get("host", ""), get("/api/backlog").get("available", False)
+    health, backlog_info = get("/api/health"), get("/api/backlog") or {}
+    host, backlog = (health or {}).get("host", ""), backlog_info.get("available", False)
     on_nebius = "Nebius" in host
     return {
         "backlog_line": "Long lectures run **overnight as a Nebius Serverless Job** with a dollar cap."
         if backlog
         else "Long lectures go to an **overnight batch job** (built for Nebius Serverless Jobs) with a dollar cap.",
-        "hosting_tags": "nebius-ai-cloud, nebius-serverless, " if on_nebius else "fly.io, ",
+        "hosting_tags": "nebius-ai-cloud, nebius-serverless, "
+        if on_nebius
+        else ("github-pages, " if health is None else "fly.io, "),
     }
 
 
@@ -201,6 +207,9 @@ def main() -> int:
     parser.add_argument(
         "--allow-prototype", action="store_true", help="accept runs not made on Token Factory"
     )
+    parser.add_argument(
+        "--allow-partial", action="store_true", help="accept a report the evaluation is still writing"
+    )
     parser.add_argument("--report", type=Path, default=REPORT)
     parser.add_argument("--sample", type=Path, default=SAMPLE)
     args = parser.parse_args()
@@ -213,9 +222,9 @@ def main() -> int:
 
     report = json.loads(args.report.read_text()) if args.report.exists() else {"available": False}
     if report.get("available"):
-        if report.get("complete") is False:
+        if report.get("complete") is False and not args.allow_partial:
             problems.append(f"{args.report.name} is partial: the evaluation did not finish every clip")
-        if report.get("provider") not in EVAL_PROVIDERS and not args.allow_prototype:
+        elif report.get("provider") not in EVAL_PROVIDERS and not args.allow_prototype:
             problems.append(f"{args.report.name} comes from an unknown provider ({report.get('provider')!r})")
         else:
             values |= report_values(report)

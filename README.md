@@ -12,7 +12,7 @@ Built for the [Nebius x NVIDIA Global AI Hackathon](https://nebiusglobalaihackat
 
 | | |
 | --- | --- |
-| Live demo | _added at submission_ |
+| Demo | [enesteve0.github.io/unsaid](https://enesteve0.github.io/unsaid/): the recorded runs, every check and the evaluation, as a static site (no server, so it stays up through judging at no cost). Describing a new clip needs the full app with a Token Factory key: see [Quickstart](#quickstart-local). |
 | Demo video | _added at submission_ |
 | License | [MIT](LICENSE) for the code. Models and media keep their own licenses; see [Credits](#credits). |
 
@@ -85,8 +85,8 @@ Models write; code decides. A description is used only if:
 ## Results
 
 <!-- results:start -->
-Measured on Nebius Token Factory before submission (`scripts/tf_day.sh`); the app's Evaluation page shows the
-method, both clip sets and the failure list.
+Filled in from the evaluation report before submission (`backend/eval/run_eval.py`, `scripts/fill_numbers.py`); the
+demo's Evaluation page shows the method, both clip sets and the failure list.
 <!-- results:end -->
 
 ## Where Nebius Token Factory accelerated the work
@@ -123,7 +123,13 @@ The first run downloads NVIDIA Parakeet (int8, about 630 MB) into `backend/model
 Tests: `cd backend && uv run pytest` (no keys needed; Token Factory is mocked) and
 `cd web && pnpm exec playwright test` (WCAG 2.1 AA checks with axe against a running server).
 
-## Deploy on Nebius
+## Deploy
+
+The public demo is static: `infra/pages/build.sh` builds the web app with the recorded examples and the evaluation
+report, and `.github/workflows/pages.yml` publishes it to GitHub Pages on every push to `master`. The full app
+(live describing) runs as one container on any host; scripts for two follow.
+
+### Nebius
 
 ```bash
 # once: Nebius CLI >= 0.12.277, `nebius profile create`, a project in eu-west1 (non-GPU quota by default)
@@ -142,7 +148,16 @@ nebius ai job create --name unsaid-backlog --image <image> --platform cpu-d3 --p
   --env-secret NEBIUS_API_KEY=unsaid-secrets --volume s3://<bucket>:/out:rw
 ```
 
-## Operations (judging period)
+### Fly.io
+
+```bash
+fly auth login
+APP=unsaid-demo REGION=ams infra/fly/deploy.sh   # one always-on machine with a volume; keys imported from .env
+```
+
+## Operating the full app
+
+The hosted demo is static and makes no model calls. When the full app is deployed, these controls apply:
 
 - Free, public, no sign-up. Each browser gets its own runs. Examples load instantly.
 - An access code (in the Devpost testing instructions) opens the judges' lane: a run slot that public runs never
@@ -155,6 +170,8 @@ nebius ai job create --name unsaid-backlog --image <image> --platform cpu-d3 --p
   Token Factory credit runs out or a key is rejected, all live runs pause. The clearly labelled recorded examples
   always remain, and `DEMO_MODE=recorded` does the same on purpose.
 - Uploaded videos, and the audio, clips and frames taken from them, are deleted after 24 hours.
+- `PUBLIC_LIVE=false` keeps the public on the recorded examples while the access code still opens live runs, and
+  `LIVE_UNTIL=YYYY-MM-DD` ends live runs on a date, for example when free model credit expires.
 
 ## Limitations
 

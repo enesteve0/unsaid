@@ -20,3 +20,6 @@ Rules learned from corrections during this project. Review at session start.
   and write a test for each fix that fails on the old code. Self-caught on Oct 29.
 - **Claims follow the deployment:** text about where the app runs (footer, Devpost, video narration) is derived
   from what the deployed app reports, never written ahead of it.
+- **Never reset a file to undo a script's output when it also holds unsaved edits:** `git checkout README.md` to drop
+  a generated table also dropped an hour's uncommitted README changes. Commit hand edits before running generators
+  that write to the same file, or restore from a copy taken just before. Self-caught on Oct 29.
