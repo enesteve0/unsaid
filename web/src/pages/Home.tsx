@@ -8,14 +8,17 @@ import { STAGES } from '../lib/stages'
 import { isPublished } from '../lib/timeline'
 import type { Cue, RunResult, SampleInfo } from '../types'
 
+/** The moment the home page plays: the published window if it holds a description (one in a silence first, else
+ * one that pauses the video), otherwise the first pointing moment Unsaid described. */
 function heroWindow(result: RunResult, sample: SampleInfo): { start: number; end: number; cue?: Cue } {
-  const cues = result.cues.filter((c) => isPublished(c) && !c.extended)
+  const cues = result.cues.filter(isPublished)
   if (sample.hero) {
-    const cue = cues.find((c) => c.start >= sample.hero!.start && c.start <= sample.hero!.end)
-    return { start: sample.hero.start, end: sample.hero.end, cue }
+    const inside = cues.filter((c) => c.start >= sample.hero!.start && c.start <= sample.hero!.end)
+    const cue = inside.find((c) => !c.extended) ?? inside[0]
+    if (cue) return { start: sample.hero.start, end: sample.hero.end, cue }
   }
   const visual = result.moments.find((m) => result.resolutions[m.id]?.refers_to_visual && cues.some((c) => c.moment_ids.includes(m.id)))
-  const cue = visual ? cues.find((c) => c.moment_ids.includes(visual.id)) : cues[0]
+  const cue = (visual && cues.find((c) => c.moment_ids.includes(visual.id))) ?? cues[0]
   if (!cue) return { start: 0, end: Math.min(result.video.duration, 30) }
   return { start: Math.max(cue.start - 9, 0), end: Math.min(cue.end + 3, result.video.duration), cue }
 }
