@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import asyncio
 import base64
+import contextlib
 import json
 import re
 from dataclasses import dataclass
@@ -11,6 +12,10 @@ from pathlib import Path
 
 # Super VL accepts data URLs up to ~13.98M characters (~10 MiB before base64). Keep a safety margin.
 MAX_CLIP_BYTES = int(9.0 * 1024 * 1024)
+# A run starts one ffmpeg per segment and per checked cue; a few at a time keep the CPU for speech recognition.
+FFMPEG_CONCURRENCY = 3
+FFMPEG_TIMEOUT_SECONDS = 600.0
+_slots: dict[asyncio.AbstractEventLoop, asyncio.Semaphore] = {}
 
 
 class MediaError(RuntimeError):
@@ -27,10 +32,20 @@ class VideoInfo:
 
 
 async def _run(*args: str) -> tuple[str, str]:
-    proc = await asyncio.create_subprocess_exec(
-        *args, stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE
-    )
-    out, err = await proc.communicate()
+    slots = _slots.setdefault(asyncio.get_running_loop(), asyncio.Semaphore(FFMPEG_CONCURRENCY))
+    async with slots:
+        proc = await asyncio.create_subprocess_exec(
+            *args, stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE
+        )
+        try:
+            out, err = await asyncio.wait_for(proc.communicate(), FFMPEG_TIMEOUT_SECONDS)
+        except BaseException as exc:  # a timeout, or the run was stopped: never leave ffmpeg running
+            with contextlib.suppress(ProcessLookupError):
+                proc.kill()
+            await asyncio.shield(proc.wait())
+            if isinstance(exc, TimeoutError):
+                raise MediaError(f"{args[0]} took longer than {FFMPEG_TIMEOUT_SECONDS:.0f} s") from exc
+            raise
     if proc.returncode != 0:
         raise MediaError(f"{args[0]} failed ({proc.returncode}): {err.decode(errors='replace')[-800:]}")
     return out.decode(errors="replace"), err.decode(errors="replace")
