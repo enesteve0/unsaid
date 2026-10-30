@@ -68,7 +68,15 @@ by a Token Factory run before submission.
   activation code for the promo-code form linked from the Devpost resources page. Entered as a promo code in the
   console, it is rejected. The form needs the owner's personal details, so it is the owner's step. It works only
   from that link, which carries the event and activation code: on Oct 30 the bare nebius.com/promo-code URL, which
-  Claude had opened, ended in "no event name found". Reopened from the Devpost link, the form has the event set. Until promo credit exists, no Token
+  Claude had opened, ended in "no event name found". Reopened from the Devpost link, the form has the event set;
+  submitted from there, it was answered by email that the code "could not be issued because the event in your
+  request was incorrect". The FAQ sends credit problems to the Nebius Discord, which is not accessible from Turkey.
+- **Owner decision, 2026-10-30, about 12:45 TRT: no Token Factory spend at all.** Offered a run of about 15 cents, then four
+  capped calls of about $0.0001, the owner chose "strictly zero calls", after being shown the FAQ answer that NVIDIA
+  models through another provider do not satisfy the platform rule. Consequences, all disclosed: no Token Factory
+  inference call; every run (example, evaluation, video) is from NVIDIA's API catalog, with Nemotron 3.5 Lightning
+  standing in for Nano; the README, Devpost text, site footer and About page, video narration, end card and
+  thumbnail say so; `docs/SUBMISSION.md` marks the runtime-call requirement as not met. Until promo credit exists, no Token
   Factory inference call is made. Listing models, which is free, confirmed the key and all five NVIDIA models.
 - **Tavily:** free plan, plus the `BBDEVPOST` coupon (8,000 credits). No card.
 - **Evaluation:** run on NVIDIA's API catalog (build.nvidia.com) with the same Nemotron models, at no cost, as the

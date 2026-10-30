@@ -3,11 +3,12 @@ Copyright (c) 2026 enesteve0. Application code licensed under the MIT License (s
 
 This project calls and redistributes nothing from the following models except through their APIs or as noted.
 
-NVIDIA Nemotron 3 Nano (via Nebius Token Factory)
+NVIDIA Nemotron 3 Nano (through Nebius Token Factory by default; the published runs used NVIDIA's API catalog)
   Licensed by NVIDIA Corporation under the NVIDIA Nemotron Model License.
   https://www.nvidia.com/en-us/agreements/enterprise-software/nvidia-nemotron-open-model-license/
 
-NVIDIA Nemotron 3 Ultra, Nemotron 3.5 Super VL, Nemotron 3.5 Lightning (via Nebius Token Factory)
+NVIDIA Nemotron 3 Ultra, Nemotron 3.5 Super VL, Nemotron 3.5 Lightning (through Nebius Token Factory by default; the
+published runs used NVIDIA's API catalog)
   Licensed under the OpenMDW License 1.1.
 
 NVIDIA Parakeet TDT 0.6B v2 (downloaded at build time as an ONNX export, istupakov/parakeet-tdt-0.6b-v2-onnx)

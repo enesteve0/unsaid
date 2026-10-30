@@ -17,12 +17,12 @@ clearly different voice so viewers can tell narration and description apart.
 | 0:16–0:20 | Text: *Which points?* | — |
 | 0:20–0:38 | Black. Same clip. Amber text appears in the pause as it is spoken. Title fades in: **Unsaid** | Lecture audio, then the description voice in the pause: the real cue from the deployed run. |
 | 0:38–0:52 | Home page: the two buttons, the vermilion highlight on “these points”. | VO: “Lecturers point instead of speaking: as you can see, this curve, these points. Whatever they show stays unsaid. Unsaid finds those moments and describes them in the pauses, without ever talking over the lecture.” |
-| 0:52–1:22 | Describe page: upload, queue, the nine stages lighting up with model names; then the timeline with amber cues slotted into silences. | VO: “Upload a lecture. NVIDIA Parakeet (on Nebius AI Cloud, if that is where the demo runs) transcribes it and finds every silence. Nemotron 3.5 Super VL watches each segment and reads the slides. Nemotron 3 Nano works out what each ‘this’ points at. Then Nemotron 3 Ultra reads the whole lecture at once on Nebius Token Factory, and plans what is unsaid and which pause it fits.” |
+| 0:52–1:22 | Describe page: upload, queue, the nine stages lighting up with model names; then the timeline with amber cues slotted into silences. | VO: “Upload a lecture. NVIDIA Parakeet (on Nebius AI Cloud, if that is where the demo runs) transcribes it and finds every silence. Nemotron 3.5 Super VL watches each segment and reads the slides. A small Nemotron model works out what each ‘this’ points at. Then Nemotron 3 Ultra reads the whole lecture at once, and plans what is unsaid and which pause it fits. Unsaid is written for Nebius Token Factory, but our hackathon credit was never issued, so this run uses the same models on NVIDIA's API catalog.” |
 | 1:22–1:50 | Review cards: “fits the 5.6 s silence”, “every number is printed on screen”, claims checked against frames. | VO: “Models write; code decides. A description must fit its silence, never overlap speech, and use only numbers printed on screen and names from the screen, the speech or the video’s own page, which Tavily looks up. Nemotron 3.5 Lightning repairs anything that breaks a rule, and Super VL checks every claim against the frames again.” |
 | 1:50–2:15 | Evaluation page: Unsaid vs one-shot baseline; then the failures list. | VO with the measured comparison from `report.json` (talk-over, coverage, invented numbers or names), then: “and we publish where Unsaid still fails.” |
 | 2:15–2:32 | Models & cost tab; backlog digest. | VO: cost per minute of video from the ledger; the backlog line says “a Nebius Serverless Job” only if the deployed app has a digest from one. |
 | 2:32–2:48 | Lecturer tips tab; end card. | VO: “And because the best description is the one the lecturer says aloud, Unsaid suggests the sentence to say next time. In presentation videos, 72% of what is shown is never properly described. Unsaid says it.” |
-| 2:48–2:55 | End card: Unsaid · built with NVIDIA Nemotron on Nebius Token Factory · demo URL · GitHub. | — |
+| 2:48–2:55 | End card: Unsaid · built with NVIDIA Nemotron and NVIDIA Parakeet · demo URL · GitHub. | — |
 
 ## Production
 
@@ -44,9 +44,10 @@ subtitles, if it exists (Unsaid's own captions of the video).
 **Description:**
 
 > Lecturers point instead of speaking: "as you can see, this curve". Unsaid finds those moments and describes what
-> they show in the pauses, never over the lecturer. It uses four NVIDIA Nemotron models on Nebius Token Factory
-> (3.5 Super VL, 3 Ultra, 3.5 Lightning, 3 Nano) and NVIDIA Parakeet speech recognition, and enforces timing and
-> grounding rules in code.
+> they show in the pauses, never over the lecturer. It uses NVIDIA Nemotron models (3.5 Super VL, 3 Ultra,
+> 3.5 Lightning, 3 Nano) and NVIDIA Parakeet speech recognition, and enforces timing and grounding rules in code.
+> Unsaid is written for Nebius Token Factory; our hackathon credit was never issued, so the runs shown used the same
+> models on NVIDIA's API catalog.
 >
 > Demo: https://enesteve0.github.io/unsaid/
 > Code: https://github.com/enesteve0/unsaid

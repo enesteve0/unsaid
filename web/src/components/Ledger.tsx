@@ -4,7 +4,7 @@ import type { LedgerSummary } from '../types'
 const ROLE: Record<string, string> = {
   'Nemotron 3.5 Super VL': 'Watches every segment, then checks every description against the frames',
   'Nemotron 3 Ultra': 'Reads the whole lecture at once and decides what is unsaid and where it fits',
-  'Nemotron 3.5 Lightning': 'Writes and rewrites each description until it fits its silence',
+  'Nemotron 3.5 Lightning': 'Repairs and corrects descriptions and writes tips; where Nano is unavailable, also resolves each “this”',
   'Nemotron 3 Nano': 'Decides what each “this” or “here” points at',
   'Nemotron 3 Super': 'Fallback for planning when Ultra is unavailable',
 }
@@ -18,7 +18,7 @@ export function Ledger({ summary, minutes }: { summary: LedgerSummary; minutes: 
         <caption className="visually-hidden">Model calls and cost for this video</caption>
         <thead>
           <tr>
-            <th scope="col">Model on Nebius Token Factory</th>
+            <th scope="col">Model (Token Factory ID)</th>
             <th scope="col" className="num">
               Calls
             </th>

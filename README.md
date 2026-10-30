@@ -5,14 +5,22 @@
 Lecturers point instead of speaking: *“…and as you can see, this curve tells us everything.”* A blind or low-vision
 student hears the sentence but never learns what the curve shows. Unsaid watches a lecture video, finds the moments
 where the speech relies on the picture, and describes what is unsaid in the pauses, without ever talking over the
-lecturer. It runs on NVIDIA Nemotron models served by **Nebius Token Factory**, with NVIDIA Parakeet speech recognition
-on CPU and an overnight backlog job built for **Nebius Serverless Jobs**.
+lecturer. It is written for NVIDIA Nemotron models on **Nebius Token Factory**, with NVIDIA Parakeet speech
+recognition on CPU and an overnight backlog job built for **Nebius Serverless Jobs**.
+
+> **Token Factory status.** Unsaid has not made an inference call to Token Factory. The hackathon's $25 Token Factory
+> credit was never issued: the credit form rejected the event code in the official Devpost link, and Nebius handles
+> such cases only on Discord, which is not accessible from Turkey. We chose not to pay for calls. Every run in this
+> repository, the demo, the evaluation and the video therefore used the same Nemotron models through NVIDIA's API
+> catalog (build.nvidia.com), with Nemotron 3.5 Lightning standing in for Nemotron 3 Nano, which our catalog key
+> lacked. Costs are shown at Token Factory list prices. `PROVIDER=tokenfactory` is the default and needs a key with
+> credit.
 
 Built for the [Nebius x NVIDIA Global AI Hackathon](https://nebiusglobalaihackathon.devpost.com/), *Best Apps and Agents* track.
 
 | | |
 | --- | --- |
-| Demo | [enesteve0.github.io/unsaid](https://enesteve0.github.io/unsaid/): the recorded runs, every check and the evaluation, as a static site (no server, so it stays up through judging at no cost). Describing a new clip needs the full app with a Token Factory key: see [Quickstart](#quickstart-local). |
+| Demo | [enesteve0.github.io/unsaid](https://enesteve0.github.io/unsaid/): the recorded runs, every check and the evaluation, as a static site (no server, so it stays up through judging at no cost). Describing a new clip needs the full app with a Token Factory or NVIDIA API catalog key: see [Quickstart](#quickstart-local). |
 | Demo video | _added at submission_ |
 | License | [MIT](LICENSE) for the code. Models and media keep their own licenses; see [Credits](#credits). |
 
@@ -106,7 +114,11 @@ On the held-out clips alone, Unsaid covered 38% of the pointing moments (one-sho
 Method, both splits and the failure list: the app's Evaluation page and `backend/eval/run_eval.py`.
 <!-- results:end -->
 
-## Where Nebius Token Factory accelerated the work
+## Built for the Token Factory API
+
+Written against Token Factory's documented API. Without credit we could not call it, so every behaviour below that
+needs a live model was exercised on NVIDIA's API catalog, which serves the same models through the same
+OpenAI-compatible interface; the rest is covered by tests.
 
 - **One API, four model sizes.** Routing each step to the right Nemotron size was a configuration change, not four
   integrations. Model chains live in environment variables with fallbacks
@@ -136,6 +148,9 @@ uv run python -c "from unsaid.api import main; main()"                          
 ```
 
 The first run downloads NVIDIA Parakeet (int8, about 630 MB) into `backend/models/`.
+
+Without Token Factory credit, use NVIDIA's API catalog, as every run in this repository did: set
+`PROVIDER=nvidia_build` and `NVIDIA_API_KEY` (from build.nvidia.com), plus `ALLOW_NON_TOKENFACTORY=1` for the web app.
 
 Tests: `cd backend && uv run pytest` (no keys needed; Token Factory is mocked) and
 `cd web && pnpm exec playwright test` (WCAG 2.1 AA checks with axe against a running server).
@@ -210,7 +225,8 @@ Unsaid focuses on the moments the speech points at, enforces timing and groundin
 ## Credits
 
 - Models: NVIDIA Nemotron 3 Ultra, Nemotron 3.5 Super VL and Nemotron 3.5 Lightning (OpenMDW-1.1) and Nemotron 3 Nano
-  (NVIDIA Nemotron Open Model License) via Nebius Token Factory. NVIDIA Parakeet TDT 0.6B v2 (CC-BY-4.0) through
+  (NVIDIA Nemotron Open Model License), written for Nebius Token Factory and run here through NVIDIA's API catalog.
+  NVIDIA Parakeet TDT 0.6B v2 (CC-BY-4.0) through
   [onnx-asr](https://github.com/istupakov/onnx-asr) (MIT). Silero VAD (MIT). See [NOTICE](NOTICE).
 - Web search: [Tavily](https://tavily.com).
 - Typefaces: Atkinson Hyperlegible Next by the Braille Institute, Instrument Serif and IBM Plex Mono (all OFL).

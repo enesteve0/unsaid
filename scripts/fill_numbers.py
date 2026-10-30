@@ -29,7 +29,8 @@ VISION = "Nemotron 3.5 Super VL"
 # Where the evaluation may have run, and how the texts say so.
 EVAL_PROVIDERS = {
     "tokenfactory": "on Nebius Token Factory",
-    "nvidia_build": "on NVIDIA's API catalog (build.nvidia.com) with the same Nemotron models, at no cost to us, with "
+    "nvidia_build": "on NVIDIA's API catalog (build.nvidia.com) with the same Nemotron models (Lightning standing in "
+    "for Nano, which our catalog key lacked), at no cost to us, with "
     "costs priced at Token Factory list prices",
 }
 WORDS = {1: "One", 2: "Two", 3: "Three", 4: "Four", 5: "Five", 6: "Six", 7: "Seven", 8: "Eight", 9: "Nine"}

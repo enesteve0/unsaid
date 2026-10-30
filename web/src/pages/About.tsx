@@ -29,8 +29,10 @@ export function About() {
           ))}
         </ol>
         <p>
-          Every model call goes through Nebius Token Factory. Each call is logged with its tokens, cached tokens, latency and
-          cost, so every description has a price and a reason.
+          Unsaid sends every model call to Nebius Token Factory by default. The runs in this demo used the same models on
+          NVIDIA's API catalog instead, because our hackathon credit for Token Factory was never issued. Each call is logged
+          with its tokens, cached tokens, latency and cost at Token Factory list prices, so every description has a price
+          and a reason.
         </p>
       </section>
 
@@ -87,8 +89,8 @@ export function About() {
       <section style={{ paddingTop: 36 }}>
         <h2 style={{ fontSize: '2rem' }}>Credits</h2>
         <p>
-          Models: NVIDIA Nemotron 3 Ultra, Nemotron 3.5 Super VL, Nemotron 3.5 Lightning and Nemotron 3 Nano on Nebius Token
-          Factory; NVIDIA Parakeet TDT 0.6B v2 (CC-BY-4.0) via onnx-asr. Typeface Atkinson Hyperlegible Next by the Braille
+          Models: NVIDIA Nemotron 3 Ultra, Nemotron 3.5 Super VL, Nemotron 3.5 Lightning and Nemotron 3 Nano, written for
+          Nebius Token Factory (on NVIDIA's API catalog, which served the runs shown, Lightning also does Nano's job); NVIDIA Parakeet TDT 0.6B v2 (CC-BY-4.0) via onnx-asr. Typeface Atkinson Hyperlegible Next by the Braille
           Institute. Example videos are credited on their pages.
         </p>
       </section>

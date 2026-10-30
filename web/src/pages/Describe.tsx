@@ -98,7 +98,7 @@ export function Describe() {
       {paused && (
         <p className="notice">
           {health?.live_status === 'static'
-            ? 'This demo is a static site that shows recorded runs. To describe your own lecture, run Unsaid with your own Nebius Token Factory key: see Quickstart in the README on GitHub.'
+            ? 'This demo is a static site that shows recorded runs. To describe your own lecture, run Unsaid with your own Nebius Token Factory or NVIDIA API catalog key: see Quickstart in the README on GitHub.'
             : health?.live_status === 'judges_only'
             ? 'During the hackathon, live describing is open to judges: unlock it with the access code below. The examples are real recorded runs.'
             : health?.live_status === 'ended'

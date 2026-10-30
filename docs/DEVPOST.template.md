@@ -9,7 +9,7 @@ number that is not measured. Edit this template, not the generated file.
 **Project name (≤60):** Unsaid
 
 **Elevator pitch (≤200):** Lecturers say “as you can see” and blind students can’t. Unsaid finds those moments and
-describes them in the pauses, never over the lecturer, using four NVIDIA Nemotron models on Nebius.
+describes them in the pauses, never over the lecturer, using NVIDIA Nemotron models.
 
 ## About the project
 
@@ -39,7 +39,8 @@ Try the 30-second test on the home page: hear a clip as a blind student does, th
 
 ## How we built it
 
-Nine stages, four Nemotron models on Nebius Token Factory, each doing the one job it is best at:
+Nine stages, four Nemotron models, each doing the one job it is best at. Unsaid is written for Nebius Token Factory,
+but every run shown here used NVIDIA's API catalog instead (see Challenges):
 
 1. **Listen:** NVIDIA Parakeet TDT 0.6B v2 (ONNX, CPU) transcribes with word timings and finds every silence. Super VL
    has no audio input, so this is how Unsaid knows when it may speak.
@@ -47,7 +48,8 @@ Nine stages, four Nemotron models on Nebius Token Factory, each doing the one jo
 3. **Watch:** Nemotron 3.5 Super VL reads each segment as a low-frame-rate clip plus full-resolution stills, and returns
    strict JSON: slide text, charts with values, actions with times.
 4. **Resolve:** Nemotron 3 Nano decides what each “this” or “here” actually points at. It rejects figures of speech,
-   hypotheticals and phrases about time.
+   hypotheticals and phrases about time. (Our NVIDIA API catalog key had no Nano, so in the runs shown Nemotron 3.5
+   Lightning does this step.)
 5. **Context:** Tavily reads the video’s own page and any works cited on slides, so names come from sources and never
    from faces.
 6. **Understand:** Nemotron 3 Ultra reads the whole lecture in one context: the transcript, every segment report and
@@ -60,7 +62,8 @@ Nine stages, four Nemotron models on Nebius Token Factory, each doing the one jo
    which sets each description’s tier: ready, needs review or withheld.
 9. **Deliver:** tracks, transcript, markers and lecturer tips.
 
-Every Token Factory call goes into a ledger with tokens, cached tokens, reasoning tokens, latency and cost. That
+Every model call goes into a ledger with tokens, cached tokens, reasoning tokens, latency and cost at Token Factory
+list prices. That
 gives each video a price ({{usd_per_min}} per minute of video in the evaluation) and a counterfactual: the same text
 work on Ultra alone would cost {{ultra_only_phrase}}.
 
@@ -87,6 +90,11 @@ sets separately and lists where Unsaid still fails. No phrase from any clip appe
 
 ## Challenges we ran into
 
+- **No Token Factory credit.** The hackathon's $25 credit form rejected the event code in the official Devpost link
+  (“the event in your request was incorrect”). Nebius handles such cases only on Discord, which is not accessible from
+  Turkey, and we chose not to pay for calls. So Unsaid, written for Token Factory, made every call shown here through
+  NVIDIA's API catalog, which serves the same Nemotron models through the same OpenAI-compatible API. This means the
+  entry has not made the runtime Token Factory call the rules ask for; we would rather say so than hide it.
 - **Super VL has no audio.** We added NVIDIA Parakeet on CPU to know when the lecturer speaks; descriptions are timed
   against its speech intervals.
 - **Fitting a description into 2.4 seconds.** A free-writing model overshoots. Moving the draft into Ultra’s plan,
@@ -130,7 +138,7 @@ fix happens before the recording, which is why Unsaid coaches the lecturer.
 
 ## Built with
 
-nebius-token-factory, {{hosting_tags}}nvidia-nemotron, nemotron-3-ultra, nemotron-3.5-super-vl,
+{{hosting_tags}}nvidia-nemotron, nvidia-api-catalog, nemotron-3-ultra, nemotron-3.5-super-vl,
 nemotron-3.5-lightning, nemotron-3-nano, nvidia-parakeet, onnxruntime, tavily, python, fastapi, pydantic, ffmpeg,
 react, typescript, vite, playwright, axe-core, docker
 
@@ -140,9 +148,10 @@ react, typescript, vite, playwright, axe-core, docker
 - **New or existing:** New. Started 2026-10-26.
 - **Repository:** {{repo_url}} (MIT, LICENSE in About)
 - **Demo:** {{demo_url}}. Testing instructions: open {{demo_url}}/?judge=1 for the 30-second tour. The hosted demo is
-  a static site with the recorded Token Factory runs, every check and the evaluation: it has no server, so it stays
-  up through judging at no cost. Describing a new clip needs the full app: clone the repository, add a Token Factory
-  key and run it (README, Quickstart); the video shows a live run end to end.
+  a static site with the recorded runs (made on NVIDIA's API catalog), every check and the evaluation: it has no
+  server, so it stays up through judging at no cost. Describing a new clip needs the full app: clone the repository,
+  add a Token Factory key, or an NVIDIA API catalog key with `PROVIDER=nvidia_build`, and run it (README,
+  Quickstart); the video shows a live run end to end, on the catalog.
 - **Models and why:** see “How we built it”.
   - Super VL is the only vision model.
   - Ultra is used once per video, for whole-lecture judgement over a 1M-token context.
@@ -152,16 +161,18 @@ react, typescript, vite, playwright, axe-core, docker
 - **Nemotron output quality:** 7/10.
   - Strongest: Ultra’s whole-lecture planning and Super VL’s reading of slides and charts.
   - Weakest: free-writing to a word budget, and occasional truncated or malformed JSON.
-- **Approach:** prompt engineering, structured outputs and routing; no fine-tuning (Token Factory doesn’t offer
-  self-service Nemotron fine-tuning).
+- **Approach:** prompt engineering, structured outputs and routing; no fine-tuning.
 - **Compared with other models:** we did not benchmark other vendors' models. Within Nemotron, moving drafting from
   Lightning (free writing) into Ultra's whole-lecture plan cut paused descriptions from 6 of 8 to 2 of 7 on our first
   test lecture, and Super VL is the only model here that sees.
-- **Most valuable Nebius capabilities:** one OpenAI-compatible endpoint for four Nemotron sizes, so routing each
-  step to the right model is configuration; strict `json_schema` decoding; reasoning controls through
-  `chat_template_kwargs`; and per-call usage, which feeds the cost ledger.
-- **Recommend Nemotron on Nebius:** 8/10. **Experience vs other clouds:** 6/10 (onboarding: a card before any key,
-  no visible trial credit, and an activation code that the console's promo field rejects; see FEEDBACK.md).
+- **Most valuable Nebius capabilities:** we could not call Token Factory without credit. What we built for, from its
+  documentation and model list: one OpenAI-compatible endpoint for four Nemotron sizes, so routing each step to the
+  right model is configuration; strict `json_schema` decoding; reasoning controls through `chat_template_kwargs`;
+  and per-call usage, which feeds the cost ledger. We used each of these on NVIDIA's API catalog.
+- **Recommend Nemotron on Nebius:** Nemotron itself 8/10, from our runs on NVIDIA's API catalog; we could not run it
+  on Nebius. **Experience vs other clouds:** 3/10 (onboarding: a card before any key, no visible trial credit, an
+  activation code that the console's promo field rejects, a credit form that rejected the official event link, and
+  support only on Discord, which is not accessible from Turkey; see FEEDBACK.md).
 - **Improvements we’d like:** see FEEDBACK.md.
 - **Hopes for the Nemotron team:** see FEEDBACK.md.
 - **Tavily:** Yes. Runtime `extract` on the video’s source page and `search` for citations on slides; request ids are

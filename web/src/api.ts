@@ -6,7 +6,8 @@ const BASE = import.meta.env.BASE_URL
 const file = (path: string) => BASE + path
 
 const NO_SERVER = () => Promise.reject(new ApiError('This demo is a static site: describing a new clip needs the full app.', 503))
-const STATIC_HEALTH: Health = { ok: true, provider: 'tokenfactory', host: '', live_status: 'static', demo_mode: 'recorded', models: {}, stages: [] }
+// The recorded runs this static site shows were made on NVIDIA's API catalog.
+const STATIC_HEALTH: Health = { ok: true, provider: 'nvidia_build', host: '', live_status: 'static', demo_mode: 'recorded', models: {}, stages: [] }
 
 export class ApiError extends Error {
   readonly status: number

@@ -77,13 +77,21 @@ not Token Factory.
    promo code, it returns "Invalid promo code. Please check the promo code symbols". It belongs to a separate form
    that emails a promo code, and that form works only when opened from the Devpost link, whose URL carries the event
    and the activation code. Opened as plain nebius.com/promo-code, it takes all the personal details and only then
-   shows "Error: no event name found". *Suggestion:* say "activation code, not a promo code" next to the console
-   field, or accept event activation codes there directly; and have the form ask for the event code before anyone
-   fills it in, when the link has none.
-3. **No hard spending limit.** Billing requires a card, and once the balance is negative the card is charged
+   shows "Error: no event name found". Filled in again from the Devpost link on Oct 30, the deadline day, it
+   answered "Form submitted", and a minute later an email said the promo code "could not be issued because the
+   event in your request was incorrect". *Suggestion:* say "activation code, not a promo code" next to the console
+   field, or accept event activation codes there directly; have the form ask for the event code before anyone fills
+   it in, when the link has none; and check that the event code in the official link is accepted before it is
+   published.
+3. **Support only on Discord.** For credits that never arrive, the hackathon FAQ sends participants to the Nebius
+   Discord. Discord is not accessible from Turkey, and the forum shows others waiting four to five days there. With
+   no credit and no reachable support, this entry made no Token Factory inference call at all: every run used the
+   same Nemotron models on NVIDIA's API catalog, at no cost. *Suggestion:* an email or console support path for
+   credit problems, and a small hackathon credit granted automatically with the first API key.
+4. **No hard spending limit.** Billing requires a card, and once the balance is negative the card is charged
    automatically, at the start of the month or at a threshold. For students and hackathon participants, a hard
    cap ("stop serving at $X") would make trying the API risk-free. Until then, our app enforces its own caps.
-4. **What worked at once:** `GET /v1/models` with a new key listed all five NVIDIA models Unsaid uses, with the IDs
+5. **What worked at once:** `GET /v1/models` with a new key listed all five NVIDIA models Unsaid uses, with the IDs
    our fallback chains expect.
 
 ## Nebius AI Cloud (Serverless Endpoints and Jobs)

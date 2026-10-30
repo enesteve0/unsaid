@@ -46,7 +46,7 @@
     },
     {
       "id": "pipeline",
-      "narration": "Upload a lecture. NVIDIA Parakeet{{asr_host}} transcribes it and finds every silence. Nemotron 3.5 Super VL watches each segment and reads the slides. Nemotron 3 Nano works out what each this points at. Then Nemotron 3 Ultra reads the whole lecture at once, on Nebius Token Factory, and plans what is unsaid, and which pause it fits.",
+      "narration": "Upload a lecture. NVIDIA Parakeet{{asr_host}} transcribes it and finds every silence. Nemotron 3.5 Super VL watches each segment and reads the slides. A small Nemotron model works out what each this points at. Then Nemotron 3 Ultra reads the whole lecture at once, and plans what is unsaid, and which pause it fits. Unsaid is written for Nebius Token Factory, but our hackathon credit was never issued, so this run uses the same models on NVIDIA's API catalog.",
       "speedup_to_narration": true,
       "actions": [
         {
@@ -142,7 +142,7 @@
     },
     {
       "id": "cost",
-      "narration": "Every call is in the ledger. Four Nemotron models, {{usd_per_min_words}} per minute of video. {{backlog_sentence}}",
+      "narration": "Every call is in the ledger, priced at Token Factory list prices: {{usd_per_min_words}} per minute of video. {{backlog_sentence}}",
       "actions": [
         {
           "goto": "/samples/{sample}"
@@ -193,7 +193,7 @@
     "title": "Unsaid",
     "lines": [
       "Audio description for everything a lecture shows but never says.",
-      "Built with NVIDIA Nemotron on Nebius Token Factory."
+      "Built with NVIDIA Nemotron and NVIDIA Parakeet."
     ],
     "seconds": 6,
     "links": [

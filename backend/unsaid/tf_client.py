@@ -1,7 +1,8 @@
 """Nebius Token Factory client.
 
 One entry point, `TokenFactory.chat`, routes a request for a *role* (vision, reason, fast, classify) through that
-role's model chain and handles the behaviours we measured on Token Factory:
+role's model chain and handles the behaviours Token Factory documents, as measured on NVIDIA's API catalog (same models,
+same OpenAI-compatible API; no Token Factory credit was ever issued to this project):
 
 * Nemotron thinks by default. Fast and structured calls switch it off with
   `chat_template_kwargs.enable_thinking=false`; reasoning calls get an explicit, generous token budget because a

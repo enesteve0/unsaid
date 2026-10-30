@@ -19,7 +19,7 @@ export function SamplePage() {
   return (
     <section style={{ paddingTop: 40 }} aria-labelledby="result-title">
       <p className="eyebrow">
-        Example · {result && result.provider !== 'tokenfactory' ? 'prototype run on the NVIDIA API catalog, not Token Factory' : 'recorded run'}
+        Example · {result && result.provider !== 'tokenfactory' ? "run on NVIDIA's API catalog, not Token Factory" : 'recorded run'}
       </p>
       <h1 id="result-title" style={{ fontSize: 'clamp(2rem, 4.4vw, 3.6rem)', marginBottom: 10 }}>
         {result?.title ?? 'Loading…'}
