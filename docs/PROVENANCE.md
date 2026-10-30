@@ -65,8 +65,10 @@ by a Token Factory run before submission.
   Token Factory billing details and card. Claude entered no personal or payment data, and accepted no terms.
 - **Token Factory credit:** after billing setup, the account showed a balance of $0.00 and no October
   transactions, so no trial credit was visible. The hackathon's code `NEBIUS-DEVPOST-GLOBAL26` is an
-  activation code for the form at nebius.com/promo-code. Entered as a promo code in the console, it is rejected.
-  That form needs the owner's personal details, so it is the owner's step. Until promo credit exists, no Token
+  activation code for the promo-code form linked from the Devpost resources page. Entered as a promo code in the
+  console, it is rejected. The form needs the owner's personal details, so it is the owner's step. It works only
+  from that link, which carries the event and activation code: on Oct 30 the bare nebius.com/promo-code URL, which
+  Claude had opened, ended in "no event name found". Reopened from the Devpost link, the form has the event set. Until promo credit exists, no Token
   Factory inference call is made. Listing models, which is free, confirmed the key and all five NVIDIA models.
 - **Tavily:** free plan, plus the `BBDEVPOST` coupon (8,000 credits). No card.
 - **Evaluation:** run on NVIDIA's API catalog (build.nvidia.com) with the same Nemotron models, at no cost, as the

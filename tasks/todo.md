@@ -68,8 +68,9 @@ Night of Oct 29 (owner asleep; no money may be spent):
       gallery JPEGs and thumbnail ready. The pipeline scene's live run used the catalog; re-render after the Token
       Factory examples if credit arrives (`scripts/make_video.sh http://127.0.0.1:8080 https://enesteve0.github.io/unsaid`).
 
-Morning (owner): fill nebius.com/promo-code (activation code `NEBIUS-DEVPOST-GLOBAL26`) → the emailed promo code goes
-into Token Factory → Balance + → With promo code (Claude can enter it). Then `scripts/tf_day.sh` (smoke test and
+Morning (owner): fill the promo form from the Devpost resources page's "Fill out this form" link (the bare
+nebius.com/promo-code URL fails: "no event name found"; activation code `NEBIUS-DEVPOST-GLOBAL26`) → the emailed
+promo code goes into Token Factory → Balance + → With promo code (Claude can enter it). Then `scripts/tf_day.sh` (smoke test and
 the two examples on Token Factory, about $0.20 of credit) → `scripts/make_video.sh` → YouTube and Devpost.
 If no credit arrives in time, the owner decides whether about $0.25 of Token Factory spend is acceptable: without
 any Token Factory call, the entry does not meet the platform rule.

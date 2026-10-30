@@ -75,8 +75,11 @@ not Token Factory.
 2. **The hackathon activation code looks like a promo code, but is not one.** The Devpost resources page lists
    `NEBIUS-DEVPOST-GLOBAL26` for "$25 Token Factory credits". Entered in the console under Top up balance → With
    promo code, it returns "Invalid promo code. Please check the promo code symbols". It belongs to a separate form
-   (nebius.com/promo-code) that emails a promo code. *Suggestion:* say "activation code, not a promo code" next to
-   the console field, or accept event activation codes there directly.
+   that emails a promo code, and that form works only when opened from the Devpost link, whose URL carries the event
+   and the activation code. Opened as plain nebius.com/promo-code, it takes all the personal details and only then
+   shows "Error: no event name found". *Suggestion:* say "activation code, not a promo code" next to the console
+   field, or accept event activation codes there directly; and have the form ask for the event code before anyone
+   fills it in, when the link has none.
 3. **No hard spending limit.** Billing requires a card, and once the balance is negative the card is charged
    automatically, at the start of the month or at a threshold. For students and hackathon participants, a hard
    cap ("stop serving at $X") would make trying the API risk-free. Until then, our app enforces its own caps.

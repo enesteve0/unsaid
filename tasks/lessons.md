@@ -23,3 +23,7 @@ Rules learned from corrections during this project. Review at session start.
 - **Never reset a file to undo a script's output when it also holds unsaved edits:** `git checkout README.md` to drop
   a generated table also dropped an hour's uncommitted README changes. Commit hand edits before running generators
   that write to the same file, or restore from a copy taken just before. Self-caught on Oct 29.
+- **Open forms from the organizer's link:** a typed or shortened URL can drop parameters the form needs. The bare
+  nebius.com/promo-code page took the owner's details and then failed with "no event name found"; the Devpost link
+  carries the event and activation code. Before sending the owner to a form, open it from the official link and
+  compare its query string with the bare URL. Found on Oct 30, after the owner's first submission failed.
