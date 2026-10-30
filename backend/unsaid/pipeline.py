@@ -39,7 +39,11 @@ STAGES = [
     ("listen", "Listen", "NVIDIA Parakeet speech recognition on CPU"),
     ("segment", "Segment", "slide changes, silences and pointing phrases"),
     ("watch", "Watch", "Nemotron 3.5 Super VL reads every segment"),
-    ("resolve", "Resolve", "Nemotron 3 Nano (3.5 Lightning on the API catalog): what does each 'this' point at?"),
+    (
+        "resolve",
+        "Resolve",
+        "Nemotron 3 Nano (3.5 Lightning on the API catalog): what does each 'this' point at?",
+    ),
     ("context", "Context", "Tavily: names from the source page and slide citations"),
     ("understand", "Understand", "Nemotron 3 Ultra plans what is unsaid and where it fits"),
     ("write", "Write & fit", "code gates check Ultra's drafts; Nemotron 3.5 Lightning repairs failures"),
