@@ -5,6 +5,7 @@ cd video && uv run --project ../backend python captions.py      # writes build/c
 
 from __future__ import annotations
 
+import re
 import subprocess
 import sys
 from pathlib import Path
@@ -15,6 +16,9 @@ sys.path.insert(0, str(ROOT.parent / "backend"))
 from unsaid.asr import SpeechRecognizer  # noqa: E402
 from unsaid.export import captions_srt  # noqa: E402
 
+# Product names Parakeet spells the way it hears them ("Nematron", "Tavili").
+NAMES = {"nematron": "Nemotron", "tavili": "Tavily", "nvidia": "NVIDIA", "token factory": "Token Factory"}
+
 
 def main() -> None:
     video, wav = ROOT / "build" / "unsaid-demo.mp4", ROOT / "build" / "demo-audio.wav"
@@ -23,7 +27,10 @@ def main() -> None:
         check=True,
     )
     words = SpeechRecognizer(ROOT.parent / "backend" / "models").transcribe_sync(wav).words
-    (ROOT / "build" / "captions.srt").write_text(captions_srt(words))
+    srt = captions_srt(words)
+    for heard, name in NAMES.items():
+        srt = re.sub(rf"\b{heard}\b", name, srt, flags=re.IGNORECASE)
+    (ROOT / "build" / "captions.srt").write_text(srt)
     print(f"build/captions.srt: {len(words)} words")
 
 
