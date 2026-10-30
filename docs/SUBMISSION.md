@@ -13,8 +13,8 @@ Tick a box only with evidence.
 | Working demo URL, free and unrestricted until Dec 15 23:00 TRT | ☑ | [enesteve0.github.io/unsaid](https://enesteve0.github.io/unsaid/): static (recorded runs, evaluation), no server, no cost; monitor workflow checks it |
 | Public repo with an OSI license visible in About | ☑ | public since 2026-10-29 as [enesteve0/unsaid](https://github.com/enesteve0/unsaid) after a clean gitleaks scan of all commits; GitHub detects MIT |
 | README with setup and how NVIDIA models, Token Factory and other Nebius services are used | ☑ | `README.md` (results filled from `backend/eval/report.json`) |
-| Public YouTube video under 3 minutes showing the project working | ☐ | `video/build/unsaid-demo.mp4` and captions ready (re-rendered 2026-10-30 with the catalog disclosure); owner uploads |
-| Project description, built with, try-it links | ☑ | `docs/DEVPOST.md`, every placeholder filled; video URL added at upload |
+| Public YouTube video under 3 minutes showing the project working | ☑ | [youtube.com/watch?v=bB43Q7K-aTw](https://www.youtube.com/watch?v=bB43Q7K-aTw): Public, 2:58, English subtitles; uploaded 2026-10-30 (a copy under 10 MB, see `docs/VIDEO.md`) |
+| Project description, built with, try-it links | ☑ | `docs/DEVPOST.md`, every placeholder filled; submitted as [devpost.com/software/unsaid-5vjdqz](https://devpost.com/software/unsaid-5vjdqz) with the video URL |
 | Feedback on Token Factory, AI Cloud and NVIDIA tools | ☑ | `FEEDBACK.md` (NVIDIA API catalog, Token Factory onboarding) |
 | New project (after Aug 26, 2026) | ☑ | git history starts 2026-10-23 (docs), code from 2026-10-26; `docs/PROVENANCE.md` |
 | English materials | ☑ | all |
@@ -26,7 +26,9 @@ Tick a box only with evidence.
 - [ ] Tavily key → `.env` (`TAVILY_API_KEY`), promo `BBDEVPOST`
 - [ ] console.nebius.com billing ($25 activation) and `nebius profile create`
 - [ ] Before Nov 25: Token Factory set to continue after the trial; Dec 1: pre-fund at least $35
-- [ ] Fri: upload the video as **Public** on YouTube; paste the Devpost fields; tick the terms; Submit
+- [x] Fri: upload the video as **Public** on YouTube; paste the Devpost fields; tick the terms; Submit (2026-10-30,
+      about 18:05 TRT; Claude did it in the owner's browser at the owner's request, after the owner created the
+      YouTube channel and answered the eligibility questions)
 
 ## Release review (Thu Oct 29)
 
@@ -37,5 +39,5 @@ Tick a box only with evidence.
 - [x] Secret scan of the tree and full history (`gitleaks` or equivalent) → repository public → renamed to
       `enesteve0/unsaid` → LICENSE detected in About (2026-10-29)
 - [ ] `DEMO_URL` repository variable set so the monitor runs
-- [ ] Tag `submission-2026-10-30`; record commit, URLs and access checks in `docs/PROVENANCE.md`
+- [x] Tag `submission-2026-10-30`; record commit, URLs and access checks in `docs/PROVENANCE.md`
 - [ ] After the deadline: change only environment configuration documented in the README

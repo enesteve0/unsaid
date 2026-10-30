@@ -39,6 +39,19 @@ clearly different voice so viewers can tell narration and description apart.
 Upload `video/build/unsaid-demo.mp4` as **Public**, not made for kids. Then add `video/build/captions.srt` as English
 subtitles, if it exists (Unsaid's own captions of the video).
 
+Uploaded on 2026-10-30 as [youtube.com/watch?v=bB43Q7K-aTw](https://www.youtube.com/watch?v=bB43Q7K-aTw), Public,
+with English subtitles. The browser tool that uploaded it accepts at most 10 MB per file, so the uploaded file was a
+9.6 MB copy with the same picture size, frame rate and sound:
+
+```sh
+cd video
+ffmpeg -i build/unsaid-demo.mp4 -an -c:v libx265 -preset medium -b:v 356k -pix_fmt yuv420p \
+  -x265-params pass=1:stats=x265.log -f null /dev/null
+ffmpeg -i build/unsaid-demo.mp4 -c:v libx265 -preset medium -b:v 356k -pix_fmt yuv420p \
+  -x265-params pass=2:stats=x265.log -tag:v hvc1 -c:a aac_at -b:a 64k -ac 1 -movflags +faststart \
+  build/unsaid-demo-upload.mp4
+```
+
 **Title:** Unsaid: audio description for what lectures show but never say (NVIDIA Nemotron)
 
 **Description:**

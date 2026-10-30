@@ -99,8 +99,8 @@ Exact versions are pinned in `backend/uv.lock` and `web/pnpm-lock.yaml`. None of
 
 | Component | Version / source | License | Purpose |
 | --- | --- | --- | --- |
-| NVIDIA Nemotron 3 Ultra, 3.5 Super VL, 3.5 Lightning | Nebius Token Factory API | OpenMDW-1.1 | planning, perception and checking, repairs |
-| NVIDIA Nemotron 3 Nano | Nebius Token Factory API | NVIDIA Nemotron Open Model License | pointing-phrase classification |
+| NVIDIA Nemotron 3 Ultra, 3.5 Super VL, 3.5 Lightning | Nebius Token Factory API by default; every published run used NVIDIA's API catalog | OpenMDW-1.1 | planning, perception and checking, repairs |
+| NVIDIA Nemotron 3 Nano | Nebius Token Factory API by default (not on our catalog key; Lightning stood in) | NVIDIA Nemotron Open Model License | pointing-phrase classification |
 | NVIDIA Parakeet TDT 0.6B v2 (int8 ONNX, `istupakov/parakeet-tdt-0.6b-v2-onnx`) | downloaded at build time | CC-BY-4.0 | speech recognition |
 | Silero VAD (ONNX, `istupakov/silero-vad-onnx`) | downloaded at build time | MIT | speech segments |
 | onnx-asr / onnxruntime | 0.12.0 / 1.31.0 | MIT / MIT | running the ONNX models on CPU |
@@ -129,4 +129,22 @@ Exact versions are pinned in `backend/uv.lock` and `web/pnpm-lock.yaml`. None of
 
 ## Submission record
 
-No submission exists yet. At submission, record the exact source commit/tag, official submission URL, demo/video URLs, access checks and applicable freeze period. Do not put secrets or private judge passwords here.
+Submitted on **2026-10-30 at about 18:05 TRT**, before the 20:00 TRT deadline. At the owner's request, Claude
+filled in the Devpost form and uploaded the video in the owner's browser. The owner created the YouTube channel and
+answered the eligibility and survey questions.
+
+| Item | Value |
+| --- | --- |
+| Devpost project | [devpost.com/software/unsaid-5vjdqz](https://devpost.com/software/unsaid-5vjdqz): Best Apps and Agents, Tavily used, new project |
+| Video | [youtube.com/watch?v=bB43Q7K-aTw](https://www.youtube.com/watch?v=bB43Q7K-aTw): Public, 2:58, English subtitles from `video/build/captions.srt` |
+| Demo | [enesteve0.github.io/unsaid](https://enesteve0.github.io/unsaid/): static, no server |
+| Repository | [enesteve0/unsaid](https://github.com/enesteve0/unsaid), tag `submission-2026-10-30` |
+| Access checks, 18:10 TRT | YouTube oEmbed returns the video's title (public); the Devpost page returns HTTP 200; CI and Pages green for `3b9d4a5`, the last code change |
+
+- The uploaded video file is a smaller copy of `video/build/unsaid-demo.mp4`: the same 1080p30 picture and sound, in
+  HEVC at about 360 kbps with 64 kbps AAC mono, 9.6 MB. The browser automation that uploaded it accepts at most 10 MB
+  per file. The commands are in `docs/VIDEO.md`.
+- The Devpost text and the form answers state that no runtime Token Factory call was made (see the owner decision
+  above). Ratings were submitted as proposed in `docs/DEVPOST.md`: 7/10 for Nemotron's output quality, 8/10 for
+  Nemotron itself (from catalog runs, not Nebius), 3/10 for the Nebius onboarding experience.
+- Devpost allows edits until the deadline. After it, change only environment configuration documented in the README.

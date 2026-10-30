@@ -21,7 +21,8 @@ Built for the [Nebius x NVIDIA Global AI Hackathon](https://nebiusglobalaihackat
 | | |
 | --- | --- |
 | Demo | [enesteve0.github.io/unsaid](https://enesteve0.github.io/unsaid/): the recorded runs, every check and the evaluation, as a static site (no server, so it stays up through judging at no cost). Describing a new clip needs the full app with a Token Factory or NVIDIA API catalog key: see [Quickstart](#quickstart-local). |
-| Demo video | _added at submission_ |
+| Demo video | [YouTube, 2:58](https://www.youtube.com/watch?v=bB43Q7K-aTw), with English subtitles from Unsaid's own speech recognition |
+| Devpost | [devpost.com/software/unsaid-5vjdqz](https://devpost.com/software/unsaid-5vjdqz) |
 | License | [MIT](LICENSE) for the code. Models and media keep their own licenses; see [Credits](#credits). |
 
 ## What it does

@@ -30,3 +30,10 @@ Rules learned from corrections during this project. Review at session start.
 - **Run CI's own checks before pushing:** tests and lint passed locally, but CI also runs `ruff format --check`, and
   a longer label line failed it. Before a push, run every command in `.github/workflows/ci.yml`, not a subset.
   Self-caught on Oct 30.
+- **Read the clock, never carry it over:** before saying how much time is left, run `date` or read a server's `Date`
+  header. "4 hours left" was right at 15:58, but the owner's next message came at 17:46; Devpost's "2 more hours"
+  banner caught it. Self-caught on Oct 30.
+- **Check identity-bound prerequisites the day before:** on deadline day the owner's Google account had no YouTube
+  channel (only the owner may create one), and the browser upload tool takes at most 10 MB per file, so the 31 MB
+  video needed a re-encode. Before the final day, confirm that every account the submission needs exists and that
+  every file fits the tool that will upload it. Self-caught on Oct 30.

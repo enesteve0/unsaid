@@ -8,7 +8,8 @@ Deadline: **Fri Oct 30, 2026 20:00 Istanbul** (submit by 16:00). Work directly o
 - [ ] Credit requests: Devpost promo form + Builders Program
 - [ ] Tavily key in `.env` as `TAVILY_API_KEY` (+ promo `BBDEVPOST`)
 - [ ] Tue: console.nebius.com billing ($25 activation) + `nebius profile create`
-- [ ] Fri: upload video to YouTube as **Public**; paste Devpost fields from `docs/DEVPOST.md`; Submit by 16:00 TRT
+- [x] Fri: upload video to YouTube as **Public**; paste Devpost fields from `docs/DEVPOST.md`; Submit by 16:00 TRT
+      (submitted 18:05 TRT; see the submission record in `docs/PROVENANCE.md`)
 
 ## Mon Oct 26 — foundation
 
@@ -87,7 +88,9 @@ Submission day, Oct 30:
       frames of the pipeline, cost and end scenes, and length (< 3:00). The ledger's model count now comes from the
       data ("three Nemotron models" on the catalog run), so the cost scene was re-recorded.
 - [x] Pages redeployed; the live bundle carries the new footer and labels
-- [ ] **owner:** YouTube upload (Public, captions), Devpost paste and Submit by 16:00 TRT
+- [x] YouTube upload (Public, English subtitles) and Devpost submission, about 18:05 TRT. Claude did both in the
+      owner's browser at the owner's request; the owner created the YouTube channel and answered the eligibility
+      and survey questions. Checked: oEmbed shows the video public, the Devpost page loads, the story renders.
 
 Key day, in order (owner steps marked **owner**):
 
@@ -127,7 +130,8 @@ Key day, in order (owner steps marked **owner**):
 ## Fri Oct 30 — submit
 
 - [ ] Fresh-browser judge-path test on deployed URL
-- [ ] Owner uploads video + submits; tag `submission-2026-10-30`; provenance updated; monitors running
+- [x] Video uploaded and project submitted; tag `submission-2026-10-30`; provenance updated (monitor status:
+      `docs/SUBMISSION.md`)
 
 ## Progress notes
 
