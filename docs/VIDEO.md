@@ -39,7 +39,7 @@ clearly different voice so viewers can tell narration and description apart.
 Upload `video/build/unsaid-demo.mp4` as **Public**, not made for kids. Then add `video/build/captions.srt` as English
 subtitles, if it exists (Unsaid's own captions of the video).
 
-**Title:** Unsaid: audio description for what lectures show but never say (NVIDIA Nemotron on Nebius)
+**Title:** Unsaid: audio description for what lectures show but never say (NVIDIA Nemotron)
 
 **Description:**
 
@@ -47,7 +47,7 @@ subtitles, if it exists (Unsaid's own captions of the video).
 > they show in the pauses, never over the lecturer. It uses NVIDIA Nemotron models (3.5 Super VL, 3 Ultra,
 > 3.5 Lightning, 3 Nano) and NVIDIA Parakeet speech recognition, and enforces timing and grounding rules in code.
 > Unsaid is written for Nebius Token Factory; our hackathon credit was never issued, so the runs shown used the same
-> models on NVIDIA's API catalog.
+> models on NVIDIA's API catalog, with 3.5 Lightning standing in for Nano.
 >
 > Demo: https://enesteve0.github.io/unsaid/
 > Code: https://github.com/enesteve0/unsaid
