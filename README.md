@@ -93,7 +93,7 @@ Models write; code decides. A description is used only if:
 ## Results
 
 <!-- results:start -->
-On 9 openly licensed lecture clips (16.6 minutes, 38 labelled pointing moments), each described twice, measured on NVIDIA's API catalog (build.nvidia.com) with the same Nemotron models, at no cost to us, with costs priced at Token Factory list prices, scored by the same code for both systems (evaluated 2026-10-29 21:23 UTC):
+On 9 openly licensed lecture clips (16.6 minutes, 38 labelled pointing moments), each described twice, measured on NVIDIA's API catalog (build.nvidia.com) with the same Nemotron models (Lightning standing in for Nano, which our catalog key lacked), at no cost to us, with costs priced at Token Factory list prices, scored by the same code for both systems (evaluated 2026-10-29 21:23 UTC):
 
 | | One-shot (Super VL, whole clip) | Unsaid |
 | --- | --- | --- |

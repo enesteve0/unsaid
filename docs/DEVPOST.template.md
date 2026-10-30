@@ -139,7 +139,7 @@ fix happens before the recording, which is why Unsaid coaches the lecturer.
 ## Built with
 
 {{hosting_tags}}nvidia-nemotron, nvidia-api-catalog, nemotron-3-ultra, nemotron-3.5-super-vl,
-nemotron-3.5-lightning, nemotron-3-nano, nvidia-parakeet, onnxruntime, tavily, python, fastapi, pydantic, ffmpeg,
+nemotron-3.5-lightning, nvidia-parakeet, onnxruntime, tavily, python, fastapi, pydantic, ffmpeg,
 react, typescript, vite, playwright, axe-core, docker
 
 ## Additional info (for judges)
@@ -156,7 +156,7 @@ react, typescript, vite, playwright, axe-core, docker
   - Super VL is the only vision model.
   - Ultra is used once per video, for whole-lecture judgement over a 1M-token context.
   - Lightning handles cheap parallel repairs.
-  - Nano handles strict-JSON classification.
+  - Nano handles strict-JSON classification (Lightning did it in our catalog runs, which had no Nano).
   - Split of cost on the home-page example, at Token Factory list prices: {{cost_split}}.
 - **Nemotron output quality:** 7/10.
   - Strongest: Ultra’s whole-lecture planning and Super VL’s reading of slides and charts.

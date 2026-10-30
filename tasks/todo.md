@@ -75,6 +75,18 @@ the two examples on Token Factory, about $0.20 of credit) → `scripts/make_vide
 If no credit arrives in time, the owner decides whether about $0.25 of Token Factory spend is acceptable: without
 any Token Factory call, the entry does not meet the platform rule.
 
+Submission day, Oct 30:
+
+- [x] Promo form from the Devpost link submitted; Nebius refused the code ("the event in your request was
+      incorrect"). Support is Discord-only, not accessible from Turkey.
+- [x] Owner decision: strictly zero Token Factory calls, no spend (PROVENANCE). The FAQ says other providers do not
+      satisfy the platform rule; disclosed, not hidden.
+- [x] Every public claim matches: README status note, Devpost template (+ generated), site footer/About/labels,
+      stage label (Lightning stands in for Nano on the catalog), NOTICE, video narration, end card, thumbnail
+- [ ] Video re-rendered with the disclosure; checked by transcript, contact sheet and length (< 3:00)
+- [ ] Pages redeployed; live site shows the new footer and labels
+- [ ] **owner:** YouTube upload (Public, captions), Devpost paste and Submit by 16:00 TRT
+
 Key day, in order (owner steps marked **owner**):
 
 1. **owner:** copy the Token Factory key, then `! printf 'NEBIUS_API_KEY=%s\n' "$(pbpaste)" >> .env`; the same for
