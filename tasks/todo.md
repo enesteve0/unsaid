@@ -83,8 +83,10 @@ Submission day, Oct 30:
       satisfy the platform rule; disclosed, not hidden.
 - [x] Every public claim matches: README status note, Devpost template (+ generated), site footer/About/labels,
       stage label (Lightning stands in for Nano on the catalog), NOTICE, video narration, end card, thumbnail
-- [ ] Video re-rendered with the disclosure; checked by transcript, contact sheet and length (< 3:00)
-- [ ] Pages redeployed; live site shows the new footer and labels
+- [x] Video re-rendered with the disclosure (178 s); checked by its captions (the disclosure sentence is heard),
+      frames of the pipeline, cost and end scenes, and length (< 3:00). The ledger's model count now comes from the
+      data ("three Nemotron models" on the catalog run), so the cost scene was re-recorded.
+- [x] Pages redeployed; the live bundle carries the new footer and labels
 - [ ] **owner:** YouTube upload (Public, captions), Devpost paste and Submit by 16:00 TRT
 
 Key day, in order (owner steps marked **owner**):

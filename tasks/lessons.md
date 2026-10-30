@@ -27,3 +27,6 @@ Rules learned from corrections during this project. Review at session start.
   nebius.com/promo-code page took the owner's details and then failed with "no event name found"; the Devpost link
   carries the event and activation code. Before sending the owner to a form, open it from the official link and
   compare its query string with the bare URL. Found on Oct 30, after the owner's first submission failed.
+- **Run CI's own checks before pushing:** tests and lint passed locally, but CI also runs `ruff format --check`, and
+  a longer label line failed it. Before a push, run every command in `.github/workflows/ci.yml`, not a subset.
+  Self-caught on Oct 30.

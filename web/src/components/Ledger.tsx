@@ -9,6 +9,8 @@ const ROLE: Record<string, string> = {
   'Nemotron 3 Super': 'Fallback for planning when Ultra is unavailable',
 }
 
+const COUNT = ['no', 'one', 'two', 'three', 'four', 'five', 'six']
+
 export function Ledger({ summary, minutes }: { summary: LedgerSummary; minutes: number }) {
   const rows = Object.entries(summary.by_model).sort((a, b) => b[1].cost_usd - a[1].cost_usd)
   const max = Math.max(summary.ultra_only_usd, summary.total_usd, 1e-9)
@@ -53,7 +55,9 @@ export function Ledger({ summary, minutes }: { summary: LedgerSummary; minutes: 
       <div style={{ display: 'grid', gap: 14, marginTop: 20 }}>
         <div>
           <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-            <span>Routed across four Nemotron models</span>
+            <span>
+              Routed across {COUNT[rows.length] ?? rows.length} Nemotron {rows.length === 1 ? 'model' : 'models'}
+            </span>
             <span className="mono">{fmtUsd(summary.total_usd)}</span>
           </div>
           <div className="bar" aria-hidden="true">

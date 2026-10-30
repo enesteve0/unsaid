@@ -145,7 +145,8 @@ export function Home() {
             <h2 id="how-title">Four Nemotron models, each doing the one job it is best at.</h2>
             <p>
               Only Super VL can see, so it watches and later checks. Only Ultra can hold a whole lecture in mind, so it plans.
-              Lightning rewrites quickly and cheaply until a description fits its silence. Nano classifies. Code has the last word.
+              Lightning rewrites quickly and cheaply until a description fits its silence. Nano classifies (on NVIDIA's API catalog,
+              where our runs were made, Lightning stands in). Code has the last word.
             </p>
           </div>
         </div>
